@@ -1,6 +1,9 @@
 //creating a scene
 const scene = new THREE.Scene();
 
+// arrray containing color of vehicles
+const vehicleColors = [0xa52523 , 0xbdb638 , 0x78b14b];
+
 //adding a car object to the scene
 const playerCar = Car();
 scene.add(playerCar);
@@ -54,25 +57,17 @@ document.body.appendChild(renderer.domElement);
 function Car(){
     const car = new THREE.Group();
 
-    const backWheel = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(12,33,12),
-        new THREE.MeshLambertMaterial({color:0x333333})
-    );
-    backWheel.position.z = 6;
+    const backWheel = Wheel();
     backWheel.position.x = -18;
     car.add(backWheel);
 
-    const frontWheel = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(12,33,12),
-        new THREE.MeshLambertMaterial({color:0x333333})
-    );
-    frontWheel.position.z = 6;
+    const frontWheel = Wheel();
     frontWheel.position.x = 18;
     car.add(frontWheel);
 
     const main = new THREE.Mesh(
         new THREE.BoxBufferGeometry(60,30,15),
-        new THREE.MeshLambertMaterial({color:0xa52523})
+        new THREE.MeshLambertMaterial({color:pickRandom(vehicleColors)})
     );
     main.position.z = 12;
     car.add(main);
@@ -99,6 +94,7 @@ function Wheel() {
 
 }
 
+// random color picker for car
 function pickRandom(array){
     return array[Math.floor(Math.random() * array.length)];
 }
