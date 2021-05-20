@@ -31,8 +31,32 @@ btn1.addEventListener('click', ()=>{
     controls.lock();
 });
 
+let keyboard = [];
+addEventListener('keydown', (e)=>{
+    keyboard[e.key] = true;
+});
+addEventListener('keyup', (e)=>{
+    keyboard[e.key] = false;
+});
+function processKeyboard(){
+    var speed = 0.1;
+    if (keyboard['w']){
+        controls.moveForward(speed);
+    }
+    else if(keyboard['a']){
+        controls.moveRight(-speed);
+    }
+    else if(keyboard['s']){
+        controls.moveForward(-speed);
+    }
+    else if(keyboard['d']){
+        controls.moveRight(speed);
+    }
+}
+
 function drawScene(){
     renderer.render(scene, cam);
+    processKeyboard();
     requestAnimationFrame(drawScene);
 }
 
