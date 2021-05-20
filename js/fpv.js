@@ -24,7 +24,12 @@ let cube = new THREE.Mesh(bGeo, bMat);
 scene.add(cube);
 
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);
-let clock = new THREE.Clock()
+let clock = new THREE.Clock();
+
+let btn1 = document.querySelector("#button1");
+btn1.addEventListener('click', ()=>{
+    controls.lock();
+});
 
 function drawScene(){
     renderer.render(scene, cam);
