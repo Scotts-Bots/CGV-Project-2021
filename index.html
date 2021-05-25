@@ -5,14 +5,19 @@
 		<title>My first three.js app</title>
 		<style>
 			body { margin: 0; }
-			#button1{ position: absolute; }
+			#button1{ position: relative; }
+			#buttonLevel1{ position: relative; }
+			#buttonLevel2{ position: relative; }
 		</style>
 	</head>
 	<body>
+		<button id=buttonLevel1> Level 1 </button>
+		<button id=buttonLevel2> Level 2 </button>
+
 		<button id=button1> press me</button>
 		<script src="js/three.js"></script>
 		<script src ="js/fps/PointerLockControls.js" ></script>
         <script src ="js/fps/fpv.js" ></script>
-		<script src ="js/room.js" ></script>
+		<script src ="js/level1.js" ></script>
 	</body>
 </html>

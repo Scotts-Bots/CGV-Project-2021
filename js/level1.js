@@ -1,56 +1,64 @@
-//creating a scene
-const scene1 = new THREE.Scene();
 
-// adding ambient light
-const ambientLight1 = new THREE.AmbientLight(0xffffff, 0.6);
-scene1.add(ambientLight1);
+let btnLevel1 = document.querySelector("#buttonLevel1");
+btnLevel1.addEventListener('click', ()=>{
+    //creating a scene
+    const scene1 = new THREE.Scene();
 
-//adding directional light @ position 100,-300, 400
-const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-dirLight.position.set(100, -300, 400);
-scene1.add(dirLight);
+    // adding ambient light
+    const ambientLight1 = new THREE.AmbientLight(0xffffff, 0.6);
+    scene1.add(ambientLight1);
 
-//adding orthographic camera
-const aspectRatio = window.innerWidth / window.innerHeight;
-const cameraWidth = 3500;
-const cameraHeight = cameraWidth / aspectRatio;
+    //adding directional light @ position 100,-300, 400
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    dirLight.position.set(100, -300, 400);
+    scene1.add(dirLight);
 
-const camera = new THREE.OrthographicCamera(
-    cameraWidth / -2, //Left
-    cameraWidth / 2, // Right
-    cameraHeight / 2, //top
-    cameraHeight / -2, // bottom
-    -800, //near
-    5000 // far
-);
+    //adding orthographic camera
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    const cameraWidth = 3500;
+    const cameraHeight = cameraWidth / aspectRatio;
 
-camera.position.set(0, -200, 300);
-camera.up.set(0, 0, 1);
-//camera.position.set(0,0,300);
-camera.lookAt(0, 0, 0);
+    const camera = new THREE.OrthographicCamera(
+        cameraWidth / -2, //Left
+        cameraWidth / 2, // Right
+        cameraHeight / 2, //top
+        cameraHeight / -2, // bottom
+        -800, //near
+        5000 // far
+    );
 
-/*Perspective camera code
-    const aspectRatio = window.innerwidthh / width/innerheight;
+    camera.position.set(0, -200, 300);
+    camera.up.set(0, 0, 1);
+    //camera.position.set(0,0,300);
+    camera.lookAt(0, 0, 0);
 
-    const camera = new THREE.PerspectiveCamera(
-        20, vertical field of view
-        aspectRatio, aspect ratio
-        60, // near plane
-        100 // far plane
-    )
+    /*Perspective camera code
+        const aspectRatio = window.innerwidthh / width/innerheight;
 
-*/
+        const camera = new THREE.PerspectiveCamera(
+            20, vertical field of view
+            aspectRatio, aspect ratio
+            60, // near plane
+            100 // far plane
+        )
 
- const room = Room();
- room.scale.set(1,1,1);
- scene1.add(room);
+    */
 
-// setting up renderer
-const renderer1 = new THREE.WebGL1Renderer({ antialias: true });
-renderer1.setSize(window.innerWidth, window.innerHeight);
-renderer1.render(scene1, camera);
+    const room = Room();
+    room.scale.set(1,1,1);
+    scene1.add(room);
 
-document.body.appendChild(renderer1.domElement);
+    // setting up renderer
+    const renderer1 = new THREE.WebGL1Renderer({ antialias: true });
+    renderer1.setSize(window.innerWidth, window.innerHeight);
+    renderer1.render(scene1, camera);
+
+    //TEMPORARY - replaces other scene with level
+    document.body.innerHTML = '';
+    document.body.appendChild(renderer1.domElement);
+});
+
+
 
 function Wall(x, y, z) {
     const wall = new THREE.Mesh(
