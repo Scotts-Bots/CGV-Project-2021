@@ -1,6 +1,4 @@
 
-let btnLevel1 = document.querySelector("#buttonLevel1");
-btnLevel1.addEventListener('click', ()=>{
     //creating a scene
     const scene1 = new THREE.Scene();
 
@@ -53,12 +51,7 @@ btnLevel1.addEventListener('click', ()=>{
     renderer1.setSize(window.innerWidth, window.innerHeight);
     renderer1.render(scene1, camera);
 
-    //TEMPORARY - replaces other scene with level
-    document.body.innerHTML = '';
     document.body.appendChild(renderer1.domElement);
-});
-
-
 
 function Wall(x, y, z) {
     const wall = new THREE.Mesh(
