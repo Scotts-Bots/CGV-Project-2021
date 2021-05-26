@@ -57,7 +57,7 @@
     document.body.appendChild(renderer.domElement);
 
     //generic floor mesh
-    function Wall() {
+    function Floor() {
         const floor = new THREE.Mesh(
             new THREE.BoxBufferGeometry(200, 100, 200),
             new THREE.MeshLambertMaterial({ color: 0x808080 })
@@ -109,17 +109,17 @@
         const roomPart = new THREE.Group();
         //FLOORS
             //main floor 1 - f1
-            const f1 = Wall()
+            const f1 = Floor()
             f1.scale.set(4,1,8);
             roomPart.add(f1);
 
             //floors 2 and 3
-            const f2 = Wall();
+            const f2 = Floor();
             f2.scale.set(2,1,2);
             f2.position.set(600,0,600);
             roomPart.add(f2);
 
-            const f3 = Wall();
+            const f3 = Floor();
             f3.scale.set(2,1,2);
             f3.position.set(600,0,-600);
             roomPart.add(f3);
@@ -175,12 +175,12 @@
 
         //FLOORS
             //floors 4 and 5
-            const f4 = Wall();
+            const f4 = Floor();
             f4.scale.set(4,1,5);
             f4.position.set(-800,0,300);
             room.add(f4);
 
-            const f5 = Wall();
+            const f5 = Floor();
             f5.scale.set(4,1,3);
             f5.position.set(-800,0,-500);
             room.add(f5);
