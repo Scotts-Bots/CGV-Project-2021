@@ -21,11 +21,11 @@
     //     cameraWidth / 2, // Right
     //     cameraHeight / 2, //top
     //     cameraHeight / -2, // bottom
-    //     -800, //near
-    //     5000 // far
+    //     -3000, //near
+    //     10000 // far
     // );
 
-    // camera.position.set(0, -200, 300);
+    // camera.position.set(200, -200, 200);
     // camera.up.set(0, 0, 1);
     // //camera.position.set(0,0,300);
     // camera.lookAt(0, 0, 0);
@@ -43,7 +43,7 @@
     // */
 
     // const room = Room();
-    // room.scale.set(2,2.5,1);
+    // room.scale.set(1,1,1);
     // scene1.add(room);
 
     // // setting up renderer
@@ -61,6 +61,14 @@ function Floor(x, y, z) {
     return wall;
 }
 
+function Window(x, y, z) {
+    const wall = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(x, y, z),
+        new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.8})
+    );
+    return wall;
+}
+
 function Room() {
 
     // D - DOOR     | - WALL
@@ -68,17 +76,17 @@ function Room() {
     // ||||||||||||||||||||||||||||||||||||D D D|||||||||||||||||||||||||
     // |                            |                 |                 |   
     // |                            |[b7]             |[b11]            |
-    // |[b3]                        |                 |                 |
+    // |[b3]                        |                 |                 |[b6]
     // |                            D                 D                 |
     // |                            D[b78]            D[b1112]          |
     // |                            D                 D                 |
     // |            [b4]            |[b8]             |                 | 
-    // ||||||||||||||||||||||||||||||                 |                 |[b6]
+    // ||||||||||||||||||||||||||||||                 |                 |[b613][b14][window]
     // |                            |[b9]             |                 | 
     // |                            D                 |                 |
     // |                            D[b910]           |[b_12]           |
     // |                            D                 |                 |
-    // |[b3]                        |                 |                 |
+    // |[b3]                        |                 |                 |[b13]
     // |                            |[b10]            |                 |
     // |                            |                 |                 |
     // ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  
@@ -93,7 +101,7 @@ function Room() {
     const fl = Floor(775, 1100, 10);
     const b4 = Floor(500, 25, 300);
     const b5 = Floor(1100, 25, 300);
-    const b6 = Floor(750, 25, 300);
+    const b6 = Floor(225, 25, 300);
     const b7 = Floor(240, 25, 300);
     const b78 = Floor(100, 25, 100);
     const b8 = Floor(30, 25, 300);
@@ -103,6 +111,10 @@ function Room() {
     const b11 = Floor(240, 25, 300);
     const b1112 = Floor(100, 25, 100);
     const b_12 = Floor(410, 25, 300);
+    const b613 = Floor(400, 25, 70);
+    const b13 = Floor(225, 25, 300);
+    const b14 = Floor(400, 25, 70);
+    const window = Window(400,23,160);
 
     b1.translateX(10);
     b3.rotateZ(Math.PI / 2);
@@ -120,7 +132,10 @@ function Room() {
     b5.translateX(290);
     b6.rotateZ(Math.PI / 2);
     b6.translateY(-825);
-    b6.translateX(-364);
+    b6.translateX(-100);
+    b13.rotateZ(Math.PI / 2);
+    b13.translateY(-825);
+    b13.translateX(-650);
     b7.rotateZ(Math.PI / 2);
     b7.translateY(-237);
     b7.translateX(-130);
@@ -151,6 +166,17 @@ function Room() {
     b_12.rotateZ(Math.PI / 2);
     b_12.translateY(-430);
     b_12.translateX(-550);
+    b613.rotateZ(Math.PI / 2);
+    b613.translateY(-825);
+    b613.translateX(-400);
+    b613.translateZ(115);
+    b14.rotateZ(Math.PI / 2);
+    b14.translateY(-825);
+    b14.translateX(-400);
+    b14.translateZ(-115);
+    window.rotateZ(Math.PI / 2);
+    window.translateY(-825);
+    window.translateX(-400);
 
     room.add(b3);
     room.add(b1);
@@ -169,6 +195,10 @@ function Room() {
     room.add(b11);
     room.add(b1112);
     room.add(b_12);
+    room.add(b13);
+    room.add(b613);
+    room.add(b14);
+    room.add(window);
 
     return room;
 
