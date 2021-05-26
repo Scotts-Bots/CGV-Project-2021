@@ -53,10 +53,10 @@
 
     // document.body.appendChild(renderer1.domElement);
 
-function Wall(x, y, z) {
+function Floor(x, y, z) {
     const wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
-        new THREE.MeshLambertMaterial({ color: 0xffffff })
+        new THREE.MeshLambertMaterial({ color: 0x808080 })
     );
     return wall;
 }
@@ -86,23 +86,23 @@ function Room() {
 
     const room = new THREE.Group();
 
-    const b1 = Wall(553, 25, 300);
-    const b12 = Wall(100, 25, 100);
-    const b2 = Wall(450, 25, 300);
-    const b3 = Wall(750, 25, 300);
-    const fl = Wall(775, 1100, 10);
-    const b4 = Wall(500, 25, 300);
-    const b5 = Wall(1100, 25, 300);
-    const b6 = Wall(750, 25, 300);
-    const b7 = Wall(240, 25, 300);
-    const b78 = Wall(100, 25, 100);
-    const b8 = Wall(30, 25, 300);
-    const b9 = Wall(30, 25, 300);
-    const b910 = Wall(100, 25, 100);
-    const b10 = Wall(240, 25, 300);
-    const b11 = Wall(240, 25, 300);
-    const b1112 = Wall(100, 25, 100);
-    const b_12 = Wall(410, 25, 300);
+    const b1 = Floor(553, 25, 300);
+    const b12 = Floor(100, 25, 100);
+    const b2 = Floor(450, 25, 300);
+    const b3 = Floor(750, 25, 300);
+    const fl = Floor(775, 1100, 10);
+    const b4 = Floor(500, 25, 300);
+    const b5 = Floor(1100, 25, 300);
+    const b6 = Floor(750, 25, 300);
+    const b7 = Floor(240, 25, 300);
+    const b78 = Floor(100, 25, 100);
+    const b8 = Floor(30, 25, 300);
+    const b9 = Floor(30, 25, 300);
+    const b910 = Floor(100, 25, 100);
+    const b10 = Floor(240, 25, 300);
+    const b11 = Floor(240, 25, 300);
+    const b1112 = Floor(100, 25, 100);
+    const b_12 = Floor(410, 25, 300);
 
     b1.translateX(10);
     b3.rotateZ(Math.PI / 2);
