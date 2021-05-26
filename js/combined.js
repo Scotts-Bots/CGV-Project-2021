@@ -63,14 +63,14 @@ function Wall(x, y, z) {
     return wall;
 }
 
-function sky(){
+/*function sky(){
     const materialArray = [];
-    const texture_ft = new THREE.TextureLoader().load('js/marslike01ft2.jpg');
-    const texture_bk = new THREE.TextureLoader().load('js/marslike01bk2.jpg');
-    const texture_up = new THREE.TextureLoader().load('js/marslike01up.jpg');
-    const texture_dn = new THREE.TextureLoader().load('js/marslike01dn1.jpg');
-    const texture_rt = new THREE.TextureLoader().load('js/marslike01rt1.jpg');
-    const texture_lt = new THREE.TextureLoader().load('js/marslike01lf1.jpg');
+    const texture_ft = new THREE.TextureLoader().load('Images/marslike01ft2.jpg');
+    const texture_bk = new THREE.TextureLoader().load('Images/marslike01bk2.jpg');
+    const texture_up = new THREE.TextureLoader().load('Images/marslike01up.jpg');
+    const texture_dn = new THREE.TextureLoader().load('Images/marslike01dn1.jpg');
+    const texture_rt = new THREE.TextureLoader().load('Images/marslike01rt1.jpg');
+    const texture_lt = new THREE.TextureLoader().load('Images/marslike01lf1.jpg');
 
     materialArray.push(new THREE.MeshBasicMaterial({map : texture_ft}));
     materialArray.push(new THREE.MeshBasicMaterial({map : texture_bk}));
@@ -201,7 +201,7 @@ function Room() {
 
     return room;
 
-}
+}*/
 
 function drawScene(){
     renderer.render(scene, cam);
