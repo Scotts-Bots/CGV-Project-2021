@@ -1,64 +1,93 @@
+const scene = new THREE.Scene();
+var cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 100000);
+var renderer = new THREE.WebGLRenderer({antialias: true});
 
-    //creating a scene
-    const scene1 = new THREE.Scene();
+scene.background = new THREE.Color(0xfafafa);
+renderer.setSize(innerWidth, innerHeight);
+cam.position.set(1000,50,200);
+cam.lookAt(1300,0,2000)
+document.body.appendChild(renderer.domElement);
+var directionalLight = new THREE.DirectionalLight(0xFFFFFF, 100);
+directionalLight.position.set(0, 1, 0);
+directionalLight.castShadow = true;
+scene.add(directionalLight);
+var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
 
-    // adding ambient light
-    const ambientLight1 = new THREE.AmbientLight(0xffffff, 0.6);
-    scene1.add(ambientLight1);
+const room = Room();
+room.scale.set(2,2.5,1.8);
+room.rotateX(3*Math.PI/2);
+scene.add(room);
 
-    //adding directional light @ position 100,-300, 400
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-    dirLight.position.set(100, -300, 400);
-    scene1.add(dirLight);
 
-    //adding orthographic camera
-    const aspectRatio = window.innerWidth / window.innerHeight;
-    const cameraWidth = 3500;
-    const cameraHeight = cameraWidth / aspectRatio;
+const box = sky();
+box.translateY(14700);
+scene.add(box);
 
-    const camera = new THREE.OrthographicCamera(
-        cameraWidth / -2, //Left
-        cameraWidth / 2, // Right
-        cameraHeight / 2, //top
-        cameraHeight / -2, // bottom
-        -800, //near
-        5000 // far
-    );
+let controls = new THREE.PointerLockControls(cam, renderer.domElement);
+let clock = new THREE.Clock();
 
-    camera.position.set(0, -200, 300);
-    camera.up.set(0, 0, 1);
-    //camera.position.set(0,0,300);
-    camera.lookAt(0, 0, 0);
+let btn1 = document.querySelector("#button1");
+btn1.addEventListener('click', ()=>{
+    controls.lock();
+});
 
-    /*Perspective camera code
-        const aspectRatio = window.innerwidthh / width/innerheight;
-
-        const camera = new THREE.PerspectiveCamera(
-            20, vertical field of view
-            aspectRatio, aspect ratio
-            60, // near plane
-            100 // far plane
-        )
-
-    */
-
-    const room = Room();
-    room.scale.set(2,2.5,1);
-    scene1.add(room);
-
-    // setting up renderer
-    const renderer1 = new THREE.WebGL1Renderer({ antialias: true });
-    renderer1.setSize(window.innerWidth, window.innerHeight);
-    renderer1.render(scene1, camera);
-
-    document.body.appendChild(renderer1.domElement);
+let keyboard = [];
+addEventListener('keydown', (e)=>{
+    keyboard[e.key] = true;
+});
+addEventListener('keyup', (e)=>{
+    keyboard[e.key] = false;
+});
+function processKeyboard(){
+    var speed = 10;
+    if (keyboard['w']){
+        controls.moveForward(speed);
+    }
+    else if(keyboard['a']){
+        controls.moveRight(-speed);
+    }
+    else if(keyboard['s']){
+        controls.moveForward(-speed);
+    }
+    else if(keyboard['d']){
+        controls.moveRight(speed);
+    }
+}
 
 function Wall(x, y, z) {
     const wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
-        new THREE.MeshLambertMaterial({ color: 0x808080 })
+        new THREE.MeshLambertMaterial({ color: 0xffffff })
     );
     return wall;
+}
+
+function sky(){
+    const materialArray = [];
+    const texture_ft = new THREE.TextureLoader().load('js/marslike01ft2.jpg');
+    const texture_bk = new THREE.TextureLoader().load('js/marslike01bk2.jpg');
+    const texture_up = new THREE.TextureLoader().load('js/marslike01up.jpg');
+    const texture_dn = new THREE.TextureLoader().load('js/marslike01dn1.jpg');
+    const texture_rt = new THREE.TextureLoader().load('js/marslike01rt1.jpg');
+    const texture_lt = new THREE.TextureLoader().load('js/marslike01lf1.jpg');
+
+    materialArray.push(new THREE.MeshBasicMaterial({map : texture_ft}));
+    materialArray.push(new THREE.MeshBasicMaterial({map : texture_bk}));
+    materialArray.push(new THREE.MeshBasicMaterial({map : texture_up}));
+    materialArray.push(new THREE.MeshBasicMaterial({map : texture_dn}));
+    materialArray.push(new THREE.MeshBasicMaterial({map : texture_rt}));
+    materialArray.push(new THREE.MeshBasicMaterial({map : texture_lt}));
+
+    for (let i = 0; i < 6; i++){
+        materialArray[i].side = THREE.BackSide;
+    }
+           
+
+    const skyBoxGeo = new THREE.BoxGeometry(100000,30000,100000);
+    const skyBox = new THREE.Mesh(skyBoxGeo,materialArray);
+
+    return skyBox
 }
 
 function Room() {
@@ -173,3 +202,11 @@ function Room() {
     return room;
 
 }
+
+function drawScene(){
+    renderer.render(scene, cam);
+    processKeyboard();
+    requestAnimationFrame(drawScene);
+}
+
+drawScene();
