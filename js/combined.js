@@ -2,26 +2,30 @@ const scene = new THREE.Scene();
 var cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 100000);
 var renderer = new THREE.WebGLRenderer({antialias: true});
 
-scene.background = new THREE.Color(0xfafafa);
 renderer.setSize(innerWidth, innerHeight);
 cam.position.set(1000,50,200);
-cam.lookAt(1300,0,2000)
+cam.lookAt(1800,0,2000)
 document.body.appendChild(renderer.domElement);
-var directionalLight = new THREE.DirectionalLight(0xFFFFFF, 100);
-directionalLight.position.set(0, 1, 0);
+
+var directionalLight = new THREE.DirectionalLight(0xffdead, 1);
+directionalLight.position.set(50000, 50000, 50000);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
+const light = new THREE.PointLight( 0xffffff, 3, 1500 ,2 ); 
+light.position.set( 1000 , 50 , 1000 ); 
+scene.add( light );
+
 const room = Room();
-room.scale.set(2,2.5,1.8);
+room.scale.set(4,4,2.5);
 room.rotateX(3*Math.PI/2);
 scene.add(room);
 
 
 const box = sky();
-box.translateY(14700);
+box.translateY(14600);
 scene.add(box);
 
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);

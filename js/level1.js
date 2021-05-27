@@ -115,6 +115,7 @@ function Room() {
     const b13 = Floor(225, 25, 300);
     const b14 = Floor(400, 25, 70);
     const window = Window(400,23,160);
+    const roof = Floor(775, 1100, 10);
 
     b1.translateX(10);
     b3.rotateZ(Math.PI / 2);
@@ -177,6 +178,10 @@ function Room() {
     window.rotateZ(Math.PI / 2);
     window.translateY(-825);
     window.translateX(-400);
+    roof.translateZ(155);
+    roof.rotateZ(Math.PI / 2);
+    roof.translateX(-375);
+    roof.translateY(-280);
 
     room.add(b3);
     room.add(b1);
@@ -199,6 +204,7 @@ function Room() {
     room.add(b613);
     room.add(b14);
     room.add(window);
+    room.add(roof);
 
     return room;
 
