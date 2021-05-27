@@ -71,7 +71,7 @@ function setCamera(isPlay) {
         );
 
         camera.position.set(0,0,600);
-        camera.lookAt(-300,100,-600);
+        camera.lookAt(-1300,100,-600);
     } else {
         //setting up orthographic camera
             camera = new THREE.OrthographicCamera(
@@ -132,6 +132,15 @@ function Wall() {
     return wall;
 }
 
+//transparent box
+function Window(x, y, z) {
+    const wall = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(x, y, z),
+        new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.5})
+    );
+    return wall;
+}
+
 //wall with a single window
 function WindowedWall() {
     windowedWall = new THREE.Group();
@@ -158,6 +167,10 @@ function WindowedWall() {
     bottomWall.rotateZ(Math.PI/2);
     bottomWall.position.set(0,-200 + wallHeight,0);
     windowedWall.add(bottomWall);
+
+    const window = Window(550,300,50);
+    window.position.set(-25,150,0);
+    windowedWall.add(window);
 
     return windowedWall;
 }
@@ -374,31 +387,26 @@ function Room() {
         u20.position.set(350,1000,-2500);
         room.add(u20);
 
-        //CEILING
-            //c - ceiling, number from the floor copied
-            const c4 = Floor();
-            c4.scale.set(6,1,8);
-            c4.position.set(-1100,600,0);
-            room.add(c4);
+    //CEILING
+        //c - ceiling, number from the floor copied
+        const c4 = Floor();
+        c4.scale.set(6,1,8);
+        c4.position.set(-1100,600,0);
+        room.add(c4);
 
-            //floors from repeated room units used as ceilings here
-            const repeatedFloors1 = RoomPartFloors();
-            repeatedFloors1.position.set(0,1400,0);
-            room.add(repeatedFloors1);
+        //floors from repeated room units used as ceilings here
+        const repeatedFloors1 = RoomPartFloors();
+        repeatedFloors1.position.set(0,1400,0);
+        room.add(repeatedFloors1);
 
-            const repeatedFloors2 = RoomPartFloors();
-            repeatedFloors2.position.set(320,1400,-1650);
-            repeatedFloors2.rotateY(Math.PI);
-            room.add(repeatedFloors2);
+        const repeatedFloors2 = RoomPartFloors();
+        repeatedFloors2.position.set(320,1400,-1650);
+        repeatedFloors2.rotateY(Math.PI);
+        room.add(repeatedFloors2);
 
-            const repeatedFloors3 = RoomPartFloors();
-            repeatedFloors3.position.set(400,1400,-1650);
-            room.add(repeatedFloors3);
-
-
-
-
-
+        const repeatedFloors3 = RoomPartFloors();
+        repeatedFloors3.position.set(400,1400,-1650);
+        room.add(repeatedFloors3);
 
     return room;
 }
