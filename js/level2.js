@@ -3,19 +3,6 @@
 //creating a scene
 const scene = new THREE.Scene();
 
-//adding ambient light
-const ambientLight1 = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambientLight1);
-
-//adding directional light @ position 100,-300, 400
-const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-dirLight.position.set(100, 300, -300);
-scene.add(dirLight);
-
-const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
-dirLight2.position.set(-500, 400, 100);
-scene.add(dirLight2);
-
 //////////////////////View settings - pick which camera////////////////////////////
 var play = true; //MANUAL CHOICE!
 
@@ -27,8 +14,10 @@ setCamera(play);
 
 ///////////////////////////////////////////////////////////////////////////////////
 
+//actual level
 const room = Room();
 room.scale.set(1.3,1,1.5);
+//room.scale.setScalar(1.5);
 room.position.set(0,-300,0);
 scene.add(room);
 
@@ -40,6 +29,37 @@ scene.add(box);
 //setting up renderer
 const renderer = new THREE.WebGL1Renderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+//LIGHTING
+    //adding ambient light
+    const ambientLight1 = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight1);
+
+    //adding directional light
+    // const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    // dirLight.position.set(100, 300, -300);
+    // scene.add(dirLight);
+
+    // const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
+    // dirLight2.position.set(-500, 400, 100);
+    // scene.add(dirLight2);
+
+    //Create a PointLight and turn on shadows for the light
+    var x = 100, y = 700, z = -2200;
+    const light = new THREE.PointLight( 0xff00ff, 1, 3000, 1);
+    light.position.set(x,y-200,z-100);
+    light.castShadow = true; // default false
+    scene.add(light);
+
+    const finder = new THREE.Mesh(
+    new THREE.SphereBufferGeometry(50),
+    new THREE.MeshLambertMaterial({color: 0x666666})
+    );
+    finder.position.set(x,y,z);
+    finder.castShadow = true;
+    scene.add(finder);
 
 document.body.appendChild(renderer.domElement);
 
@@ -70,8 +90,8 @@ function setCamera(isPlay) {
             100000 //far plane
         );
 
-        camera.position.set(0,0,600);
-        camera.lookAt(-1300,100,-600);
+        camera.position.set(0,0,300);
+        camera.lookAt(0,0,-600);
     } else {
         //setting up orthographic camera
             camera = new THREE.OrthographicCamera(
@@ -83,7 +103,7 @@ function setCamera(isPlay) {
             10000 //far
         );
 
-        camera.position.set(100, 600, -2000);
+        camera.position.set(-800, 600, -1000);
         camera.up.set(0, 1, 0);
         camera.lookAt(0, 300, -800);
     }
@@ -118,8 +138,9 @@ drawScene();
 function Floor() {
     const floor = new THREE.Mesh(
         new THREE.BoxBufferGeometry(200, 100, 200),
-        new THREE.MeshLambertMaterial({ color: 0x808080 })
+        new THREE.MeshLambertMaterial({ color: 0x888888 })
     );
+    floor.receiveShadow = true;
     return floor;
 }
 
@@ -127,8 +148,11 @@ function Floor() {
 function Wall() {
     const wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(100, 800, 50),
-        new THREE.MeshLambertMaterial({ color: 0xc99f63 })
+        new THREE.MeshLambertMaterial({
+             color: 0xc99f63,
+             })
     );
+    wall.receiveShadow = true;
     return wall;
 }
 
@@ -168,92 +192,44 @@ function WindowedWall() {
     bottomWall.position.set(0,-200 + wallHeight,0);
     windowedWall.add(bottomWall);
 
-    const window = Window(550,300,50);
-    window.position.set(-25,150,0);
-    windowedWall.add(window);
-
+    windowedWall.receiveShadow = true;
     return windowedWall;
 }
 
 //Room unit that gets repeated multiple times
-function RoomPartFloors() {
-    const roomPartFloors = new THREE.Group();
-
-    //main floor 1 - f1
-    const f1 = Floor()
-    f1.scale.set(5,1,9);
-    roomPartFloors.add(f1);
-
-    //floors 2 and 3
-    const f2 = Floor();
-    f2.scale.set(3,1,3);
-    f2.position.set(600,0,600);
-    roomPartFloors.add(f2);
-
-    const f3 = Floor();
-    f3.scale.set(3,1,3);
-    f3.position.set(600,0,-600);
-    roomPartFloors.add(f3);
-
-    return roomPartFloors;
-}
-
-function RoomPartWalls() {
-    const roomPartWalls = new THREE.Group();
+function RoomPart() {
+    const roomPart = new THREE.Group();
 
     //walls 2 - 6
     const w2 = Wall();
-    w2.scale.set(5,1,1);
+    w2.scale.set(5,3,1);
     w2.rotateY(Math.PI/2);
     w2.position.set(820,200,600);
-    roomPartWalls.add(w2);
+    roomPart.add(w2);
 
     const w6 = Wall();
-    w6.scale.set(5,1,1);
+    w6.scale.set(5,3,1);
     w6.rotateY(Math.PI/2);
     w6.position.set(820,200,-600);
-    roomPartWalls.add(w6);
+    roomPart.add(w6);
 
     const w5 = Wall();
-    w5.scale.set(5,1,1);
+    w5.scale.set(5,3,1);
     w5.position.set(725,200,-325);
-    roomPartWalls.add(w5);
+    roomPart.add(w5);
 
     const w3 = Wall();
-    w3.scale.set(5,1,1);
+    w3.scale.set(5,3,1);
     w3.position.set(725,200,325);
-    roomPartWalls.add(w3);
+    roomPart.add(w3);
 
     const w4 = Wall();
-    w4.scale.set(7,1,1);
+    w4.scale.set(7,3,1);
     w4.rotateY(Math.PI/2);
     w4.position.set(500,200,0);
-    roomPartWalls.add(w4);
-
-    return roomPartWalls;
-}
-
-function RoomPart() {
-    //Floors and walls are separated so that walls can be stacked later on
-    const roomPart = new THREE.Group();
-    const floorPart = RoomPartFloors();
-    const wallPart = RoomPartWalls();
-
-    roomPart.add(floorPart);
-    roomPart.add(wallPart);
+    roomPart.add(w4);
 
     return roomPart;
-}
-
-//Upper walls
-function UpperWalls() {
-    const upperWalls = new THREE.Group();
-
-    const repeatedPart = RoomPartWalls();
-    repeatedPart.position.set(0,800,0);
-    upperWalls.add(repeatedPart);
-
-    return upperWalls;
 }
 
 //Entire room of level
@@ -273,28 +249,27 @@ function Room() {
         roomPart3.position.set(400,0,-1650);
         room.add(roomPart3);
 
-    //FLOORS
-        //floors 4
-        const f4 = Floor();
-        f4.scale.set(6,1,8);
-        f4.position.set(-1100,0,0);
-        room.add(f4);
+    //FLOOR
+        const f = Floor();
+        f.scale.set(15,1,18);
+        f.position.set(-200,0,-800);
+        room.add(f);
     
     //WALLS
         //walls 1,7
         const w1 = Wall();
-        w1.scale.set(25,1,1);
+        w1.scale.set(25,3,1);
         w1.position.set(-450,200,825);
         room.add(w1);
 
         const w7 = Wall();
         w7.scale.set(12,1,1);
-        w7.position.set(-1100,200,-825);
+        w7.position.set(-1125,200,-825);
         room.add(w7);
 
         //walls 10,13,15,3r
         const w10 = Wall();
-        w10.scale.set(10,1,1);
+        w10.scale.set(9,1,1);
         w10.rotateY(Math.PI/2);
         w10.position.set(-1700,200,350);
         room.add(w10);
@@ -312,7 +287,7 @@ function Room() {
         room.add(w15);
 
         const w3r = Wall();
-        w3r.scale.set(4,1,1);
+        w3r.scale.set(4,3,1);
         w3r.position.set(1035,200,-825);
         room.add(w3r);
 
@@ -337,34 +312,11 @@ function Room() {
 
         //end of level wall
         const w20 = Wall();
-        w20.scale.set(6,1,1);
-        w20.position.set(-225,200,-2500);
+        w20.scale.set(18,3,1);
+        w20.position.set(400,200,-2510);
         room.add(w20);
 
-        const w21 = Wall();
-        w21.scale.set(6,1,1);
-        w21.position.set(945,200,-2500);
-        room.add(w21);
-
-        const w21r = Wall();
-        w21r.scale.set(2,0.8,1);
-        w21r.rotateZ(Math.PI/2);
-        w21r.position.set(350,500,-2500);
-        room.add(w21r);
-
     //UPPER WALLS
-        const repeatedWalls1 = UpperWalls();
-        room.add(repeatedWalls1);
-
-        const repeatedWalls2 = UpperWalls();
-        repeatedWalls2.position.set(400,0,-1650);
-        room.add(repeatedWalls2);
-
-        const repeatedWalls3 = UpperWalls();
-        repeatedWalls3.rotateY(Math.PI);
-        repeatedWalls3.position.set(320,0,-1650);
-        room.add(repeatedWalls3);
-
         //u - upper wall, number is the wall it repeats
         const u13 = Wall();
         u13.scale.set(16,1,1);
@@ -372,41 +324,17 @@ function Room() {
         u13.position.set(-500,1000,0);
         room.add(u13);
 
-        const u1 = Wall();
-        u1.scale.set(14,1,1);
-        u1.position.set(175,1000,825);
-        room.add(u1);
-
-        const u3r = Wall();
-        u3r.scale.set(4,1,1);
-        u3r.position.set(1035,1000,-825);
-        room.add(u3r);
-
-        const u20 = Wall();
-        u20.scale.set(18,1,1);
-        u20.position.set(350,1000,-2500);
-        room.add(u20);
-
     //CEILING
-        //c - ceiling, number from the floor copied
-        const c4 = Floor();
-        c4.scale.set(6,1,8);
-        c4.position.set(-1100,600,0);
-        room.add(c4);
+        //c - ceiling
+        const c1 = Floor();
+        c1.scale.set(6,1,8);
+        c1.position.set(-1100,600,0);
+        room.add(c1);
 
-        //floors from repeated room units used as ceilings here
-        const repeatedFloors1 = RoomPartFloors();
-        repeatedFloors1.position.set(0,1400,0);
-        room.add(repeatedFloors1);
-
-        const repeatedFloors2 = RoomPartFloors();
-        repeatedFloors2.position.set(320,1400,-1650);
-        repeatedFloors2.rotateY(Math.PI);
-        room.add(repeatedFloors2);
-
-        const repeatedFloors3 = RoomPartFloors();
-        repeatedFloors3.position.set(400,1400,-1650);
-        room.add(repeatedFloors3);
-
+        const c2 = Floor();
+        c2.scale.set(10,1,18);
+        c2.position.set(300,1300,-800);
+        room.add(c2);
+        
     return room;
 }
