@@ -24,9 +24,15 @@ scene.add(grid);
 // scene.add(cube);
 
 new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf' , result => {
-    model = result.scene;
+    model = result.scene;//result.scene.children[0]
     scene.add(model);
     drawScene();
+    /*model.traaverse(n=> {
+        if(n.isMesh){
+            n.castShadow = true;
+            n.recieve = true;
+        }
+    }*/ 
 });
 
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);

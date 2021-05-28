@@ -209,9 +209,10 @@ function Room() {
     level2.add(_b14);
     level2.add(_window);
     level2.add(_roof);
-
-    level2.translateY(1513);
-    level2.translateX(600);
+    level2.rotateZ(Math.PI);
+    level2.translateY(13);
+    level2.translateX(-200);
+    
 
     room.add(level2);
 

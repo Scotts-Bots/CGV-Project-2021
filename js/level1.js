@@ -1,4 +1,7 @@
 const scene = new THREE.Scene();
+intensity = 1;
+len = 10
+
 var cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 100000);
 var renderer = new THREE.WebGL1Renderer({antialias: true});
 renderer.shadowMap.enabled = true;
@@ -9,7 +12,7 @@ renderer.setSize(innerWidth, innerHeight);
 cam.position.set(2100,50,200);
 cam.lookAt(2900,0,2000);
 //cam.lookAt(-2000,0,15000)
-document.body.appendChild(renderer.domElement);
+
 
 var directionalLight = new THREE.PointLight(0xffdead, 0.5);
 directionalLight.position.set(47500, 8000, 20000);
@@ -26,7 +29,7 @@ finder.position.set(0,375,2000);
 //scene.add(finder);
 
 //back right room
-const light9 = new THREE.PointLight( 0xffffff, 1, 2100 ,2 ); 
+const light9 = new THREE.PointLight( 0xffffff, intensity, 2200 ,2 ); 
 light9.position.set( -100,375,2100 ); 
 light9.castShadow = true;
 scene.add( light9 );
@@ -37,7 +40,7 @@ scene.add( light9 );
 
 
 //front right room
-const light7 = new THREE.PointLight( 0xffffff, 1, 2100 ,2 ); 
+const light7 = new THREE.PointLight( 0xffffff, intensity, 2500 ,2 ); 
 light7.position.set( -100,375,900 ); 
 light7.castShadow = true;
 scene.add( light7 );
@@ -51,7 +54,7 @@ scene.add( light7 );
 // light4.position.set( 1300,375,1650 ); 
 //light4.castShadow = true;
 //scene.add( light4 );
-const light5 = new THREE.PointLight( 0xffffff, 0.5, 1400 ,2 ); 
+const light5 = new THREE.PointLight( 0xffffff, intensity, 800 ,2 ); 
 light5.position.set( 1300,375,1500 ); 
 light5.castShadow = true;
 scene.add( light5 );
@@ -71,9 +74,10 @@ scene.add( light3 );
 // light.position.set( 2500,375,1650 ); 
 //light.castShadow = true;
 //scene.add( light );
-const light1 = new THREE.PointLight( 0xffffff, 1, 6000 ,2 ); 
+const light1 = new THREE.PointLight( 0xffffff, intensity, 6000 ,2 ); 
 light1.position.set( 2500,375,1500 ); 
 light1.castShadow = true;
+light1.shadow.bias = -0.0001;
 scene.add( light1 );
 // const light2 = new THREE.PointLight( 0xffffff, 1, 3000 ,2 ); 
 // light2.position.set( 2500,375,1350 ); 
@@ -90,6 +94,8 @@ scene.add(room);
 const box = sky();
 box.translateY(14600);
 scene.add(box);
+
+document.body.appendChild(renderer.domElement);
 
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);
 let clock = new THREE.Clock();
@@ -123,6 +129,28 @@ function processKeyboard(){
 }
 
 function drawScene(){
+    if (len == 0){
+        len = Math.floor(Math.random() * 10);
+        ran = Math.floor(Math.random() * 10);
+        if (ran == 2){
+            intensity = 0.3;
+            light1.intensity = intensity;
+            light5.intensity = intensity;
+            light7.intensity = intensity;
+            light9.intensity = intensity;
+        }else{
+            intensity = 1;
+            light1.intensity = intensity;
+            light5.intensity = intensity;
+            light7.intensity = intensity;
+            light9.intensity = intensity;
+        }
+    }else{
+        len = len-1;
+    }
+    
+    
+    
     renderer.render(scene, cam);
     processKeyboard();
     requestAnimationFrame(drawScene);
