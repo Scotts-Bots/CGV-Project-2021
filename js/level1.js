@@ -131,7 +131,7 @@ function processKeyboard(){
 function drawScene(){
     if (len == 0){
         len = Math.floor(Math.random() * 10);
-        ran = Math.floor(Math.random() * 10);
+        ran = Math.floor(Math.random() * 6);
         if (ran == 2){
             intensity = 0.3;
             light1.intensity = intensity;
