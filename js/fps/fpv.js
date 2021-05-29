@@ -11,7 +11,6 @@ document.body.appendChild(renderer.domElement);
 var directionalLight = new THREE.PointLight();
 directionalLight.position.set(3, 3, 3);
 directionalLight.castShadow = true;
-directionalLight.shadow.radius = 8;
 scene.add(directionalLight);
 // var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 // scene.add(ambientLight);
@@ -34,28 +33,32 @@ let bMat = new THREE.MeshStandardMaterial({color: 0x00ff00, wireframe: false});
 let cube = new THREE.Mesh(bGeo, bMat);
 cube.castShadow = true;
 cube.receiveShadow = true;
-//scene.add(cube);
+scene.add(cube);
 scene.updateMatrixWorld(true);
 var position = new THREE.Vector3();
 
 position.setFromMatrixPosition(cube.matrixWorld);
-//alert(position.x + ", " + position.y + ", " + position.z);
+//alert(Math.pow(2, 2));
 
-new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf' , result =>  {
-    model = result.scene;//result.scene.children[0]
-    let stand = new THREE.Mesh(result.scene);
-    stand.traverse(function (node) {
-        if (node instanceof THREE.Mesh){
+var gun;
+new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+    gun = gltf.scene;
+    gun.traverse(function (node){
+        if (node.isMesh){
             node.castShadow = true;
         }
     });
-    model.traverse(function (node){
-        if (node instanceof THREE.Mesh){
-            node.castShadow = true;
-            node.receiveShadow = true;
-        }
-    });
-    scene.add(model);
+    //scene.add(gun);
+    // model = result.scene;//result.scene.children[0]
+    
+    // model.traverse(function (node){
+    //     if (node instanceof THREE.Mesh){
+    //         node.castShadow = true;
+    //         //node.receiveShadow = true;
+    //     }
+    // });
+    // scene.add(model);
+
     //drawScene();
     /*model.traaverse(n=> {
         if(n.isMesh){
@@ -72,6 +75,32 @@ let btn1 = document.querySelector("#button1");
 btn1.addEventListener('click', ()=>{
     controls.lock();
 });
+
+function inRadius(r, a, b, c){
+    health = 100;
+    var text2 = document.createElement('div');
+    text2.style.position = 'absolute';
+    text2.style.width = 100;
+    text2.style.height = 100;
+    text2.style.backgroundColor = "blue";
+    text2.style.top = 200 + 'px';
+    text2.style.left = 200 + 'px';
+    document.body.appendChild(text2);
+    if (Math.pow(a - position.x, 2) + Math.pow(b - position.y, 2) + Math.pow(c - position.z, 2) <= Math.pow(r, 2)){
+        cube.material.color.setHex(0xff0000);
+        text2.innerText = "Danger";
+    }
+    else{
+        cube.material.color.setHex(0x00ff00);
+        text2.innerText = "Safety";
+        health = 100;
+    }
+}
+
+function rotateGun(x, z){
+    var ang =  Math.atan(z/x);
+    gun.rotation.y =  2* Math.PI/2;
+}
 
 let keyboard = [];
 addEventListener('keydown', (e)=>{
@@ -95,12 +124,13 @@ function processKeyboard(){
         controls.moveRight(speed);
     }
     
-    
 }
 
 function drawScene(){
     renderer.render(scene, cam);
     processKeyboard();
+    inRadius(10, cam.position.x, cam.position.y, cam.position.z);
+    //rotateGun(cam.position.x, cam.position.z);
     requestAnimationFrame(drawScene);
 }
 
