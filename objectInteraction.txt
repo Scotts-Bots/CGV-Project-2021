@@ -4,3 +4,36 @@ domEvent1.addEventListener(<meshName>, 'dblclick', event =>{
     scene.remove(<meshName>);
     //function call like decAmmo();
 });
+
+
+function checkPopUps(){
+    camposition = new THREE.Vector3();
+    camposition.setFromMatrixPosition( cam.matrixWorld );
+    x = camposition.x;
+    y = camposition.z;
+    //finder object
+    finderposition = new THREE.Vector3();
+    finderposition.setFromMatrixPosition( finder.matrixWorld );
+    fx = finderposition.x;
+    fy = finderposition.z;
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <1200){
+        finderPopup.visible = true;
+    }else{
+        finderPopup.visible = false;
+    }
+}
+
+drawscene(
+    checkPopUps();
+    finderPopup.rotation.y +=0.02;
+    
+    frame +=1;
+)
+
+
+const geometry = new THREE.ConeGeometry( 50, 50, 4 );
+const material = new THREE.MeshBasicMaterial( {color: 0x00ff99} );
+const finderPopup = new THREE.Mesh( geometry, material );
+finderPopup.position.set(2500,150,1500);
+finderPopup.rotateZ(Math.PI);
+scene.add( finderPopup );
