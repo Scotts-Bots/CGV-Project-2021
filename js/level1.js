@@ -1,6 +1,8 @@
 const scene = new THREE.Scene();
 intensity = 1;
-len = 10
+len = 10;
+
+var _euler = new THREE.Euler( 0, 0, 0, 'YXZ' );
 
 var cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 100000);
 var renderer = new THREE.WebGL1Renderer({antialias: true});
@@ -21,12 +23,6 @@ directionalLight.position.set(47500, 8000, 20000);
 var ambientLight = new THREE.AmbientLight(0xffffff, 0.05);//0.05
 scene.add(ambientLight);
 
-const finder = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(200,200,200),
-    new THREE.MeshLambertMaterial({color: 0xffffff})
-);
-finder.position.set(0,375,2000);
-//scene.add(finder);
 
 //back right room
 const light9 = new THREE.PointLight( 0xffffff, intensity, 2200 ,2 ); 
@@ -97,12 +93,27 @@ scene.add(box);
 
 document.body.appendChild(renderer.domElement);
 
+function onMouseMove( event ) {
+	const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+				const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+				_euler.setFromQuaternion( cam.quaternion );
+
+				_euler.y -= movementX * 0.02;
+				_euler.x -= movementY * 0.02;
+				_euler.x = Math.max(Math.PI / 2 - 3.141592653589793, Math.min(Math.PI / 2 - 0, _euler.x ) );
+				cam.quaternion.setFromEuler( _euler );
+
+}
+
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);
+
+
 let clock = new THREE.Clock();
 
 let btn1 = document.querySelector("#button1");
-btn1.addEventListener('click', ()=>{
-    controls.lock();
+btn1.addEventListener('clicAk', ()=>{
+    //WWWWWWWWWWWWWWWDSASDAScontrols.lock();
 });
 
 let keyboard = [];
@@ -113,7 +124,7 @@ addEventListener('keyup', (e)=>{
     keyboard[e.key] = false;
 });
 function processKeyboard(){
-    var speed = 15;
+    var speed = 15
     if (keyboard['w']){
         controls.moveForward(speed);
     }
@@ -148,13 +159,33 @@ function drawScene(){
     }else{
         len = len-1;
     }
+
+    //raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
+	// calculate objects intersecting the picking ray
+	//const intersects = raycaster.intersectObjects( finder, true );
+
+	// if (intersects.length > 0) {
+    //     alert("Mouse on Circle");
+    // }
+
+    // raycaster.setFromCamera( mouse, cam );
+
+	// // calculate objects intersecting the picking ray
+	// let intersects = raycaster.intersectObjects( scene.children );
+    // if (intersects.length > 0){
+    //     console.log(intersects);
+    // }
     
     
     
     renderer.render(scene, cam);
     processKeyboard();
+    //wscon.update;
     requestAnimationFrame(drawScene);
 }
+
+window.addEventListener( 'mousemove', onMouseMove, false );
 
 drawScene();
 

@@ -139,6 +139,7 @@
 
 			this.lock = function () {
 
+				console.log(scope);
 				this.domElement.requestPointerLock();
 
 			};
