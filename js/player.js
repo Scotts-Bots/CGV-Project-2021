@@ -4,6 +4,7 @@ class Player{
         this.name = name;
         this.health = 100;
         this.ammo = 0;
+        this.cards = 0;
     }
 
     getName() { 
@@ -15,8 +16,12 @@ class Player{
     }
 
     getAmmo() { 
-         return this.ammo
+         return this.ammo;
     }
+
+    getCards() { 
+        return this.cards;
+   }
 
     incAmmo(increase){
         this.ammo = this.ammo + increase;
@@ -31,7 +36,15 @@ class Player{
     }
 
     decHealth(){
-        this.ammo = this.ammo - 0.5;
+        this.health = this.health - 0.5;
+    }
+
+    incCards(increase){
+        this.cards = this.cards + increase;
+    }
+
+    decCards(){
+        this.cards = this.cards - 1;
     }
     
 }

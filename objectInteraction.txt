@@ -1,7 +1,7 @@
 const domEvent1 = new THREEx.DomEvents(cam,  renderer.domElement);
 
 domEvent1.addEventListener(<meshName>, 'dblclick', event =>{
-    scene.remove(<meshName>);
+    scene.remove(<meshName>);//must remove object
     //function call like decAmmo();
 });
 
