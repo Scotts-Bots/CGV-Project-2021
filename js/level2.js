@@ -34,7 +34,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 //LIGHTING
     //adding ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
     scene.add(ambientLight);
 
     //ight 1
@@ -66,7 +66,10 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
 //keyboard and mouse controls
+const speedDefault = 10;
+var speedW = 10, speedA = 10, speedS = 10, speedD = 10;
 let controls = new THREE.PointerLockControls(camera, renderer.domElement);
+var lastKeyPressed;
 let clock = new THREE.Clock();
 
 let btn1 = document.querySelector("#button1");
@@ -112,27 +115,33 @@ function setCamera(isPlay) {
 }
 
 function processKeyboard(){
-    var speed = 10;
     if (keyboard['w']){
-        controls.moveForward(speed);
+        controls.moveForward(speedW);
+        lastKeyPressed = 'w';
     }
     else if(keyboard['a']){
-        controls.moveRight(-speed);
+        controls.moveRight(-speedA);
+        lastKeyPressed = 'a';
     }
     else if(keyboard['s']){
-        controls.moveForward(-speed);
+        controls.moveForward(-speedS);
+        lastKeyPressed = 's';
     }
     else if(keyboard['d']){
-        controls.moveRight(speed);
+        controls.moveRight(speedD);
+        lastKeyPressed = 'd';
     }
 }
 
 function drawScene(){
     renderer.render(scene, camera);
+    checkCollision();
     processKeyboard();
     requestAnimationFrame(drawScene);
 }
 
+//ACTION!
+setCollisionDetection();
 drawScene();
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
@@ -157,6 +166,7 @@ function Wall() {
     );
     wall.receiveShadow = true;
     wall.castShadow = true;
+    collidableMeshList.push(wall);
     return wall;
 }
 
@@ -166,6 +176,7 @@ function Window(x, y, z) {
         new THREE.BoxBufferGeometry(x, y, z),
         new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.5})
     );
+    collidableMeshList.push(window);
     return window;
 }
 
