@@ -33,22 +33,20 @@ let bMat = new THREE.MeshStandardMaterial({color: 0x00ff00, wireframe: false});
 let cube = new THREE.Mesh(bGeo, bMat);
 cube.castShadow = true;
 cube.receiveShadow = true;
-scene.add(cube);
+//scene.add(cube);
 scene.updateMatrixWorld(true);
 var position = new THREE.Vector3();
-
 position.setFromMatrixPosition(cube.matrixWorld);
-//alert(Math.pow(2, 2));
 
-var gun;
-new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+var gun = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Laser Turret/LaserTurret.gltf' , function (gltf)  {
     gun = gltf.scene;
     gun.traverse(function (node){
         if (node.isMesh){
             node.castShadow = true;
         }
     });
-    //scene.add(gun);
+    scene.add(gun);
     // model = result.scene;//result.scene.children[0]
     
     // model.traverse(function (node){
@@ -89,11 +87,13 @@ function inRadius(r, a, b, c){
     if (Math.pow(a - position.x, 2) + Math.pow(b - position.y, 2) + Math.pow(c - position.z, 2) <= Math.pow(r, 2)){
         cube.material.color.setHex(0xff0000);
         text2.innerText = "Danger";
+        return 0;
     }
     else{
         cube.material.color.setHex(0x00ff00);
         text2.innerText = "Safety";
         health = 100;
+        return 1;
     }
 }
 
@@ -129,8 +129,11 @@ function processKeyboard(){
 function drawScene(){
     renderer.render(scene, cam);
     processKeyboard();
-    inRadius(10, cam.position.x, cam.position.y, cam.position.z);
-    //rotateGun(cam.position.x, cam.position.z);
+    if (inRadius(10, cam.position.x, cam.position.y, cam.position.z) == 0){
+        var ang = Math.atan2( ( cam.position.x - gun.position.x ), ( cam.position.z - gun.position.z ) );
+        console.log(ang);
+        gun.rotation.y = ang;
+    }
     requestAnimationFrame(drawScene);
 }
 
