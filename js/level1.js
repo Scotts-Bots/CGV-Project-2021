@@ -1,6 +1,9 @@
 const scene = new THREE.Scene();
 intensity = 1;
 len = 10;
+var fixedWires = false;
+var shotTagets = false;
+Player.setName("Tristan Bookhan");
 
 var cam = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 100000);
 var renderer = new THREE.WebGL1Renderer({ antialias: true });
@@ -60,7 +63,12 @@ scene.add(box);
 const reticle = Reticle(cam);
 cam.add(reticle);
 scene.add(cam);
-scene.updateMatrixWorld(true);
+
+// const hud = HUD();
+// cam.add(hud);
+// scene.add(cam);
+HUD();
+
 
 document.body.appendChild(renderer.domElement);
 
@@ -134,7 +142,7 @@ function drawScene() {
         len = len - 1;
     }
 
-    
+    HUD();
     renderer.render(scene, cam);
     processKeyboard();
     requestAnimationFrame(drawScene);
@@ -151,3 +159,194 @@ drawScene();
 // );
 // finder.position.set(2500,25,1500);
 // scene.add(finder);
+
+function HUD() {
+
+    let check = document.getElementById(Hbar);
+    if (check != null) {
+        document.body.removeChild(Hbar);
+        document.body.removeChild(text2);
+        document.body.removeChild(task);
+        document.body.removeChild(ammo);
+        document.body.removeChild(torch);
+        document.body.removeChild(Q);
+        document.body.removeChild(helper);
+    }
+    check = document.getElementById(task1);
+    if (check != null) {
+        document.body.removeChild(task1);
+    }
+    check = document.getElementById(task2);
+    if (check != null) {
+        document.body.removeChild(task3);
+    }
+    check = document.getElementById(task3);
+    if (check != null) {
+        document.body.removeChild(task3);
+    }
+    check = document.getElementById(gun);
+    if (check != null) {
+        document.body.removeChild(gun);
+    }
+
+    var text2 = document.createElement('div');
+    text2.style.position = 'absolute';
+    text2.style.color = "white";
+    text2.style.fontSize = "25px";
+    text2.style.letterSpacing = "2px";
+    text2.style.fontFamily = "Helvetica";
+    text2.style.width = 200;
+    text2.style.height = 500;
+    text2.innerHTML = Player.getName();
+    text2.style.top = 70 + 'px';
+    text2.style.left = 70 + 'px';
+
+    var button = document.createElement('button');
+    button.style.position = 'absolute';
+    button.style.color = "black";
+    button.style.fontSize = "25px";
+    button.style.letterSpacing = "2px";
+    button.style.fontFamily = "Helvetica";
+    button.style.width = 200;
+    button.style.height = 500;
+    button.innerHTML = "Pause";
+    button.style.top = 70 + 'px';
+    button.style.left = 1800 + 'px';
+    button.addEventListener('click', () => {
+        //bring up pause menu
+    });
+
+    var Hbar = document.createElement('progress');
+    Hbar.id = Hbar;
+    Hbar.style.position = 'absolute';
+    Hbar.value = Player.getHealth();
+    Hbar.max = 100;
+    Hbar.style.top = 100 + 'px';
+    Hbar.style.left = 75 + 'px';
+    Hbar.style.backgroundColor = 'green';
+
+    var task = document.createElement('div');
+    task.style.position = 'absolute';
+    task.style.color = "white";
+    task.style.fontSize = "20px";
+    task.style.letterSpacing = "2px";
+    task.style.fontFamily = "Helvetica";
+    task.style.width = 200;
+    task.style.height = 500;
+    task.innerHTML = "Task(s)";
+    task.style.top = 200 + 'px';
+    task.style.left = 70 + 'px';
+
+    var task1 = document.createElement('div');
+    task1.id = task1;
+    task1.style.position = 'absolute';
+    task1.style.color = "white";
+    task1.style.fontSize = "20px";
+    task1.style.letterSpacing = "2px";
+    task1.style.fontFamily = "Helvetica";
+    task1.style.width = 200;
+    task1.style.height = 500;
+    task1.innerHTML = "> Pick up Gun and ammo";
+    task1.style.top = 230 + 'px';
+    task1.style.left = 70 + 'px';
+
+    var task2 = document.createElement('div');
+    task2.id = task2;
+    task2.style.position = 'absolute';
+    task2.style.color = "white";
+    task2.style.fontSize = "20px";
+    task2.style.letterSpacing = "2px";
+    task2.style.fontFamily = "Helvetica";
+    task2.style.width = 200;
+    task2.style.height = 500;
+    task2.innerHTML = "> Fix Wires";
+    task2.style.top = 260 + 'px';
+    task2.style.left = 70 + 'px';
+
+    var task3 = document.createElement('div');
+    task3.id = task3;
+    task3.style.position = 'absolute';
+    task3.style.color = "white";
+    task3.style.fontSize = "20px";
+    task3.style.letterSpacing = "2px";
+    task3.style.fontFamily = "Helvetica";
+    task3.style.width = 200;
+    task3.style.height = 500;
+    task3.innerHTML = "> Shoot Targets";
+    task3.style.top = 290 + 'px';
+    task3.style.left = 70 + 'px';
+
+    var ammo = document.createElement('div');
+    ammo.style.position = 'absolute';
+    ammo.style.color = "white";
+    ammo.style.fontSize = "20px";
+    ammo.style.letterSpacing = "2px";
+    ammo.style.fontFamily = "Helvetica";
+    ammo.style.width = 200;
+    ammo.style.height = 500;
+    ammo.innerHTML = "Ammo: " + Player.getAmmo();
+    ammo.style.top = 750 + 'px';
+    ammo.style.left =1800 + 'px';
+
+    var torch = document.createElement("img");
+    torch.style.position = 'absolute';
+    torch.src = "Images/torch.png";
+    torch.style.top = 850 + 'px';
+    torch.style.left = 1700 + 'px';
+    torch.width = 80;
+
+    var gun = document.createElement("img");
+    gun.id = gun;
+    gun.style.position = 'absolute';
+    gun.src = "Images/gun.jpg";
+    gun.style.top = 850 + 'px';
+    gun.style.left = 1830 + 'px';
+    gun.width = 85;
+
+    var helper = document.createElement('div');
+    helper.style.position = 'absolute';
+    helper.style.color = "white";
+    helper.style.fontSize = "15px";
+    helper.style.letterSpacing = "2px";
+    helper.style.fontFamily = "Helvetica";
+    helper.style.width = 2000;
+    helper.style.height = 500;
+    helper.innerHTML = "Shoot - single click,    Interact - double click,         Movement - WASD";
+    helper.style.top = 40 + 'px';
+    helper.style.left = 700 + 'px';
+
+    var Q = document.createElement('div');
+    Q.style.position = 'absolute';
+    Q.style.color = "white";
+    Q.style.fontSize = "20px";
+    Q.style.letterSpacing = "2px";
+    Q.style.fontFamily = "Helvetica";
+    Q.style.width = 200;
+    Q.style.height = 500;
+    Q.innerHTML = "Q";
+    Q.style.top = 820 + 'px';
+    Q.style.left =1730 + 'px';
+
+
+    document.body.appendChild(Hbar);
+    document.body.appendChild(text2);
+    document.body.appendChild(task);
+    document.body.appendChild(ammo);
+    document.body.appendChild(torch);
+    document.body.appendChild(Q);
+    document.body.appendChild(helper);
+    if (Player.checkGun() == false && Player.getAmmo() != 16){
+        document.body.appendChild(task1);
+    }
+    if (Player.checkGun() != false && Player.getAmmo() > 0){
+        document.body.appendChild(gun);
+    }
+    if (fixedWires == false){
+        document.body.appendChild(task2);
+    }
+    if (shotTagets == false){
+        document.body.appendChild(task3);
+    }
+    document.body.appendChild(button);
+
+}

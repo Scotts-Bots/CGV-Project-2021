@@ -6,6 +6,13 @@ domEvent1.addEventListener(<meshName>, 'dblclick', event =>{
 });
 
 
+
+
+
+
+scene.updateMatrixWorld(true);
+
+
 function checkPopUps(){
     camposition = new THREE.Vector3();
     camposition.setFromMatrixPosition( cam.matrixWorld );
