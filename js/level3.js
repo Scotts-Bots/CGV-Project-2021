@@ -37,8 +37,7 @@ box.translateY(14600);
 box.receiveShadow = true;
 scene.add(box);
 
-const reticle = Reticle(cam);
-cam.add(reticle);
+addReticle(cam);
 scene.add(cam);
 
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);

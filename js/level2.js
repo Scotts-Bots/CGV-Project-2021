@@ -11,6 +11,7 @@ const cameraWidth = 3500;
 const cameraHeight = cameraWidth / aspectRatio;
 var camera;
 setCamera(play);
+setCollisionDetection(camera); //collision detection hitbox
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -63,10 +64,14 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     //pointLight3.castShadow = true; // default false
     scene.add(pointLight3);
 
+//reticle
+addReticle(camera);
+scene.add(camera);
+
 document.body.appendChild(renderer.domElement);
 
 //keyboard and mouse controls
-const speedDefault = 10;
+const speedDefault = 7;
 var speedW = 10, speedA = 10, speedS = 10, speedD = 10;
 let controls = new THREE.PointerLockControls(camera, renderer.domElement);
 var lastKeyPressed;
@@ -133,15 +138,39 @@ function processKeyboard(){
     }
 }
 
+function updateKeyboard(isCollision){
+    if (isCollision) {
+        appendText(" Hit ");
+        switch (lastKeyPressed) {
+            case "w":
+                speedW = 0;
+                break;
+            case "a":
+                speedA = 0;
+                break;
+            case "s":
+                speedS = 0;
+                break;
+            case "d":
+                speedD = 0;
+                break;
+        }
+    } else {
+        speedA = speedDefault;
+        speedW = speedDefault;
+        speedS = speedDefault;
+        speedD = speedDefault;
+    }
+}
+
 function drawScene(){
     renderer.render(scene, camera);
-    checkCollision();
+    checkCollision(updateKeyboard);
     processKeyboard();
     requestAnimationFrame(drawScene);
 }
 
 //ACTION!
-setCollisionDetection();
 drawScene();
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////

@@ -76,8 +76,7 @@ const box = sky();
 box.translateY(14600);
 scene.add(box);
 
-const reticle = Reticle(cam);
-cam.add(reticle);
+addReticle(cam);
 scene.add(cam);
 
 const finder = new THREE.Mesh(

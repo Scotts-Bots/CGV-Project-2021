@@ -1,6 +1,5 @@
-function Reticle(cam) {
+function addReticle(cam) {
     var reticle = new THREE.Group();
-
 
     var circle = new THREE.Mesh(
         new THREE.RingBufferGeometry(0.015, 0.02 , 64),
@@ -24,5 +23,5 @@ function Reticle(cam) {
     reticle.add(rect);
     reticle.add(rect1);
 
-    return reticle;
+    cam.add(reticle);
 }
