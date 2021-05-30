@@ -39,32 +39,23 @@ var position = new THREE.Vector3();
 position.setFromMatrixPosition(cube.matrixWorld);
 
 var gun = new THREE.Mesh();
+var pistol = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Laser Turret/LaserTurret.gltf' , function (gltf)  {
     gun = gltf.scene;
-    gun.traverse(function (node){
-        if (node.isMesh){
-            node.castShadow = true;
-        }
-    });
-    scene.add(gun);
-    // model = result.scene;//result.scene.children[0]
-    
-    // model.traverse(function (node){
-    //     if (node instanceof THREE.Mesh){
+    // gun.traverse(function (node){
+    //     if (node.isMesh){
     //         node.castShadow = true;
-    //         //node.receiveShadow = true;
     //     }
     // });
-    // scene.add(model);
-
-    //drawScene();
-    /*model.traaverse(n=> {
-        if(n.isMesh){
-            n.castShadow = true;
-            n.recieve = true;
-        }
-    }*/ 
+    scene.add(gun);
 });
+new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+    pistol = gltf.scene;
+    cam.add(pistol);
+    pistol.position.set(cam.position.x+1, cam.position.y+1, cam.position.z+1);
+});
+
+var bullets = [];
 
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);
 let clock = new THREE.Clock();
@@ -97,11 +88,6 @@ function inRadius(r, a, b, c){
     }
 }
 
-function rotateGun(x, z){
-    var ang =  Math.atan(z/x);
-    gun.rotation.y =  2* Math.PI/2;
-}
-
 let keyboard = [];
 addEventListener('keydown', (e)=>{
     keyboard[e.key] = true;
@@ -123,15 +109,31 @@ function processKeyboard(){
     else if(keyboard['d']){
         controls.moveRight(speed);
     }
+    else if(keyboard['r']){
+        controls.lock();
+    }
+    else if (keyboard['x']){
+        var bullet = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5, 8, 8),
+            new THREE.MeshBasicMaterial({color: 0xffffff})
+        );
+        bullet.alive = true;
+        setTimeout(function(){
+            bullet.alive = false;
+            scene.remove(bullet);
+        }, 1000);
+        scene.add(bullet);
+    }
     
 }
 
 function drawScene(){
     renderer.render(scene, cam);
     processKeyboard();
+    
     if (inRadius(10, cam.position.x, cam.position.y, cam.position.z) == 0){
         var ang = Math.atan2( ( cam.position.x - gun.position.x ), ( cam.position.z - gun.position.z ) );
-        console.log(ang);
+
         gun.rotation.y = ang;
     }
     requestAnimationFrame(drawScene);
