@@ -57,16 +57,9 @@ const box = sky();
 box.translateY(14600);
 scene.add(box);
 
-// var reticle = new THREE.Mesh(
-//     new THREE.RingBufferGeometry(15, 20, 34),
-//     new THREE.MeshBasicMaterial({ color: 0xffffff })
-// );
-// reticle.scale.set(1,0.2,1);
-// reticle.position.z = -70;
-// //reticle.position.x = 20;
-// reticle.lookAt(cam.position)
-// cam.add(reticle);
-// scene.add(cam);
+const reticle = Reticle();
+cam.add(reticle);
+scene.add(cam);
 scene.updateMatrixWorld(true);
 
 document.body.appendChild(renderer.domElement);
@@ -90,7 +83,7 @@ let controls = new THREE.PointerLockControls(cam, renderer.domElement);
 let clock = new THREE.Clock();
 
 let btn1 = document.querySelector("#button1");
-btn1.addEventListener('clicAk', () => {
+btn1.addEventListener('click', () => {
     controls.lock();
 });
 
