@@ -1,4 +1,4 @@
-function Reticle() {
+function Reticle(cam) {
     var reticle = new THREE.Group();
 
 
@@ -16,11 +16,11 @@ function Reticle() {
     );
     circle.scale.set(0.1, 0.1, 1);
     circle.position.z = -9;
-    circle.lookAt(300, 50, 2000);
+    circle.lookAt(cam.quaternion.x*2000,cam.quaternion.y,cam.quaternion.z*2000);///300, 50, 2000);
     rect.position.z = -9;
-    rect.lookAt(300, 50, 2000);
+    rect.lookAt(cam.quaternion.x*2000,cam.quaternion.y,cam.quaternion.z*2000);
     rect1.position.z = -9;
-    rect1.lookAt(300, 50, 2000);
+    rect1.lookAt(cam.quaternion.x*2000,cam.quaternion.y,cam.quaternion.z*2000);
     reticle.add(circle);
     reticle.add(rect);
     reticle.add(rect1);

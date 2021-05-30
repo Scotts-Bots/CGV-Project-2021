@@ -57,7 +57,7 @@ const box = sky();
 box.translateY(14600);
 scene.add(box);
 
-const reticle = Reticle();
+const reticle = Reticle(cam);
 cam.add(reticle);
 scene.add(cam);
 scene.updateMatrixWorld(true);
