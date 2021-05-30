@@ -1,10 +1,10 @@
 var scene, camera, renderer, mesh, clock;
 var meshFloor, ambientLight, light;
 
-var crate, crateTexture, crateNormalMap, crateBumpMap;
+var crate, crateTexture, crateNormalMap, crateBumpMap, gun;
 
 var keyboard = {};
-var player = { height:1.8, speed:0.2, turnSpeed:Math.PI*0.02 };
+var player = { height:1.8, speed:0.2, turnSpeed:Math.PI*0.02, canShoot:0};
 var USE_WIREFRAME = false;
 
 var loadingScreen = {
@@ -20,6 +20,8 @@ var RESOURCES_LOADED = false;
 
 // Meshes index
 var meshes = {};
+
+var bullets = [];
 
 function init(){
 	scene = new THREE.Scene();
@@ -46,16 +48,16 @@ function init(){
 		new THREE.MeshPhongMaterial({color:0xff4444, wireframe:USE_WIREFRAME})
 	);
 	mesh.position.y += 1;
-	mesh.receiveShadow = true;
-	mesh.castShadow = true;
-	scene.add(mesh);
+	// mesh.receiveShadow = true;
+	// mesh.castShadow = true;
+	//scene.add(mesh);
 	
 	meshFloor = new THREE.Mesh(
 		new THREE.PlaneGeometry(20,20, 10,10),
 		new THREE.MeshPhongMaterial({color:0xffffff, wireframe:USE_WIREFRAME})
 	);
 	meshFloor.rotation.x -= Math.PI / 2;
-	meshFloor.receiveShadow = true;
+	// meshFloor.receiveShadow = true;
 	scene.add(meshFloor);
 	
 	
@@ -64,9 +66,9 @@ function init(){
 	
 	light = new THREE.PointLight(0xffffff, 0.8, 18);
 	light.position.set(-3,6,-3);
-	light.castShadow = true;
-	light.shadow.camera.near = 0.1;
-	light.shadow.camera.far = 25;
+	// light.castShadow = true;
+	// light.shadow.camera.near = 0.1;
+	// light.shadow.camera.far = 25;
 	scene.add(light);
 	
 	crate = new THREE.Mesh(
@@ -80,30 +82,29 @@ function init(){
 	);
 	scene.add(crate);
 	crate.position.set(2.5, 3/2, 2.5);
-	crate.receiveShadow = true;
-	crate.castShadow = true;	
 
     pistol = new THREE.Mesh();
     new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
         pistol = gltf.scene;
-        pistol.traverse(function (node){
-            if (node.isMesh){
-                node.castShadow = true;
-            }
-        });
+        // pistol.traverse(function (node){
+        //     if (node.isMesh){
+        //         node.castShadow = true;
+        //     }
+        // });
         scene.add(pistol);
     });
     
-    var gun = new THREE.Mesh();
+    gun = new THREE.Mesh();
     new THREE.GLTFLoader().load('Blender Models/Laser Turret/LaserTurret.gltf' , function (gltf)  {
         gun = gltf.scene;
-        gun.traverse(function (node){
-            if (node.isMesh){
-                node.castShadow = true;
-            }
-        });
+        // gun.traverse(function (node){
+        //     if (node.isMesh){
+        //         node.castShadow = true;
+        //     }
+        // });
         scene.add(gun);
     });
+	
 	
 	camera.position.set(0, player.height, -5);
 	camera.lookAt(new THREE.Vector3(0,player.height,0));
@@ -121,14 +122,11 @@ function init(){
 
 function inRadius(r, a, b, c){
     if (Math.pow(a - position.x, 2) + Math.pow(b - position.y, 2) + Math.pow(c - position.z, 2) <= Math.pow(r, 2)){
-        cube.material.color.setHex(0xff0000);
-        text2.innerText = "Danger";
+        crate.material.color.setHex(0xff0000);
         return 0;
     }
     else{
-        cube.material.color.setHex(0x00ff00);
-        text2.innerText = "Safety";
-        health = 100;
+        crate.material.color.setHex(0x00ff00);
         return 1;
     }
 }
@@ -157,6 +155,43 @@ function processKeyboard(){
 	if(keyboard[39]){ // right arrow key
 		camera.rotation.y += player.turnSpeed;
 	}
+
+	window.addEventListener("mousedown", function(){
+		var bullet = new THREE.Mesh(
+			new THREE.SphereGeometry(0.05, 8, 8),
+			new THREE.MeshBasicMaterial({color: 0xffffff})
+		);
+
+		bullet.position.set(
+			pistol.position.x,
+			pistol.position.y,
+			pistol.position.z,
+		);
+
+		bullet.velocity = new THREE.Vector3(
+			-Math.sin(camera.rotation.y),
+			0,
+			Math.cos(camera.rotation.y)
+		);
+
+		bullet.alive = true;
+		setTimeout(function(){
+			bullet.alive = false;
+			scene.remove(bullet);
+		}, 1000);
+		
+		bullets.push(bullet);
+		scene.add(bullet);
+		player.canShoot = 10;
+	});
+	if (player.canShoot > 0) player.canShoot -= 1;
+}
+
+function turnTurret(r){
+	if (Math.pow(camera.position.x - gun.position.x, 2) + Math.pow(camera.position.y - gun.position.y, 2) + Math.pow(camera.position.z - gun.position.z, 2) <= Math.pow(r, 2)){
+		var ang = Math.atan2( ( camera.position.x - gun.position.x ), ( camera.position.z - gun.position.z ) );
+		gun.rotation.y = ang;
+	}
 }
 
 function animate(){
@@ -166,25 +201,27 @@ function animate(){
 	var time = Date.now() * 0.0005;
 	var delta = clock.getDelta();
 	
-	mesh.rotation.x += 0.01;
-	mesh.rotation.y += 0.02;
-	crate.rotation.y += 0.01;
+	// mesh.rotation.x += 0.01;
+	// mesh.rotation.y += 0.02;
+	//crate.rotation.y += 0.1;
 	// Uncomment for absurdity!
 	// meshes["pirateship"].rotation.z += 0.01;
+    turnTurret(10);
+
+	for (var index = 0; index < bullets.length; index+=1){
+		if (bullets[index] == undefined) continue;
+		if (bullets[index].alive == false){
+			bullets.splice(index, 1);
+			continue;
+		}
+		bullets[index].position.add(bullets[index].velocity);
+	}
 	
 	processKeyboard();
 
-    // let controls = new THREE.PointerLockControls(camera, renderer.domElement);
-    // let clock = new THREE.Clock();
-
-    // let btn1 = document.querySelector("#button1");
-    // btn1.addEventListener('click', ()=>{
-    //     controls.lock();
-    // });
-
     pistol.position.set(
 		camera.position.x - Math.sin(camera.rotation.y + Math.PI/6) * 0.75,
-		0,//camera.position.y + 1, //- 0.5 + Math.sin(time*4 + camera.position.x + camera.position.z)*0.01,
+		camera.position.y - 0.5 + Math.sin(time*4 + camera.position.x + camera.position.z)*0.01,
 		camera.position.z + Math.cos(camera.rotation.y + Math.PI/6) * 0.75
 	);
 	pistol.rotation.set(

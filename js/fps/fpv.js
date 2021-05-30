@@ -9,7 +9,7 @@ cam.position.z = 5;
 cam.position.y = 2;
 document.body.appendChild(renderer.domElement);
 var directionalLight = new THREE.PointLight();
-directionalLight.position.set(3, 3, 3);
+directionalLight.position.set(5, 5, 5);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 // var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -39,7 +39,6 @@ var position = new THREE.Vector3();
 position.setFromMatrixPosition(cube.matrixWorld);
 
 var gun = new THREE.Mesh();
-var pistol = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Laser Turret/LaserTurret.gltf' , function (gltf)  {
     gun = gltf.scene;
     // gun.traverse(function (node){
@@ -49,10 +48,17 @@ new THREE.GLTFLoader().load('Blender Models/Laser Turret/LaserTurret.gltf' , fun
     // });
     scene.add(gun);
 });
+
+var pistol = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
     pistol = gltf.scene;
-    cam.add(pistol);
-    pistol.position.set(cam.position.x+1, cam.position.y+1, cam.position.z+1);
+    // pistol.scale.set(5, 5, 5);
+    // pistol.position.y = -5;
+    // pistol.position.z = -15;
+    // pistol.position.x = 10;
+    // cam.add(pistol);
+    //pistol.lookAt(cam.quaternion.x*2000,cam.quaternion.y,cam.quaternion.z*2000);
+    scene.add(pistol);
 });
 
 var bullets = [];
@@ -130,7 +136,18 @@ function processKeyboard(){
 function drawScene(){
     renderer.render(scene, cam);
     processKeyboard();
-    
+    var relativeCameraOffset = new THREE.Vector3(0, 5, 20);
+    var cameraOffset = relativeCameraOffset.applyMatrix4(pistol.matrixWorld);
+    pistol.position.set(
+		camera.position.x - Math.sin(camera.rotation.y + Math.PI/6) * 0.75,
+		camera.position.y ,//- 0.5 + Math.sin(time*4 + camera.position.x + camera.position.z)*0.01,
+		camera.position.z + Math.cos(camera.rotation.y + Math.PI/6) * 0.75
+	);
+	pistol.rotation.set(
+		camera.rotation.x,
+		camera.rotation.y - Math.PI,
+		camera.rotation.z
+	);
     if (inRadius(10, cam.position.x, cam.position.y, cam.position.z) == 0){
         var ang = Math.atan2( ( cam.position.x - gun.position.x ), ( cam.position.z - gun.position.z ) );
 
