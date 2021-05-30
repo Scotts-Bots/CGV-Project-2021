@@ -1,6 +1,6 @@
 class Player {
 
-    static name = name;
+    static name = "Guest01";
     static health = 100;
     static ammo = 0;
     static cards = 0;
