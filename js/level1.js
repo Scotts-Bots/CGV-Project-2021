@@ -17,6 +17,7 @@ var cam = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100000)
 var renderer = new THREE.WebGL1Renderer({ antialias: true });
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+setCollisionDetection(cam); //collision detection hitbox added to camera
 
 renderer.setSize(innerWidth, innerHeight);
 cam.position.set(2100, 50, 200);
@@ -114,9 +115,10 @@ document.body.appendChild(renderer.domElement);
 
 // }
 
+const speedDefault = 7;
+var speedW = 10, speedA = 10, speedS = 10, speedD = 10;
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);
-
-
+var lastKeyPressed;
 let clock = new THREE.Clock();
 
 let btn1 = document.querySelector("#button1");
@@ -131,31 +133,31 @@ addEventListener('keydown', (e) => {
 addEventListener('keyup', (e) => {
     keyboard[e.key] = false;
 });
+
 function processKeyboard() {
-    var speed = 15
     if (keyboard['w']) {
         if (isPlaying == true){
             EndGame();
         }
-        controls.moveForward(speed);
+        controls.moveForward(speedW);
     }
     else if (keyboard['a']) {
         if (isPlaying == true){
             EndGame();
         }
-        controls.moveRight(-speed);
+        controls.moveRight(-speedA);
     }
     else if (keyboard['s']) {
         if (isPlaying == true){
             EndGame();
         }
-        controls.moveForward(-speed);
+        controls.moveForward(-speedS);
     }
     else if (keyboard['d']) {
         if (isPlaying == true){
             EndGame();
         }
-        controls.moveRight(speed);
+        controls.moveRight(speedD);
     }
     else if (keyboard['r']) {
         controls.lock();
@@ -217,8 +219,34 @@ function drawScene() {
 
     
     renderer.render(scene, cam);
+    checkCollision(cam,updateKeyboard);
     processKeyboard();
     requestAnimationFrame(drawScene);
+}
+
+function updateKeyboard(isCollision){
+    if (isCollision) {
+        appendText(" Hit ");
+        switch (lastKeyPressed) {
+            case "w":
+                speedW = 0;
+                break;
+            case "a":
+                speedA = 0;
+                break;
+            case "s":
+                speedS = 0;
+                break;
+            case "d":
+                speedD = 0;
+                break;
+        }
+    } else {
+        speedA = speedDefault;
+        speedW = speedDefault;
+        speedS = speedDefault;
+        speedD = speedDefault;
+    }
 }
 
 function EndGame() {
