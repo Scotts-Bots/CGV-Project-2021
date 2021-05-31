@@ -32,6 +32,7 @@ room.castShadow = true;
 scene.add(room);
 
 
+
 const box = sky();
 box.translateY(14600);
 box.receiveShadow = true;

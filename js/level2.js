@@ -173,6 +173,7 @@ function updateKeyboard(isCollision){
 function drawScene(){
     renderer.render(scene, camera);
     checkCollision(camera,updateKeyboard, MovingCube);
+    console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
     processKeyboard();
     requestAnimationFrame(drawScene);
 }
