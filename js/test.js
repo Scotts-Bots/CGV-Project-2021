@@ -1,188 +1,298 @@
+var mesh;
+var mesh2;
+var mesh6;
+var mesh7;
+var mesh8;
+var mesh9;
+var mesh10;
+var mesh11;
+var mesh12;
+var back2;
+var back4;
+var cback;
+
 const scene = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
 
-scene.background = new THREE.Color(0x0000ff);
+const geometry = new THREE.SphereGeometry(1, 32, 32);
+const material = new THREE.MeshPhongMaterial();
+const mars = new THREE.Mesh(geometry, material);
 
-var isPlaying = false;
-var success = 0;
+const starsGeometry = new THREE.SphereGeometry(50, 32, 32);
+const starsMaterial = new THREE.MeshBasicMaterial();
+const starsMesh = new THREE.Mesh(starsGeometry, starsMaterial);
 
-var lines = [];
+const light = new THREE.DirectionalLight(0xcccccc, 1);
 
-var cam = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100000);
-var renderer = new THREE.WebGL1Renderer({ antialias: true });
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-renderer.setSize(innerWidth, innerHeight);
-cam.position.set(2100, 50, 200);
-cam.lookAt(2900, 0, 2000);
-
-var ambientLight = new THREE.AmbientLight(0xffffff, 1);//0.05
-scene.add(ambientLight);
-//adding directional light
-const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-dirLight.position.set(100, 300, 300);
-//scene.add(dirLight);
-
-var cback = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(1, 0.7, 0.001),
-    new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
-);
-cback.position.z = -1;
-cback.position.x = -0.05;
-cam.add(cback);
-scene.add(cam);
-
-var loader = new THREE.FontLoader();
-
-loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-
-    var credit1 = new THREE.TextGeometry("SkyBox images: MegaKosan - https://gamebanana.com/mods/7912", {
-
-        font: font,
-
-        size: 0.017,
-        height: 0.001,
-        curveSegments: 2,
-
-    });
-
-    var credit2 = new THREE.TextGeometry("Threex library: Jerome Etienne - https://github.com/jeromeetienne/threex.domevents", {
-
-        font: font,
-
-        size: 0.017,
-        height: 0.001,
-        curveSegments: 2,
-
-    });
-
-    var credit = new THREE.TextGeometry("Credits", {
-
-        font: font,
-
-        size: 0.05,
-        height: 0.001,
-        curveSegments: 2,
-
-    });
-
-    var credit3 = new THREE.TextGeometry("Collision dectection: Three.js tutorials by Lee Stemkoski Date: July 2013 (three.js v59dev)", {
-
-        font: font,
-
-        size: 0.017,
-        height: 0.001,
-        curveSegments: 2,
-
-    });
-
-    var credit4 = new THREE.TextGeometry("Gun view: saucecode - https://github.com/saucecode/threejs-demos/tree/master/08_GunView", {
-
-        font: font,
-
-        size: 0.0155,
-        height: 0.001,
-        curveSegments: 2,
-
-    });
-
-    var dArrow = new THREE.TextGeometry("Down arrow to close", {
-
-        font: font,
-
-        size: 0.013,
-        height: 0.001,
-        curveSegments: 2,
-
-    });
-
-    textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
-
-    mesh6 = new THREE.Mesh(credit1, textMaterial);
-    mesh6.position.z = -1;
-    mesh6.position.y = 0.17;
-    mesh6.position.x = -0.5;
-
-    mesh7 = new THREE.Mesh(credit2, textMaterial);
-    mesh7.position.z = -1;
-    mesh7.position.y = -0.01;
-    mesh7.position.x = -0.5;
-
-    mesh8 = new THREE.Mesh(credit, textMaterial);
-    mesh8.position.z = -1;
-    mesh8.position.y = 0.25;
-    mesh8.position.x = -0.15;
-
-    mesh9 = new THREE.Mesh(credit3, textMaterial);
-    mesh9.position.z = -1;
-    mesh9.position.y = 0.08;
-    mesh9.position.x = -0.5;
-
-    mesh10 = new THREE.Mesh(credit4, textMaterial);
-    mesh10.position.z = -1;
-    mesh10.position.y = -0.105;
-    mesh10.position.x = -0.5;
-
-    mesh11 = new THREE.Mesh(dArrow, textMaterial);
-    mesh11.position.z = -1;
-    mesh11.position.y = 0.3;
-    mesh11.position.x = 0.25;
-
-    cam.add(mesh6);
-    cam.add(mesh7);
-    cam.add(mesh8);
-    cam.add(mesh9);
-    cam.add(mesh10);
-    cam.add(mesh11);
-    scene.add(cam);
-
-});
-
-
+renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-let controls = new THREE.PointerLockControls(cam, renderer.domElement);
+cam.position.z = 3;
+light.position.set(5, 3, 5);
 
+material.map = new THREE.TextureLoader().load('textures/diffuse.jpg');
+material.bumpMap = new THREE.TextureLoader().load('textures/bump.jpg');     
+material.bumpScale = 0.015;
 
-let clock = new THREE.Clock();
+starsMaterial.map = new THREE.TextureLoader().load('textures/stars.jpg');
+starsMaterial.side = THREE.BackSide;
 
-let btn1 = document.querySelector("#button1");
-btn1.addEventListener('click', () => {
-    controls.lock();
-});
+scene.add(mars);
+scene.add(light);
+scene.add(starsMesh);
+AddPause();
 
-let keyboard = [];
-addEventListener('keydown', (e) => {
-    keyboard[e.key] = true;
-});
-addEventListener('keyup', (e) => {
-    keyboard[e.key] = false;
-});
-function processKeyboard() {
-    var speed = 15
-    if (keyboard['w']) {
-        controls.moveForward(speed);
-    }
-    else if (keyboard['a']) {
-        controls.moveRight(-speed);
-    }
-    else if (keyboard['s']) {
-        controls.moveForward(-speed);
-    }
-    else if (keyboard['d']) {
-        controls.moveRight(speed);
-    }
-    else if (keyboard['r']) {
-        controls.lock();
-    }
-}
-
-function drawScene() {
-    //wall4.position.x -= 0.01;
+const animate = () => {
+    requestAnimationFrame(animate);
     renderer.render(scene, cam);
-    processKeyboard();
-    requestAnimationFrame(drawScene);
+
+    starsMesh.rotation.y += 0.0001;
+    starsMesh.rotation.x += 0.0003;
+    mars.rotation.y -= 0.001;
+    mars.rotation.z -= 0.0005;
+    light.rotation.y -= 0.001;
+};
+
+animate();
+
+const domEvent1 = new THREEx.DomEvents(cam,  renderer.domElement);
+
+domEvent1.addEventListener(back2, 'dblclick', event =>{
+    window.location.href = "level1.html";
+});
+
+const domEvent2 = new THREEx.DomEvents(cam,  renderer.domElement);
+
+domEvent2.addEventListener(back4, 'dblclick', event =>{
+    RemovePause();
+        AddCredit();
+});
+
+document.addEventListener('keydown', event => {
+    if (event.code === "ArrowDown") {
+        RemoveCredit();
+        AddPause();
+    }
+});
+
+function AddPause(){
+
+    back2 = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0x696969 })
+    );
+    back2.position.z = -1;
+    back2.position.y = 0.19;
+    cam.add(back2);
+    scene.add(cam);
+
+    back4 = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0x696969 })
+    );
+    back4.position.z = -1;
+    back4.position.y = -0.16;
+    cam.add(back4);
+    scene.add(cam);
+
+
+    var loader = new THREE.FontLoader();
+
+    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+
+        var restartText = new THREE.TextGeometry("Start", {
+
+            font: font,
+
+            size: 0.05,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        var creditText = new THREE.TextGeometry("Credits", {
+
+            font: font,
+
+            size: 0.05,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+
+        mesh = new THREE.Mesh(restartText, textMaterial);
+        mesh.position.z = -1;
+        mesh.position.y = 0.17;
+        mesh.position.x = -0.08;
+
+        mesh2 = new THREE.Mesh(creditText, textMaterial);
+        mesh2.position.z = -1;
+        mesh2.position.y = -0.18;
+        mesh2.position.x = -0.1;
+
+        cam.add(mesh);
+        cam.add(mesh2);
+        scene.add(cam);
+
+    });
 }
 
-drawScene();
+function RemoveCredit(){
+    cam.remove(mesh6);
+        cam.remove(mesh7);
+        cam.remove(mesh8);
+        cam.remove(mesh9);
+        cam.remove(mesh10);
+        cam.remove(mesh11);
+        cam.remove(mesh12);
+        cam.remove(cback);
+
+        scene.add(cam);
+}
+
+function RemovePause(){
+        cam.remove(mesh);
+        cam.remove(mesh2);
+        cam.remove(back2);
+        cam.remove(back4);
+
+
+        scene.add(cam);
+}
+
+function AddCredit(){
+    cback = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(1, 0.7, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
+    );
+    cback.position.z = -1;
+    cback.position.x = -0.05;
+    cam.add(cback);
+    scene.add(cam);
+
+    let loader = new THREE.FontLoader();
+
+    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+
+        let credit1 = new THREE.TextGeometry("SkyBox images: MegaKosan - https://gamebanana.com/mods/7912", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit2 = new THREE.TextGeometry("Threex library: Jerome Etienne - https://github.com/jeromeetienne/threex.domevents", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit = new THREE.TextGeometry("Credits", {
+
+            font: font,
+
+            size: 0.05,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit3 = new THREE.TextGeometry("Collision dectection: Three.js tutorials by Lee Stemkoski Date: July 2013 (three.js v59dev)", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit4 = new THREE.TextGeometry("Gun view: saucecode - https://github.com/saucecode/threejs-demos/tree/master/08_GunView", {
+
+            font: font,
+
+            size: 0.0155,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit5 = new THREE.TextGeometry("Main menu background: flowforfrank - https://github.com/flowforfrank/threejs", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let dArrow = new THREE.TextGeometry("Down arrow to close", {
+
+            font: font,
+
+            size: 0.013,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+
+        mesh6 = new THREE.Mesh(credit1, textMaterial);
+        mesh6.position.z = -1;
+        mesh6.position.y = 0.17;
+        mesh6.position.x = -0.5;
+
+        mesh7 = new THREE.Mesh(credit2, textMaterial);
+        mesh7.position.z = -1;
+        mesh7.position.y = -0.01;
+        mesh7.position.x = -0.5;
+
+        mesh8 = new THREE.Mesh(credit, textMaterial);
+        mesh8.position.z = -1;
+        mesh8.position.y = 0.25;
+        mesh8.position.x = -0.15;
+
+        mesh9 = new THREE.Mesh(credit3, textMaterial);
+        mesh9.position.z = -1;
+        mesh9.position.y = 0.08;
+        mesh9.position.x = -0.5;
+
+        mesh10 = new THREE.Mesh(credit4, textMaterial);
+        mesh10.position.z = -1;
+        mesh10.position.y = -0.105;
+        mesh10.position.x = -0.5;
+
+        mesh12 = new THREE.Mesh(credit5, textMaterial);
+        mesh12.position.z = -1;
+        mesh12.position.y = -0.19;
+        mesh12.position.x = -0.5;
+
+        mesh11 = new THREE.Mesh(dArrow, textMaterial);
+        mesh11.position.z = -1;
+        mesh11.position.y = 0.3;
+        mesh11.position.x = 0.25;
+
+        cam.add(mesh6);
+        cam.add(mesh7);
+        cam.add(mesh8);
+        cam.add(mesh9);
+        cam.add(mesh10);
+        cam.add(mesh11);
+        cam.add(mesh12);
+        scene.add(cam);
+
+    });
+}
 

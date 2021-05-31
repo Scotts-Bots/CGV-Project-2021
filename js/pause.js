@@ -10,6 +10,7 @@ var mesh8;
 var mesh9;
 var mesh10;
 var mesh11;
+var mesh12;
 var back;
 var back1;
 var back2;
@@ -173,9 +174,8 @@ function AddPause(){
         });
 
         textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
-        textMaterial1 = new THREE.MeshPhongMaterial({ color: 0x000000 });
 
-        mesh = new THREE.Mesh(restartText, textMaterial1);
+        mesh = new THREE.Mesh(restartText, textMaterial);
         mesh.position.z = -1;
         mesh.position.y = 0.17;
         mesh.position.x = -0.15;
@@ -223,6 +223,7 @@ function RemoveCredit(){
         cam.remove(mesh9);
         cam.remove(mesh10);
         cam.remove(mesh11);
+        cam.remove(mesh12);
         cam.remove(cback);
 
         scene.add(cam);
@@ -309,6 +310,16 @@ function AddCredit(){
 
         });
 
+        let credit5 = new THREE.TextGeometry("Main menu background: flowforfrank - https://github.com/flowforfrank/threejs", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
         let dArrow = new THREE.TextGeometry("Down arrow to close", {
 
             font: font,
@@ -346,6 +357,11 @@ function AddCredit(){
         mesh10.position.y = -0.105;
         mesh10.position.x = -0.5;
 
+        mesh12 = new THREE.Mesh(credit5, textMaterial);
+        mesh12.position.z = -1;
+        mesh12.position.y = -0.19;
+        mesh12.position.x = -0.5;
+
         mesh11 = new THREE.Mesh(dArrow, textMaterial);
         mesh11.position.z = -1;
         mesh11.position.y = 0.3;
@@ -357,6 +373,7 @@ function AddCredit(){
         cam.add(mesh9);
         cam.add(mesh10);
         cam.add(mesh11);
+        cam.add(mesh12);
         scene.add(cam);
 
     });
