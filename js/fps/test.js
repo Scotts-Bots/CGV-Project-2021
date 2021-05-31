@@ -1,7 +1,7 @@
 var scene, camera, renderer, mesh, clock;
 var meshFloor, ambientLight, light;
 
-var crate, crateTexture, crateNormalMap, crateBumpMap, gun;
+var crate, crateTexture, crateNormalMap, crateBumpMap, gun, MovingCube;
 
 var keyboard = {};
 var player = { height:1.8, speed:0.2, turnSpeed:Math.PI*0.02, canShoot:0};
@@ -24,6 +24,7 @@ var meshes = {};
 var bullets = [];
 
 function init(){
+	//Setting scene and clock
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera(90, 1280/720, 0.1, 1000);
 	clock = new THREE.Clock();
@@ -42,7 +43,7 @@ function init(){
 		onResourcesLoaded();
 	};
 	
-	
+	//Setting up objects
 	mesh = new THREE.Mesh(
 		new THREE.BoxGeometry(1,1,1),
 		new THREE.MeshPhongMaterial({color:0xff4444, wireframe:USE_WIREFRAME})
@@ -60,7 +61,7 @@ function init(){
 	// meshFloor.receiveShadow = true;
 	scene.add(meshFloor);
 	
-	
+	//Lighting
 	ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 	scene.add(ambientLight);
 	
@@ -82,6 +83,12 @@ function init(){
 	);
 	scene.add(crate);
 	crate.position.set(2.5, 3/2, 2.5);
+	var cubeGeometry = new THREE.BoxBufferGeometry(200,200,200,3,3,3);
+	cubeGeometry.scale((200*3)/200, (200*3)/200, (200*3)/200);
+	var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
+	MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
+	MovingCube.position.set(crate.position);
+	setCollisionDetection(crate, MovingCube);
 
     pistol = new THREE.Mesh();
     new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
@@ -131,6 +138,7 @@ function inRadius(r, a, b, c){
     }
 }
 
+//process keyboard
 function processKeyboard(){
     if(keyboard[87]){ // W key
 		camera.position.x -= Math.sin(camera.rotation.y) * player.speed;
@@ -161,6 +169,7 @@ function processKeyboard(){
 			new THREE.SphereGeometry(0.05, 8, 8),
 			new THREE.MeshBasicMaterial({color: 0xffffff})
 		);
+		setCollisionDetection(bullet);
 
 		bullet.position.set(
 			pistol.position.x,
@@ -180,6 +189,7 @@ function processKeyboard(){
 			scene.remove(bullet);
 		}, 1000);
 		
+		collidableMeshList.push(bullets);
 		bullets.push(bullet);
 		scene.add(bullet);
 		player.canShoot = 10;
@@ -187,10 +197,19 @@ function processKeyboard(){
 	if (player.canShoot > 0) player.canShoot -= 1;
 }
 
+//rotate turret towards player if in certain range
 function turnTurret(r){
 	if (Math.pow(camera.position.x - gun.position.x, 2) + Math.pow(camera.position.y - gun.position.y, 2) + Math.pow(camera.position.z - gun.position.z, 2) <= Math.pow(r, 2)){
 		var ang = Math.atan2( ( camera.position.x - gun.position.x ), ( camera.position.z - gun.position.z ) );
 		gun.rotation.y = ang;
+	}
+}
+
+//hit detection
+function hitCrate(isCollision){
+	if (isCollision){
+		appendText(" Hit ");
+		crate.material.color.setHex(0x00ff00);
 	}
 }
 
@@ -207,6 +226,7 @@ function animate(){
 	// Uncomment for absurdity!
 	// meshes["pirateship"].rotation.z += 0.01;
     turnTurret(10);
+	checkCollision(crate, hitCrate, MovingCube);
 
 	for (var index = 0; index < bullets.length; index+=1){
 		if (bullets[index] == undefined) continue;
