@@ -71,7 +71,8 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     scene.add(pointLight3);
 
 //reticle
-addReticle(camera);
+var qf = [1,1,1,  1,1,1,  1,1,1];
+addReticle(camera,qf);
 scene.add(camera);
 
 document.body.appendChild(renderer.domElement);
