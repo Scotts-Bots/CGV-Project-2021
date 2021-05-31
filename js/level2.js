@@ -78,10 +78,8 @@ scene.add(camera);
 document.body.appendChild(renderer.domElement);
 
 //keyboard and mouse controls
-const speedDefault = 7;
-var speedW = 10, speedA = 10, speedS = 10, speedD = 10;
+
 let controls = new THREE.PointerLockControls(camera, renderer.domElement);
-var lastKeyPressed;
 let clock = new THREE.Clock();
 
 let btn1 = document.querySelector("#button1");
@@ -89,13 +87,7 @@ btn1.addEventListener('click', ()=>{
     controls.lock();
 });
 
-let keyboard = [];
-addEventListener('keydown', (e)=>{
-    keyboard[e.key] = true;
-});
-addEventListener('keyup', (e)=>{
-    keyboard[e.key] = false;
-});
+
 
 function setCamera(isPlay) {
     if (isPlay) {
@@ -123,50 +115,6 @@ function setCamera(isPlay) {
         camera.position.set(200,1000, -500);
         camera.up.set(0, 1, 0);
         camera.lookAt(0, 300, -2000);
-    }
-}
-
-function processKeyboard(){
-    if (keyboard['w']){
-        controls.moveForward(speedW);
-        lastKeyPressed = 'w';
-    }
-    else if(keyboard['a']){
-        controls.moveRight(-speedA);
-        lastKeyPressed = 'a';
-    }
-    else if(keyboard['s']){
-        controls.moveForward(-speedS);
-        lastKeyPressed = 's';
-    }
-    else if(keyboard['d']){
-        controls.moveRight(speedD);
-        lastKeyPressed = 'd';
-    }
-}
-
-function updateKeyboard(isCollision){
-    if (isCollision) {
-        appendText(" Hit ");
-        switch (lastKeyPressed) {
-            case "w":
-                speedW = 0;
-                break;
-            case "a":
-                speedA = 0;
-                break;
-            case "s":
-                speedS = 0;
-                break;
-            case "d":
-                speedD = 0;
-                break;
-        }
-    } else {
-        speedA = speedDefault;
-        speedW = speedDefault;
-        speedS = speedDefault;
-        speedD = speedDefault;
     }
 }
 
