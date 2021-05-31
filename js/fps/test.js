@@ -83,12 +83,12 @@ function init(){
 	);
 	scene.add(crate);
 	crate.position.set(2.5, 3/2, 2.5);
-	var cubeGeometry = new THREE.BoxBufferGeometry(4,4,4,20,20,20);
+	var cubeGeometry = new THREE.BoxBufferGeometry(1,2,1,5,5,5);
 	var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
 	MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
-	MovingCube.position.set(0, 0, 0);
+	MovingCube.position.set(0,0,0);
 	
-	setCollisionDetection(crate, MovingCube);
+	
 
     pistol = new THREE.Mesh();
     new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
@@ -109,11 +109,15 @@ function init(){
         //         node.castShadow = true;
         //     }
         // });
+		setCollisionDetection(gun, MovingCube);
         scene.add(gun);
     });
 	
+
 	
-	camera.position.set(0, player.height, -5);
+	
+	
+	camera.position.set(0, player.height-1, -5);
 	camera.lookAt(new THREE.Vector3(0,player.height,0));
 	
 	renderer = new THREE.WebGLRenderer();
@@ -225,7 +229,7 @@ function animate(){
 	// Uncomment for absurdity!
 	// meshes["pirateship"].rotation.z += 0.01;
     turnTurret(10);
-	checkCollision(crate, hitCrate, MovingCube);
+	checkCollision(gun, hitCrate, MovingCube);
 
 	for (var index = 0; index < bullets.length; index+=1){
 		if (bullets[index] == undefined) continue;
