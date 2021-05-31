@@ -83,11 +83,11 @@ function init(){
 	);
 	scene.add(crate);
 	crate.position.set(2.5, 3/2, 2.5);
-	var cubeGeometry = new THREE.BoxBufferGeometry(200,200,200,3,3,3);
-	cubeGeometry.scale((200*3)/200, (200*3)/200, (200*3)/200);
+	var cubeGeometry = new THREE.BoxBufferGeometry(4,4,4,20,20,20);
 	var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
 	MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
-	MovingCube.position.set(crate.position);
+	MovingCube.position.set(0, 0, 0);
+	
 	setCollisionDetection(crate, MovingCube);
 
     pistol = new THREE.Mesh();
@@ -169,7 +169,6 @@ function processKeyboard(){
 			new THREE.SphereGeometry(0.05, 8, 8),
 			new THREE.MeshBasicMaterial({color: 0xffffff})
 		);
-		setCollisionDetection(bullet);
 
 		bullet.position.set(
 			pistol.position.x,
@@ -189,7 +188,7 @@ function processKeyboard(){
 			scene.remove(bullet);
 		}, 1000);
 		
-		collidableMeshList.push(bullets);
+		collidableMeshList.push(bullet);
 		bullets.push(bullet);
 		scene.add(bullet);
 		player.canShoot = 10;
