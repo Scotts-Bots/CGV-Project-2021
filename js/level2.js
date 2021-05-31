@@ -11,7 +11,13 @@ const cameraWidth = 3500;
 const cameraHeight = cameraWidth / aspectRatio;
 var camera;
 setCamera(play);
-setCollisionDetection(camera); //collision detection hitbox
+
+//player hit box
+var cubeGeometry = new THREE.BoxBufferGeometry(200,200,200,3,3,3);
+var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
+MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
+MovingCube.position.set(0, 0, 0);
+setCollisionDetection(camera,MovingCube); //collision detection hitbox
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -165,7 +171,7 @@ function updateKeyboard(isCollision){
 
 function drawScene(){
     renderer.render(scene, camera);
-    checkCollision(camera,updateKeyboard);
+    checkCollision(camera,updateKeyboard, MovingCube);
     processKeyboard();
     requestAnimationFrame(drawScene);
 }

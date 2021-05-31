@@ -17,7 +17,13 @@ var cam = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100000)
 var renderer = new THREE.WebGL1Renderer({ antialias: true });
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-setCollisionDetection(cam); //collision detection hitbox added to camera
+
+//player hitbox
+var cubeGeometry = new THREE.BoxBufferGeometry(200,200,200,3,3,3);
+var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
+MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
+MovingCube.position.set(0, 0, 0);
+setCollisionDetection(cam,MovingCube); //collision detection hitbox added to camera
 
 renderer.setSize(innerWidth, innerHeight);
 cam.position.set(2100, 50, 200);
@@ -219,7 +225,7 @@ function drawScene() {
 
     
     renderer.render(scene, cam);
-    checkCollision(cam,updateKeyboard);
+    checkCollision(cam,updateKeyboard,MovingCube);
     processKeyboard();
     requestAnimationFrame(drawScene);
 }
