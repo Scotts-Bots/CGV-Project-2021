@@ -121,7 +121,22 @@ function AddPause(){
 
         });
 
+        var TitleText = new THREE.TextGeometry("Escape Mars", {
+
+            font: font,
+
+            size: 0.1,
+            height: 0.05,
+            curveSegments: 2,
+
+            bevelThickness: 0.005,
+        bevelSize: 0.005,
+        bevelEnabled: true
+
+        });
+
         textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+        const textMaterial1 = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 
         mesh = new THREE.Mesh(restartText, textMaterial);
         mesh.position.z = -1;
@@ -133,8 +148,14 @@ function AddPause(){
         mesh2.position.y = -0.18;
         mesh2.position.x = -0.1;
 
+        mesh3 = new THREE.Mesh(TitleText, textMaterial1);
+        mesh3.position.z = -1;
+        mesh3.position.y = 0.5;
+        mesh3.position.x = -0.4;
+
         cam.add(mesh);
         cam.add(mesh2);
+        cam.add(mesh3);
         scene.add(cam);
 
     });
