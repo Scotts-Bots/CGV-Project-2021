@@ -6,6 +6,7 @@ var shotTagets = false;
 var isPlaying = false;
 var success = 0;
 var lines = [];
+var paused = false;
 
 var wall;
 var wall1;
@@ -174,10 +175,11 @@ function processKeyboard() {
 function drawScene() {
 
     if (isPlaying == true) {
+        RemoveHUD();
         ran = Math.floor(Math.random() * 20);
         if (ran == 2) {
 
-            if (lines.length < 3) {
+            if (lines.length < 4) {
                 let line = new Line();
                 cam.add(line);
                 scene.add(cam);
@@ -196,6 +198,7 @@ function drawScene() {
             EndGame();
             unLocked = true;
         }
+    }else if(paused == true){
     }else{
         if (len == 0) {
             len = Math.floor(Math.random() * 10);
@@ -220,8 +223,9 @@ function drawScene() {
         if (unLocked == true) {
             scene.remove(door);
         }
-    
+        
         HUD();
+        
     }
 
     
@@ -260,6 +264,8 @@ function EndGame() {
     if (lines.length > 0) {
         for (i = 0; i < lines.length; i++) {
             cam.remove(lines[i]);
+        }
+        for (i = 0; i < lines.length; i++) {
             lines.splice(0, i);
         }
     }
@@ -274,8 +280,8 @@ function EndGame() {
 function playgame(){
     ambientLight.intensity = 1;
     wall = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(3.8, 1.8, 1),
-        new THREE.MeshLambertMaterial({ color: 0xffffff })
+        new THREE.BoxBufferGeometry(3.8, 1.8, 5),
+        new THREE.MeshLambertMaterial({ color: 0x696969 })
     );
     wall.position.z = -5
     wall.position.x = -0.05;
@@ -327,7 +333,7 @@ function Line() {
 }
 
 document.addEventListener('keydown', event => {
-    if (event.keyCode === 32) {
+    if (event.code === "Space") {
         if (lines.length > 0){
             line = lines[0];
             if (line.position.x<-0.93 && line.position.x>-1.052){
@@ -360,10 +366,6 @@ function HUD() {
     if (check != null) {
         check.parentNode.removeChild(check);
     }
-    check = document.getElementById("button");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
     check = document.getElementById("torch");
     if (check != null) {
         check.parentNode.removeChild(check);
@@ -384,10 +386,10 @@ function HUD() {
     if (check != null) {
         check.parentNode.removeChild(check);
     }
-    check = document.getElementById("task2");
-    
-    if (check != null) {
-        check.parentNode.removeChild(check);
+
+    check1 = document.getElementById("task2");
+    if (check1 != null) {
+        check1.parentNode.removeChild(check1);
     }
     check = document.getElementById("task3");
     if (check != null) {
@@ -410,22 +412,6 @@ function HUD() {
     Name.innerHTML = Player.getName();
     Name.style.top = 70 + 'px';
     Name.style.left = 70 + 'px';
-
-    var button = document.createElement('button');
-    button.id = "button";
-    button.style.position = 'absolute';
-    button.style.color = "black";
-    button.style.fontSize = "25px";
-    button.style.letterSpacing = "2px";
-    button.style.fontFamily = "Helvetica";
-    button.style.width = 200;
-    button.style.height = 500;
-    button.innerHTML = "Pause";
-    button.style.top = 70 + 'px';
-    button.style.left = 2200 + 'px';
-    button.addEventListener('click', () => {
-        //bring up pause menu
-    });
 
     var Hbar = document.createElement('progress');
     Hbar.id = "Hbar";
@@ -471,13 +457,12 @@ function HUD() {
     task2.style.fontFamily = "Helvetica";
     task2.style.width = 200;
     task2.style.height = 500;
-    task2.innerHTML = "> Unlock Doors";
+    task2.innerHTML = "> Unlock Door";
     task2.style.top = 260 + 'px';
     task2.style.left = 70 + 'px';
 
     var task3 = document.createElement('div');
     task3.id = "task3";
-    task3.id = task3;
     task3.style.position = 'absolute';
     task3.style.color = "white";
     task3.style.fontSize = "20px";
@@ -525,11 +510,11 @@ function HUD() {
     helper.style.fontSize = "15px";
     helper.style.letterSpacing = "2px";
     helper.style.fontFamily = "Helvetica";
-    helper.style.width = 2000;
+    helper.style.width = 1500;
     helper.style.height = 500;
-    helper.innerHTML = "Shoot - single click,    Interact - double click,         Movement - WASD";
+    helper.innerHTML = "Shoot - single click,    Interact - double click,         Movement - WASD           PAUSE - P";
     helper.style.top = 40 + 'px';
-    helper.style.left = 1100 + 'px';
+    helper.style.left = 950 + 'px';
 
     var Q = document.createElement('div');
     Q.id ="Q";
@@ -564,6 +549,53 @@ function HUD() {
     if (shotTagets == false) {
         document.body.appendChild(task3);
     }
-    document.body.appendChild(button);
 
+}
+
+function RemoveHUD(){
+    check = document.getElementById("Hbar");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("helper");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("Q");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("torch");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("ammo");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("Name");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("task");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("task1");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+
+    check1 = document.getElementById("task2");
+    if (check1 != null) {
+        check1.parentNode.removeChild(check1);
+    }
+    check = document.getElementById("task3");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("gun");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
 }
