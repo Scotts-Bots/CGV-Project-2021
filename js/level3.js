@@ -10,10 +10,17 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setSize(innerWidth, innerHeight);
 //cam.position.set(500,50,2200);
-cam.position.set(2100,50,200);
-cam.lookAt(50000,0000,50000);
+cam.position.set(2000,50,-20000);
+cam.lookAt(5000,0000,50000);
 //cam.lookAt(-2000,0,15000)
 document.body.appendChild(renderer.domElement);
+
+//collision detection
+var cubeGeometry = new THREE.BoxBufferGeometry(200,200,200,3,3,3);
+var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:false } );
+MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
+MovingCube.position.set(0, 0, 0);
+setCollisionDetection(cam,MovingCube); //collision detection hitbox
 
 //LIGHTING
 var directionalLight = new THREE.PointLight(0xffdead, 0.5);
@@ -32,7 +39,8 @@ finder.position.set(47500, 8000, 20000);
 
 //SCENE MODELING - actual scene stored in floor1.js
 const room = Room();
-room.scale.set(4,4,2.5);
+room.scale.set(4,8,5);
+room.position.set(0,300,0);
 room.rotateX(3*Math.PI/2);
 room.castShadow = true;
 scene.add(room);
@@ -60,6 +68,7 @@ btn1.addEventListener('click', ()=>{
 //ACTION!
 function drawScene(){
     renderer.render(scene, cam);
+    checkCollision(cam,updateKeyboard,MovingCube);
     processKeyboard();
     requestAnimationFrame(drawScene);
 }

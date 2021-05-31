@@ -120,7 +120,7 @@ function setCamera(isPlay) {
 
 function drawScene(){
     renderer.render(scene, camera);
-    checkCollision(camera,updateKeyboard, MovingCube);
+    checkCollision(camera,updateKeyboard,MovingCube);
     console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
     processKeyboard();
     requestAnimationFrame(drawScene);
