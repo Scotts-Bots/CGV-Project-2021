@@ -153,18 +153,18 @@ loader.load('Blender Models/Enemies/Enemies.gltf' , function (gltf)  {
 });
 
 var otank1 = new THREE.Mesh();
-loader.load('Blender Models/oxygen tank/Otank.gltf' , function (gltf)  {
+loader.load('Blender Models/Health Packs/HealthPack.gltf' , function (gltf)  {
     otank1 = gltf.scene;
-    otank1.scale.set(350,350,350);
-    otank1.position.set(-20000,100,-11000);
+    otank1.scale.set(100, 100, 100);
+    otank1.position.set(-20000,-250,-11000);
     scene.add(otank1);
 });
 
 var otank2 = new THREE.Mesh();
-loader.load('Blender Models/oxygen tank/Otank.gltf' , function (gltf)  {
+loader.load('Blender Models/Health Packs/HealthPack.gltf' , function (gltf)  {
     otank2 = gltf.scene;
-    otank2.scale.set(350,350,350);
-    otank2.position.set(-7000,100,-22000);
+    otank2.scale.set(100,100,100);
+    otank2.position.set(-7000,-250,-22000);
     scene.add(otank2);
 });
 
@@ -184,12 +184,24 @@ function turnTurret(r, obj){
 	}
 }
 
+function getPacks(r, obj){
+	if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)){
+		//replenish health
+        scene.remove(obj);
+        
+	}
+}
+
 function drawScene(){
     renderer.render(scene, cam);
+    otank1.rotation.y += 0.05;
+    otank2.rotation.y += 0.05;
     checkCollision(cam,updateKeyboard,MovingCube);
     processKeyboard();
-    turnTurret(8000, enemy1);
-    turnTurret(8000, enemy2);
+    turnTurret(5000, enemy1);
+    turnTurret(5000, enemy2);
+    getPacks(500, otank1);
+    getPacks(500, otank2);
     requestAnimationFrame(drawScene);
     Player.decHealth(0.01);
     if(Player.getHealth() <= 0){
