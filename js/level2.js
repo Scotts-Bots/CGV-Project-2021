@@ -831,7 +831,6 @@ function RemoveCredit(){
 
         scene.add(camera);
 }
-
 function RemovePause(){
         camera.remove(mesh);
         camera.remove(mesh1);
@@ -981,5 +980,4 @@ function AddCredit(){
 
     });
 }
-
 
