@@ -60,10 +60,10 @@ scene.add(cam);
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);
 let clock = new THREE.Clock();
 
-let btn1 = document.querySelector("#button1");
-btn1.addEventListener('click', ()=>{
-    controls.lock();
-});
+// let btn1 = document.querySelector("#button1");
+// btn1.addEventListener('click', ()=>{
+//     controls.lock();
+// });
 
 var loader = new THREE.GLTFLoader();
 
@@ -136,13 +136,22 @@ new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function 
     scene.add(cam);
 });
 
-var enemy = new THREE.Mesh();
+var enemy1 = new THREE.Mesh();
 loader.load('Blender Models/Enemies/Enemies.gltf' , function (gltf)  {
-    enemy = gltf.scene;
-    enemy.scale.set(350,350,350);
-    enemy.position.set(2000,100,-20000);
-    scene.add(enemy);
+    enemy1 = gltf.scene;
+    enemy1.scale.set(350,350,350);
+    enemy1.position.set(2000,100,-20000);
+    scene.add(enemy1);
 });
+
+var enemy2 = new THREE.Mesh();
+loader.load('Blender Models/Enemies/Enemies.gltf' , function (gltf)  {
+    enemy2 = gltf.scene;
+    enemy2.scale.set(350,350,350);
+    enemy2.position.set(7000,100,-15000);
+    scene.add(enemy2);
+});
+
 HUD();
 Tasks();
 
@@ -159,7 +168,8 @@ function drawScene(){
     renderer.render(scene, cam);
     checkCollision(cam,updateKeyboard,MovingCube);
     processKeyboard();
-    turnTurret(5000, enemy);
+    turnTurret(5000, enemy1);
+    turnTurret(5000, enemy2);
     requestAnimationFrame(drawScene);
     Player.decHealth(0.01);
     if(Player.getHealth() <= 0){
