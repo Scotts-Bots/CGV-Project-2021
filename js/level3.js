@@ -136,6 +136,15 @@ new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function 
     scene.add(cam);
 });
 
+var enermy = new THREE.Mesh();
+loader.load('Blender Models/Enemies/Enemies.gltf' , function (gltf)  {
+    enermy = gltf.scene;
+    enermy.scale.set(700,700,700);
+    enermy.position.set(2000,100,-20000);
+    scene.add(enermy);
+});
+HUD();
+Tasks();
 
 //ACTION!
 function drawScene(){
@@ -144,6 +153,47 @@ function drawScene(){
     processKeyboard();
     requestAnimationFrame(drawScene);
     Player.decHealth(0.02);
+    HUD();
+    Tasks();
+}
+function Tasks(){
+    check = document.getElementById("task");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("task1");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+
+    var task = document.createElement('div');
+    task.id = "task";
+    task.style.position = 'absolute';
+    task.style.color = "white";
+    task.style.fontSize = "20px";
+    task.style.letterSpacing = "2px";
+    task.style.fontFamily = "Helvetica";
+    task.style.width = 200;
+    task.style.height = 500;
+    task.innerHTML = "Task(s)";
+    task.style.top = 200 + 'px';
+    task.style.left = 70 + 'px';
+
+    var task1 = document.createElement('div');
+    task1.id = "task1";
+    task1.style.position = 'absolute';
+    task1.style.color = "white";
+    task1.style.fontSize = "20px";
+    task1.style.letterSpacing = "2px";
+    task1.style.fontFamily = "Helvetica";
+    task1.style.width = 200;
+    task1.style.height = 500;
+    task1.innerHTML = "> Get to the rocketship";
+    task1.style.top = 230 + 'px';
+    task1.style.left = 70 + 'px';
+    
+    document.body.appendChild(task);
+    document.body.appendChild(task1);
 }
 
 drawScene();
