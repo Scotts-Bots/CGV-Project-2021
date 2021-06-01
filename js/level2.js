@@ -123,6 +123,14 @@ function drawScene(){
     renderer.render(scene, camera);
     checkCollision(camera,updateKeyboard,MovingCube);
     //console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
+    // pistol.position.set(
+	// 	cam.position.x - Math.sin(cam.rotation.y + Math.PI/6) * 0.75,
+	// 	cam.position.y,//cam.position.y - 0.5 + Math.sin(time*4 + cam.position.x + cam.position.z)*0.01,
+	// 	cam.position.z + Math.cos(cam.rotation.y + Math.PI/6) * 0.75 + 200
+	// );
+    // pistol.rotation.z = cam.rotation.z;
+    // pistol.rotation.y = cam.rotation.y - Math.PI;
+    // pistol.rotation.x = cam.rotation.x;
     Progress()
     processKeyboard();
     requestAnimationFrame(drawScene);
@@ -174,6 +182,13 @@ function loadAssets(){
         swipePad.position.set(600,50,-3715);
         scene.add(swipePad);
     })
+
+    var pistol = new THREE.Mesh();
+    new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+        pistol = gltf.scene;
+        pistol.scale.set(100, 100, 100);
+        scene.add(pistol);
+    });
 
 }
 //generic floor mesh

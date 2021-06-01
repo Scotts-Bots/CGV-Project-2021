@@ -343,6 +343,13 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf' , function
     scene.add(shelf2);
 });
 
+var pistol = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+    pistol = gltf.scene;
+    pistol.scale.set(100, 100, 100);
+    scene.add(pistol);
+});
+
 HUD();
 Tasks();
 
@@ -373,6 +380,15 @@ btn1.addEventListener('click', () => {
 
 function drawScene() {
 
+    pistol.position.set(
+		cam.position.x - Math.sin(cam.rotation.y + Math.PI/6) * 0.75,
+		cam.position.y,//cam.position.y - 0.5 + Math.sin(time*4 + cam.position.x + cam.position.z)*0.01,
+		cam.position.z + Math.cos(cam.rotation.y + Math.PI/6) * 0.75 + 200
+	);
+    pistol.rotation.z = cam.rotation.z;
+    pistol.rotation.y = cam.rotation.y - Math.PI;
+    pistol.rotation.x = cam.rotation.x;
+    
     if (isPlaying == true) {
         RemoveHUD();
         RemoveTasks()
