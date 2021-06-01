@@ -38,8 +38,8 @@ class Player {
         this.health = 100;
     }
 
-    static decHealth() {
-        this.health = this.health - 0.5;
+    static decHealth(amt) {
+        this.health = this.health - amt;
     }
 
     static incCards(increase) {

@@ -7,12 +7,12 @@ var isPlaying = false;
 var success = 0;
 var lines = [];
 var paused = false;
+var hitTargets = false;
 
 var wall;
 var wall1;
 var wall2;
 var wall3;
-var aLight = 0.05;
 
 var cam = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100000);
 var renderer = new THREE.WebGL1Renderer({ antialias: true });
@@ -21,7 +21,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200,200,200,3,3,3);
-var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
+var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:false } );
 MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
 MovingCube.position.set(0, 0, 0);
 setCollisionDetection(cam,MovingCube); //collision detection hitbox added to camera
@@ -30,7 +30,7 @@ renderer.setSize(innerWidth, innerHeight);
 cam.position.set(2100, 50, 200);
 cam.lookAt(2900, 0, 2000);
 
-var ambientLight = new THREE.AmbientLight(0xffffff, aLight);//0.05
+var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);//0.05
 scene.add(ambientLight);
 
 //back right room
@@ -80,6 +80,14 @@ if (unLocked == false) {
     scene.add(door);
 }
 
+const door1 = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(30, 520, 400),
+    new THREE.MeshLambertMaterial({ color: 0x808080 })
+);
+door1.rotateY(Math.PI/2);
+door1.position.set(1350, -120, 0);
+scene.add(door1);
+
 const box = sky();
 box.translateY(14600);
 scene.add(box);
@@ -88,23 +96,201 @@ var qf = [2000,1,2000,  2000,1,2000,  2000,1,2000]
 addReticle(cam, qf);
 scene.add(cam);
 
-const finder = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(200, 200, 200),
+const ammof = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(100, 100, 100),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
-finder.position.set(2500, 50, 1500);
-scene.add(finder);
+ammof.position.set(2100, -50, 200);
+ammof.visible = false;
+scene.add(ammof);
+
+const switchf = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(50, 50, 50),
+    new THREE.MeshLambertMaterial({ color: 0xffffff })
+);
+switchf.position.set(1000, -10, 1550);
+switchf.visible = false;
+scene.add(switchf);
+
+const switchf2 = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(50, 50, 50),
+    new THREE.MeshLambertMaterial({ color: 0xffffff })
+);
+switchf2.position.set(1000, -10, 200);
+switchf2.visible = false;
+scene.add(switchf2);
+
+const gunf = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(150, 150, 150),
+    new THREE.MeshLambertMaterial({ color: 0xffffff })
+);
+gunf.position.set(-900, -120, 2600);
+gunf.visible = false;
+scene.add(gunf);
+
+
+
+var bedLight = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
+    bedLight = gltf.scene;
+    bedLight.scale.set(175,175,200);
+    bedLight.position.set(2150, 150, 1800);
+    scene.add(bedLight);
+});
+var ELight = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
+    ELight = gltf.scene;
+    ELight.scale.set(40,20,40);
+    ELight.rotation.z = 3*Math.PI/2;
+    ELight.position.set(1780, 240, 1200);
+    scene.add(ELight);
+});
+
+var hLight = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
+    hLight = gltf.scene;
+    hLight.scale.set(175,175,200);
+    hLight.position.set(1200, 150, 1800);
+    scene.add(hLight);
+});
+
+var frLight = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
+    frLight = gltf.scene;
+    frLight.scale.set(175,175,200);
+    frLight.position.set(50, 150, 1300);
+    scene.add(frLight);
+});
+
+var brLight = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
+    brLight = gltf.scene;
+    brLight.scale.set(175,175,200);
+    brLight.position.set(50, 150, 2600);
+    scene.add(brLight);
+});
+
+var Ammo = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Ammo Box/AmmoBox.gltf' , function (gltf)  {
+    Ammo = gltf.scene;
+    Ammo.scale.set(20,20,20);
+    Ammo.position.set(2100, -100, 200);
+    scene.add(Ammo);
+});
+
+const domEvent2 = new THREEx.DomEvents(cam,  renderer.domElement);
+
+domEvent2.addEventListener(ammof, 'dblclick', event =>{
+    scene.remove(Ammo);//must remove object
+    Player.incAmmo();
+});
+
+var lswitch = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Switch/Switch.gltf' , function (gltf)  {
+    lswitch = gltf.scene;
+    lswitch.scale.set(200,200,200);
+    lswitch.position.set(800, -200, 1750);
+    scene.add(lswitch);
+});
 
 const domEvent1 = new THREEx.DomEvents(cam, renderer.domElement);
 
-domEvent1.addEventListener(finder, 'dblclick', event => {
+domEvent1.addEventListener(switchf, 'dblclick', event => {
     isPlaying = true;
     playgame();
 });
 
-// const hud = HUD();
-// cam.add(hud);
-// scene.add(cam);
+var lswitch2 = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Switch/Switch.gltf' , function (gltf)  {
+    lswitch2 = gltf.scene;
+    lswitch2.scale.set(200,200,200);
+    lswitch2.position.set(800, -200, 400);
+    scene.add(lswitch2);
+});
+
+const domEvent3 = new THREEx.DomEvents(cam, renderer.domElement);
+
+domEvent3.addEventListener(switchf2, 'dblclick', event => {
+    if(success>=10 && unLocked == true && Player.checkGun() != false && Player.getAmmo() > 0){
+        window.location.href = "level2.html";
+    }
+});
+
+var pgun = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+    pgun = gltf.scene;
+    pgun.scale.set(175,175,175);
+    pgun.rotation.z = (Math.PI/2);
+    pgun.position.set(-900, -170, 2600);
+    scene.add(pgun);
+});
+
+const domEvent4 = new THREEx.DomEvents(cam, renderer.domElement);
+
+domEvent4.addEventListener(gunf, 'dblclick', event => {
+    scene.remove(pgun);
+    Player.pickUpGun();
+});
+
+var bTable = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 2/table/Table.gltf' , function (gltf)  {
+    bTable = gltf.scene;
+    bTable.scale.set(175,200,175);
+    bTable.rotation.y = (Math.PI/2);
+    bTable.position.set(2150, -400, 250);
+    scene.add(bTable);
+});
+
+var bChair = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 2/chair/Chair.gltf' , function (gltf)  {
+    bChair = gltf.scene;
+    bChair.scale.set(175,200,175);
+    bChair.rotation.y = (Math.PI/2);
+    bChair.position.set(2050, -370, 300);
+    scene.add(bChair);
+});
+
+var Table = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 2/table/Table.gltf' , function (gltf)  {
+    Table = gltf.scene;
+    Table.scale.set(175,155,500);
+    Table.position.set(-900, -400, 2800);
+    scene.add(Table);
+});
+
+var Chair = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 2/chair/Chair.gltf' , function (gltf)  {
+    Chair = gltf.scene;
+    Chair.scale.set(175,140,175);
+    Chair.position.set(-900, -370, 2600);
+    scene.add(Chair);
+});
+
+var mScope = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 1/Microscope/Microscope.gltf' , function (gltf)  {
+    mScope = gltf.scene;
+    mScope.scale.set(50,50,50);
+    mScope.rotation.y = (Math.PI/2);
+    mScope.position.set(-900, -170, 2300);
+    scene.add(mScope);
+});
+var mScope1 = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 1/Microscope/Microscope.gltf' , function (gltf)  {
+    mScope1 = gltf.scene;
+    mScope1.scale.set(50,50,50);
+    mScope1.rotation.y = (Math.PI/2);
+    mScope1.position.set(-900, -170, 2100);
+    scene.add(mScope1);
+});
+var mScope2 = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 1/Microscope/Microscope.gltf' , function (gltf)  {
+    mScope2 = gltf.scene;
+    mScope2.scale.set(50,50,50);
+    mScope2.rotation.y = (Math.PI/2);
+    mScope2.position.set(-900, -170, 1900);
+    scene.add(mScope2);
+});
+
 HUD();
 
 
@@ -200,25 +386,25 @@ function drawScene() {
         }
     }else if(paused == true){
     }else{
-        if (len == 0) {
-            len = Math.floor(Math.random() * 10);
-            ran = Math.floor(Math.random() * 6);
-            if (ran == 2) {
-                intensity = 0.3;
-                light1.intensity = intensity;
-                light5.intensity = intensity;
-                light7.intensity = intensity;
-                light9.intensity = intensity;
-            } else {
-                intensity = 1;
-                light1.intensity = intensity;
-                light5.intensity = intensity;
-                light7.intensity = intensity;
-                light9.intensity = intensity;
-            }
-        } else {
-            len = len - 1;
-        }
+        // if (len == 0) {
+        //     len = Math.floor(Math.random() * 10);
+        //     ran = Math.floor(Math.random() * 6);
+        //     if (ran == 2) {
+        //         intensity = 0.3;
+        //         light1.intensity = intensity;
+        //         light5.intensity = intensity;
+        //         light7.intensity = intensity;
+        //         light9.intensity = intensity;
+        //     } else {
+        //         intensity = 1;
+        //         light1.intensity = intensity;
+        //         light5.intensity = intensity;
+        //         light7.intensity = intensity;
+        //         light9.intensity = intensity;
+        //     }
+        // } else {
+        //     len = len - 1;
+        // }
     
         if (unLocked == true) {
             scene.remove(door);
@@ -511,10 +697,10 @@ function HUD() {
     helper.style.letterSpacing = "2px";
     helper.style.fontFamily = "Helvetica";
     helper.style.width = 1500;
-    helper.style.height = 500;
-    helper.innerHTML = "Shoot - single click,    Interact - double click,         Movement - WASD           PAUSE - P";
+    helper.style.height = 700;
+    helper.innerHTML = "To aim center the mouse on the reticle and press r, Shoot - single click,    Interact - double click,         Movement - WASD           PAUSE - P";
     helper.style.top = 40 + 'px';
-    helper.style.left = 950 + 'px';
+    helper.style.left = 500 + 'px';
 
     var Q = document.createElement('div');
     Q.id ="Q";
@@ -537,7 +723,7 @@ function HUD() {
     document.body.appendChild(torch);
     document.body.appendChild(Q);
     document.body.appendChild(helper);
-    if (Player.checkGun() == false && Player.getAmmo() == 0) {
+    if (Player.checkGun() == false || Player.getAmmo() == 0) {
         document.body.appendChild(task1);
     }
     if (Player.checkGun() != false && Player.getAmmo() > 0) {
