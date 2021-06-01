@@ -25,14 +25,16 @@ var keycard;
 var found = false;
 var swipePad;
 
+//load textures
+const materialimg = new THREE.MeshPhongMaterial();
+materialimg.map = new THREE.TextureLoader().load('Images/wall_texture.jpg');
+
 //actual level
 const room = Room();
 room.scale.set(1.3,1,1.5);
 //room.scale.setScalar(1.5);
 room.position.set(0,-300,0);
 scene.add(room);
-
-
 
 //skybox
 const box = sky();
@@ -393,10 +395,10 @@ domEvent2.addEventListener(keycardf, 'dblclick', event =>{
 function Floor() {
     const floor = new THREE.Mesh(
         new THREE.BoxBufferGeometry(200, 100, 200),
-        new THREE.MeshLambertMaterial({ color: 0x888888 })
+        materialimg
+        //new THREE.MeshLambertMaterial({ color: 0x888888 })
     );
     floor.receiveShadow = true;
-    floor.castShadow = true;
     return floor;
 }
 
@@ -405,7 +407,7 @@ function Wall() {
     const wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(100, 800, 60),
         new THREE.MeshLambertMaterial({
-             color: 0xc99f63,
+             materialimg//color: 0xc99f63,
              })
     );
     wall.receiveShadow = true;
