@@ -98,7 +98,7 @@ loader.load('Blender Models/rocketship/rocket.gltf' , function (gltf)  {
 });
 
 const rocketf = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(6000, 30000, 6000),
+    new THREE.BoxBufferGeometry(4000, 30000, 4000),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
 rocketf.position.set(5000,-2000,-50000);
@@ -117,7 +117,7 @@ domEvent1.addEventListener(rocketf, 'dblclick', event => {
     finderposition.setFromMatrixPosition( rocketf.matrixWorld );
     fx = finderposition.x;
     fy = finderposition.z;
-    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <15000){
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <10000){
         window.location.href = "index.html";
     }else{
         console.log(Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)));
@@ -150,6 +150,22 @@ loader.load('Blender Models/Enemies/Enemies.gltf' , function (gltf)  {
     enemy2.scale.set(350,350,350);
     enemy2.position.set(7000,100,-15000);
     scene.add(enemy2);
+});
+
+var otank1 = new THREE.Mesh();
+loader.load('Blender Models/oxygen tank/Otank.gltf' , function (gltf)  {
+    otank1 = gltf.scene;
+    otank1.scale.set(350,350,350);
+    otank1.position.set(-20000,100,-11000);
+    scene.add(otank1);
+});
+
+var otank2 = new THREE.Mesh();
+loader.load('Blender Models/oxygen tank/Otank.gltf' , function (gltf)  {
+    otank2 = gltf.scene;
+    otank2.scale.set(350,350,350);
+    otank2.position.set(-7000,100,-22000);
+    scene.add(otank2);
 });
 
 HUD();
