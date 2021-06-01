@@ -24,7 +24,7 @@ function appendText(txt)
 function checkCollision(obj,reactionFunction,hitBox){
     var originPoint = obj.position;
 
-	clearText();
+	//clearText();
 	var cubeArr = hitBox.geometry.attributes.position.array;
 	for (var vertexIndex = 0; vertexIndex < cubeArr.length/3; vertexIndex+=3)
 	{

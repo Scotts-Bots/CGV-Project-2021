@@ -14,7 +14,7 @@ setCamera(play);
 
 //player hit box
 var cubeGeometry = new THREE.BoxBufferGeometry(200,200,200,3,3,3);
-var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
+var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:false } );
 MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
 MovingCube.position.set(0, 0, 0);
 setCollisionDetection(camera,MovingCube); //collision detection hitbox
