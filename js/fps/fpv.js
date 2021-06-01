@@ -135,7 +135,8 @@ function processKeyboard(){
 
 function drawScene(){
     renderer.render(scene, cam);
-    processKeyboard();
+    //processKeyboard();
+    addShooting();
     var relativeCameraOffset = new THREE.Vector3(0, 5, 20);
     var cameraOffset = relativeCameraOffset.applyMatrix4(pistol.matrixWorld);
     pistol.position.set(

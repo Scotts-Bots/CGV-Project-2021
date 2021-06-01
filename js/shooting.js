@@ -2,9 +2,9 @@ var bullets = [];
 var player = { height:1.8, speed:0.2, turnSpeed:Math.PI*0.02, canShoot:0};
 
 function addShooting(){
-    scene = new THREE.Scene();
-	camera = new THREE.PerspectiveCamera(90, 1280/720, 0.1, 1000);
-	clock = new THREE.Clock();
+    // scene = new THREE.Scene();
+	// camera = new THREE.PerspectiveCamera(90, 1280/720, 0.1, 1000);
+	// clock = new THREE.Clock();
 
     pistol = new THREE.Mesh();
     new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
@@ -12,16 +12,16 @@ function addShooting(){
         scene.add(pistol);
     });
 
-    camera.position.set(0, player.height-1, -5);
-	camera.lookAt(new THREE.Vector3(0,player.height,0));
+    // camera.position.set(0, player.height-1, -5);
+	// camera.lookAt(new THREE.Vector3(0,player.height,0));
 	
-	renderer = new THREE.WebGLRenderer();
-	renderer.setSize(1280, 720);
+	// renderer = new THREE.WebGLRenderer();
+	// renderer.setSize(1280, 720);
 
-	renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.BasicShadowMap;
+	// renderer.shadowMap.enabled = true;
+	// renderer.shadowMap.type = THREE.BasicShadowMap;
 	
-	document.body.appendChild(renderer.domElement);
+	// document.body.appendChild(renderer.domElement);
 
     animate();
 }

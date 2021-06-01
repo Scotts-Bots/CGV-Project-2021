@@ -98,11 +98,28 @@ loader.load('Blender Models/rocketship/rocket.gltf' , function (gltf)  {
     scene.add(rocket);
 });
 
+var pistol = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+    pistol = gltf.scene;
+    pistol.scale.set(100, 100, 100);
+
+    //pistol.position.set(cam.position.x, cam.position.y, cam.position.z);
+    scene.add(pistol);
+});
+
 
 //ACTION!
 function drawScene(){
     renderer.render(scene, cam);
     checkCollision(cam,updateKeyboard,MovingCube);
+    pistol.position.set(
+		cam.position.x - Math.sin(cam.rotation.y + Math.PI/6) * 0.75,
+		cam.position.y,//cam.position.y - 0.5 + Math.sin(time*4 + cam.position.x + cam.position.z)*0.01,
+		cam.position.z + 200//- Math.cos(cam.rotation.y + Math.PI/6) * 0.75
+	);
+    pistol.rotation.z = cam.rotation.z;
+    pistol.rotation.y = cam.rotation.y - Math.PI;
+    pistol.rotation.x = cam.rotation.x;
     processKeyboard();
     requestAnimationFrame(drawScene);
     Player.decHealth(0.02);
