@@ -30,13 +30,12 @@ document.addEventListener('keydown', event => {
 
 document.addEventListener('keydown', event => {
     if (event.code === "ArrowUp") {
-        window.location.href = "index.html";
+        window.location.href = "level1.html";
     }
 });
 
 document.addEventListener('keydown', event => {
     if (event.code === "ArrowDown") {
-        RemoveCredit();
         AddPause();
     }
 });
@@ -44,8 +43,7 @@ document.addEventListener('keydown', event => {
 document.addEventListener('keydown', event => {
     if (event.code === "ArrowRight") {
 
-        RemovePause();
-        AddCredit();
+        window.location.href = "index.html";
 
     }
 });
@@ -133,7 +131,7 @@ function AddPause(){
 
         });
 
-        var creditText = new THREE.TextGeometry("Credits", {
+        var creditText = new THREE.TextGeometry("Main Menu", {
 
             font: font,
 
@@ -188,7 +186,7 @@ function AddPause(){
         mesh2 = new THREE.Mesh(creditText, textMaterial);
         mesh2.position.z = -1;
         mesh2.position.y = -0.18;
-        mesh2.position.x = -0.15;
+        mesh2.position.x = -0.2;
 
         mesh3 = new THREE.Mesh(rArrow, textMaterial);
         mesh3.position.z = -1;

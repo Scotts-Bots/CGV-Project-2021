@@ -31,6 +31,19 @@ document.body.appendChild(renderer.domElement);
 cam.position.z = 3;
 light.position.set(5, 3, 5);
 
+var input = document.createElement('INPUT');
+input.id ="input";
+input.style.position = 'absolute';
+input.style.color = "white";
+input.style.fontSize = "20px";
+input.style.letterSpacing = "2px";
+input.style.fontFamily = "Helvetica";
+input.style.width = 200;
+input.style.height = 500;
+input.innerHTML = "Q";
+input.style.top = 820 + 'px';
+input.style.left = 2130 + 'px';
+
 material.map = new THREE.TextureLoader().load('textures/diffuse.jpg');
 material.bumpMap = new THREE.TextureLoader().load('textures/bump.jpg');     
 material.bumpScale = 0.015;

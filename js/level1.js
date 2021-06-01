@@ -92,6 +92,7 @@ collidableMeshList.push(door1);
 collidableMeshList.push(door);
 
 const box = sky();
+box.scale.set(0.5,0.5,0.5);
 box.translateY(14600);
 scene.add(box);
 
