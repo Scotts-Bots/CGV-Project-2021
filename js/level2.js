@@ -13,7 +13,7 @@ var camera;
 setCamera(play);
 
 //player hit box
-var cubeGeometry = new THREE.BoxBufferGeometry(200,200,200,3,3,3);
+var cubeGeometry = new THREE.BoxBufferGeometry(100,100,100,3,3,3);
 var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:false } );
 MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
 MovingCube.position.set(0, 0, 0);
@@ -27,6 +27,9 @@ room.scale.set(1.3,1,1.5);
 //room.scale.setScalar(1.5);
 room.position.set(0,-300,0);
 scene.add(room);
+
+//loading blender models
+var gltfLoader = new THREE.GLTFLoader();
 loadAssets();
 
 //skybox
@@ -123,14 +126,6 @@ function drawScene(){
     renderer.render(scene, camera);
     checkCollision(camera,updateKeyboard,MovingCube);
     //console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
-    // pistol.position.set(
-	// 	cam.position.x - Math.sin(cam.rotation.y + Math.PI/6) * 0.75,
-	// 	cam.position.y,//cam.position.y - 0.5 + Math.sin(time*4 + cam.position.x + cam.position.z)*0.01,
-	// 	cam.position.z + Math.cos(cam.rotation.y + Math.PI/6) * 0.75 + 200
-	// );
-    // pistol.rotation.z = cam.rotation.z;
-    // pistol.rotation.y = cam.rotation.y - Math.PI;
-    // pistol.rotation.x = cam.rotation.x;
     Progress()
     processKeyboard();
     requestAnimationFrame(drawScene);
@@ -146,8 +141,38 @@ function Progress(){
 }
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
+function Shelf(sx,sy,sz,px,py,pz) {
+    gltfLoader.load('Blender Models/Level 2/Shelf/Shelf.gltf' , function (gltf)  {
+        shelf = gltf.scene;
+        shelf.scale.set(sx,sy,sz);
+        shelf.position.set(px,py,pz);
+        scene.add(shelf);
+    });
+}
+
+//rotated shelf
+function rShelf(sx,sy,sz,px,py,pz) {
+    gltfLoader.load('Blender Models/Level 2/Shelf/Shelf.gltf' , function (gltf)  {
+        rshelf = gltf.scene;
+        rshelf.scale.set(sx,sy,sz);
+        rshelf.position.set(px,py,pz);
+        rshelf.rotateY(Math.PI/2);
+        scene.add(rshelf);
+    });
+}
+
+//toolbox
+function Toolbox(sx,sy,sz,px,py,pz,ry) {
+    gltfLoader.load('Blender Models/Level 2/toolbox/Toolbox.gltf' , function (gltf)  {
+        toolbox = gltf.scene;
+        toolbox.scale.set(sx,sy,sz);
+        toolbox.position.set(px,py,pz);
+        toolbox.rotateY(ry);
+        scene.add(toolbox);
+    });
+}
+
 function loadAssets(){
-    var gltfLoader = new THREE.GLTFLoader();
 
     var warningLight = new THREE.Mesh();
     gltfLoader.load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
@@ -183,15 +208,22 @@ function loadAssets(){
         scene.add(swipePad);
     })
 
-    var pistol = new THREE.Mesh();
-    new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
-        pistol = gltf.scene;
-        pistol.scale.set(100, 100, 100);
-        scene.add(pistol);
-    });
+    //shelves - function made above
+        //main room shelves
+        Shelf(200,200,200,800,-350,-600);
+        Shelf(200,200,200,800,-350,1110);
+        Shelf(200,200,200,800,-350,1110);
+
+        //side room shelves
+        rShelf(200,200,200,-700,-350,200);
+        Shelf(200,200,200,-1400,-350,200);
+        Shelf(200,200,200,-1400,-350,-300);
+    
+    Toolbox(50,50,50,-2150,-250,1000,0);
+    Toolbox(50,50,50,300,-250,-200,180);
 
 }
-//generic floor mesh
+//generic floor meshw
 function Floor() {
     const floor = new THREE.Mesh(
         new THREE.BoxBufferGeometry(200, 100, 200),
