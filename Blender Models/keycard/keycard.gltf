@@ -108,6 +108,11 @@
     "materials" : [
         {
             "doubleSided" : true,
+            "emissiveFactor" : [
+                0.017867499962449074,
+                0.017867499962449074,
+                0.017867499962449074
+            ],
             "name" : "Material.001",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
@@ -122,6 +127,11 @@
         },
         {
             "doubleSided" : true,
+            "emissiveFactor" : [
+                0.02422427199780941,
+                0.02422427199780941,
+                0.02422427199780941
+            ],
             "name" : "Material.002",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [

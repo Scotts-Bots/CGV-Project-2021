@@ -60,13 +60,13 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     //pointLight2.castShadow = true; // default false
     scene.add(pointLight2);
     
-    const finder1 = new THREE.Mesh(
-    new THREE.SphereBufferGeometry(50),
-    new THREE.MeshLambertMaterial({color: 0x666666})
-    );
-    finder1.position.set(-200,500,-1500);
-    //finder1.castShadow = true;
-    scene.add(finder1);
+    // const finder1 = new THREE.Mesh(
+    // new THREE.SphereBufferGeometry(50),
+    // new THREE.MeshLambertMaterial({color: 0x666666})
+    // );
+    // finder1.position.set(-200,500,-1500);
+    // //finder1.castShadow = true;
+    // scene.add(finder1);
 
     // red light
     const pointLight3 = new THREE.PointLight( 0xff0000, 2, 4000, 3);
@@ -141,17 +141,33 @@ function Progress(){
 }
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
+function CeilingLight(px,py,pz,ry) {
+    var ceilingLight = new THREE.Mesh();
+    gltfLoader.load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
+        ceilingLight = gltf.scene;
+        ceilingLight.scale.set(175,175,200);
+        ceilingLight.position.set(px,py,pz);
+        ceilingLight.rotateY(ry);
+        scene.add(ceilingLight);
+    });
+    return ceilingLight;
+}
+
+
 function Shelf(sx,sy,sz,px,py,pz) {
+    var shelf = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/Shelf/Shelf.gltf' , function (gltf)  {
         shelf = gltf.scene;
         shelf.scale.set(sx,sy,sz);
         shelf.position.set(px,py,pz);
         scene.add(shelf);
     });
+    return shelf;
 }
 
 //rotated shelf
 function rShelf(sx,sy,sz,px,py,pz) {
+    var rshelf = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/Shelf/Shelf.gltf' , function (gltf)  {
         rshelf = gltf.scene;
         rshelf.scale.set(sx,sy,sz);
@@ -159,10 +175,12 @@ function rShelf(sx,sy,sz,px,py,pz) {
         rshelf.rotateY(Math.PI/2);
         scene.add(rshelf);
     });
+    return rshelf;
 }
 
 //toolbox
 function Toolbox(sx,sy,sz,px,py,pz,ry) {
+    var toolbox = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/toolbox/Toolbox.gltf' , function (gltf)  {
         toolbox = gltf.scene;
         toolbox.scale.set(sx,sy,sz);
@@ -170,6 +188,43 @@ function Toolbox(sx,sy,sz,px,py,pz,ry) {
         toolbox.rotateY(ry);
         scene.add(toolbox);
     });
+    return toolbox;
+}
+
+function Ladder(s,ry,px,py,pz) {
+    var ladder = new THREE.Mesh();
+    gltfLoader.load('Blender Models/Level 2/ladder/Ladder.gltf' , function (gltf)  {
+        ladder = gltf.scene;
+        ladder.scale.set(s,s,s);
+        ladder.position.set(px,py,pz);
+        ladder.rotateY(ry);
+        scene.add(ladder);
+    });
+    return ladder;
+}
+
+function Table(s,ry,px,py,pz) {
+    var table = new THREE.Mesh();
+    gltfLoader.load('Blender Models/Level 2/table/Table.gltf' , function (gltf)  {
+        table = gltf.scene;
+        table.scale.set(s,s,s);
+        table.position.set(px,py,pz);
+        table.rotateY(ry);
+        scene.add(table);
+    });
+    return table;
+}
+
+function Chair(s,ry,px,py,pz) {
+    var chair = new THREE.Mesh();
+    gltfLoader.load('Blender Models/Level 2/chair/Chair.gltf' , function (gltf)  {
+        chair = gltf.scene;
+        chair.scale.set(s,s,s);
+        chair.position.set(px,py,pz);
+        chair.rotateY(ry);
+        scene.add(chair);
+    });
+    return chair;
 }
 
 function loadAssets(){
@@ -182,21 +237,9 @@ function loadAssets(){
         scene.add(warningLight);
     });
 
-    var ceilingLight1 = new THREE.Mesh();
-    gltfLoader.load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
-        ceilingLight1 = gltf.scene;
-        ceilingLight1.scale.set(175,175,200);
-        ceilingLight1.position.set(-100,850,-1800);
-        scene.add(ceilingLight1);
-    });
+    var ceilingLight1 = CeilingLight(-100,850,-1800,0);
 
-    var ceilingLight2 = new THREE.Mesh();
-    gltfLoader.load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
-        ceilingLight2 = gltf.scene;
-        ceilingLight2.scale.set(175,175,200);
-        ceilingLight2.position.set(-100,850,-200);
-        scene.add(ceilingLight2);
-    });
+    var ceilingLight2 = CeilingLight(-100,850,-200,0);
 
     var swipePad = new THREE.Mesh();
     gltfLoader.load('Blender Models/keycard/swipepad.gltf' , function (gltf)  {
@@ -208,19 +251,34 @@ function loadAssets(){
         scene.add(swipePad);
     })
 
+    var keycard = new THREE.Mesh();
+    gltfLoader.load('Blender Models/keycard/keycard.gltf' , function (gltf)  {
+        keycard = gltf.scene;
+        keycard.scale.set(200,150,200);
+        keycard.position.set(-830,-130,-200);
+        scene.add(keycard);
+    })
+
+
     //shelves - function made above
         //main room shelves
-        Shelf(200,200,200,800,-350,-600);
-        Shelf(200,200,200,800,-350,1110);
-        Shelf(200,200,200,800,-350,1110);
+        var shelf1 = Shelf(200,200,200,800,-350,-600);
+        var shelf2 = Shelf(200,200,200,800,-350,1110);
+        var shelf3 = Shelf(200,200,200,800,30,1110);
+        var shelf6 = Shelf(200,200,200,800,-350,-2100);
+        var shelf7 = Shelf(200,200,200,800,30,-2100);
 
         //side room shelves
-        rShelf(200,200,200,-700,-350,200);
-        Shelf(200,200,200,-1400,-350,200);
-        Shelf(200,200,200,-1400,-350,-300);
+        var shelf4 = rShelf(200,200,200,-700,-350,200);
+        var shelf5 = Shelf(200,200,200,-1400,-350,200);
+        var shelf6 = Shelf(200,200,200,-1400,-350,-300);
     
-    Toolbox(50,50,50,-2150,-250,1000,0);
-    Toolbox(50,50,50,300,-250,-200,180);
+    var toolbox1 = Toolbox(50,50,50,-2150,-250,1000,0);
+    var toolbox2 = Toolbox(50,50,50,300,-250,-200,180);
+    var ladder = Ladder(150,Math.PI/2,800,-280,650);
+    var table1 = Table(150,Math.PI/2,-800,-350,-50);
+    var table2 = Table(150,Math.PI/2,-1850,-350,-1000);
+    var chair1 = Chair(100,-Math.PI/2,-1000,-250,-350);
 
 }
 //generic floor meshw
