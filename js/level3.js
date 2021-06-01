@@ -145,7 +145,7 @@ loader.load('Blender Models/Enemies/Enemies.gltf' , function (gltf)  {
 });
 
 var enemy2 = new THREE.Mesh();
-loader.load('Blender Models/Enemies/Enemies.gltf' , function (gltf)  {
+loader.load('Blender Models/Laser Turret/LaserTurret.gltf' , function (gltf)  {
     enemy2 = gltf.scene;
     enemy2.scale.set(350,350,350);
     enemy2.position.set(7000,100,-15000);
@@ -186,7 +186,7 @@ function turnTurret(r, obj){
 
 function getPacks(r, obj){
 	if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)){
-		//replenish health
+		Player.resetHealth();
         scene.remove(obj);
         
 	}
