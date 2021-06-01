@@ -16,6 +16,7 @@ function Window1(x, y, z) {
         new THREE.BoxBufferGeometry(x, y, z),
         new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.8})
     );
+    collidableMeshList.push(window);
     return window;
 }
 
