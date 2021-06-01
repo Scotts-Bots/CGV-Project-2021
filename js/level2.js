@@ -599,3 +599,388 @@ function Room() {
         
     return room;
 }
+
+
+//PAUSE MENU
+var mesh;
+var mesh1;
+var mesh2;
+var mesh3;
+var mesh4;
+var mesh5;
+var mesh6;
+var mesh7;
+var mesh8;
+var mesh9;
+var mesh10;
+var mesh11;
+var mesh12;
+var back;
+var back1;
+var back2;
+var back3;
+var back4;
+var cback;
+
+document.addEventListener('keydown', event => {
+    if (event.code === "ArrowLeft") {
+        paused = false;
+        
+    ambientLight.intensity = 0.05;
+    RemoveCredit();
+        RemovePause();
+    }
+});
+
+document.addEventListener('keydown', event => {
+    if (event.code === "ArrowUp") {
+        window.location.href = "index.html";
+    }
+});
+
+document.addEventListener('keydown', event => {
+    if (event.code === "ArrowDown") {
+        RemoveCredit();
+        AddPause();
+    }
+});
+
+document.addEventListener('keydown', event => {
+    if (event.code === "ArrowRight") {
+
+        RemovePause();
+        AddCredit();
+
+    }
+});
+
+document.addEventListener('keydown', event => {
+    if (event.code === "KeyP") {
+        RemoveHUD();
+        paused = true;
+        ambientLight.intensity = 1;
+        AddPause();
+    }
+});
+
+function AddPause(){
+    back = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(1, 0.7, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0x696969 })
+    );
+    back.position.z = -1;
+    back.position.x = -0.05;
+    camera.add(back);
+    scene.add(camera);
+
+    back1 = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(0.9, 0.6, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
+    );
+    back1.position.z = -1;
+    back1.position.x = -0.05;
+    camera.add(back1);
+    scene.add(camera);
+
+    back2 = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0x696969 })
+    );
+    back2.position.z = -1;
+    back2.position.y = 0.19;
+    back2.position.x = -0.04;
+    camera.add(back2);
+    scene.add(camera);
+
+    back3 = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0x696969 })
+    );
+    back3.position.z = -1;
+    back3.position.y = 0.01;
+    back3.position.x = -0.04;
+    camera.add(back3);
+    scene.add(camera);
+
+    back4 = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0x696969 })
+    );
+    back4.position.z = -1;
+    back4.position.y = -0.16;
+    back4.position.x = -0.04;
+    camera.add(back4);
+    scene.add(camera);
+
+
+    var loader = new THREE.FontLoader();
+
+    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+
+        var restartText = new THREE.TextGeometry("Restart", {
+
+            font: font,
+
+            size: 0.05,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        var resumeText = new THREE.TextGeometry("Resume", {
+
+            font: font,
+
+            size: 0.05,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        var creditText = new THREE.TextGeometry("Credits", {
+
+            font: font,
+
+            size: 0.05,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        var rArrow = new THREE.TextGeometry("right arrow key", {
+
+            font: font,
+
+            size: 0.015,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        var lArrow = new THREE.TextGeometry("left arrow key", {
+
+            font: font,
+
+            size: 0.015,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        var uArrow = new THREE.TextGeometry("up arrow key", {
+
+            font: font,
+
+            size: 0.015,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+
+        mesh = new THREE.Mesh(restartText, textMaterial);
+        mesh.position.z = -1;
+        mesh.position.y = 0.17;
+        mesh.position.x = -0.15;
+
+        mesh1 = new THREE.Mesh(resumeText, textMaterial);
+        mesh1.position.z = -1;
+        mesh1.position.y = -0.01;
+        mesh1.position.x = -0.15;
+
+        mesh2 = new THREE.Mesh(creditText, textMaterial);
+        mesh2.position.z = -1;
+        mesh2.position.y = -0.18;
+        mesh2.position.x = -0.15;
+
+        mesh3 = new THREE.Mesh(rArrow, textMaterial);
+        mesh3.position.z = -1;
+        mesh3.position.y = -0.205;
+        mesh3.position.x = -0.1;
+
+        mesh4 = new THREE.Mesh(lArrow, textMaterial);
+        mesh4.position.z = -1;
+        mesh4.position.y = -0.035;
+        mesh4.position.x = -0.1;
+
+        mesh5 = new THREE.Mesh(uArrow, textMaterial);
+        mesh5.position.z = -1;
+        mesh5.position.y = 0.145;
+        mesh5.position.x = -0.1;
+
+        camera.add(mesh);
+        camera.add(mesh1);
+        camera.add(mesh2);
+        camera.add(mesh3);
+        camera.add(mesh4);
+        camera.add(mesh5);
+        scene.add(camera);
+
+    });
+}
+
+function RemoveCredit(){
+    camera.remove(mesh6);
+        camera.remove(mesh7);
+        camera.remove(mesh8);
+        camera.remove(mesh9);
+        camera.remove(mesh10);
+        camera.remove(mesh11);
+        camera.remove(mesh12);
+        camera.remove(cback);
+
+        scene.add(camera);
+}
+
+function RemovePause(){
+        camera.remove(mesh);
+        camera.remove(mesh1);
+        camera.remove(mesh2);
+        camera.remove(mesh3);
+        camera.remove(mesh4);
+        camera.remove(mesh5);
+        camera.remove(back);
+        camera.remove(back1);
+        camera.remove(back2);
+        camera.remove(back3);
+        camera.remove(back4);
+
+
+        scene.add(camera);
+}
+
+function AddCredit(){
+    cback = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(1, 0.7, 0.001),
+        new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
+    );
+    cback.position.z = -1;
+    cback.position.x = -0.05;
+    camera.add(cback);
+    scene.add(camera);
+
+    let loader = new THREE.FontLoader();
+
+    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+
+        let credit1 = new THREE.TextGeometry("SkyBox images: MegaKosan - https://gamebanana.com/mods/7912", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit2 = new THREE.TextGeometry("Threex library: Jerome Etienne - https://github.com/jeromeetienne/threex.domevents", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit = new THREE.TextGeometry("Credits", {
+
+            font: font,
+
+            size: 0.05,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit3 = new THREE.TextGeometry("Collision dectection: Three.js tutorials by Lee Stemkoski Date: July 2013 (three.js v59dev)", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit4 = new THREE.TextGeometry("Gun view: saucecode - https://github.com/saucecode/threejs-demos/tree/master/08_GunView", {
+
+            font: font,
+
+            size: 0.0155,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit5 = new THREE.TextGeometry("Main menu background: flowforfrank - https://github.com/flowforfrank/threejs", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let dArrow = new THREE.TextGeometry("Down arrow to close", {
+
+            font: font,
+
+            size: 0.013,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+
+        mesh6 = new THREE.Mesh(credit1, textMaterial);
+        mesh6.position.z = -1;
+        mesh6.position.y = 0.17;
+        mesh6.position.x = -0.5;
+
+        mesh7 = new THREE.Mesh(credit2, textMaterial);
+        mesh7.position.z = -1;
+        mesh7.position.y = -0.01;
+        mesh7.position.x = -0.5;
+
+        mesh8 = new THREE.Mesh(credit, textMaterial);
+        mesh8.position.z = -1;
+        mesh8.position.y = 0.25;
+        mesh8.position.x = -0.15;
+
+        mesh9 = new THREE.Mesh(credit3, textMaterial);
+        mesh9.position.z = -1;
+        mesh9.position.y = 0.08;
+        mesh9.position.x = -0.5;
+
+        mesh10 = new THREE.Mesh(credit4, textMaterial);
+        mesh10.position.z = -1;
+        mesh10.position.y = -0.105;
+        mesh10.position.x = -0.5;
+
+        mesh12 = new THREE.Mesh(credit5, textMaterial);
+        mesh12.position.z = -1;
+        mesh12.position.y = -0.19;
+        mesh12.position.x = -0.5;
+
+        mesh11 = new THREE.Mesh(dArrow, textMaterial);
+        mesh11.position.z = -1;
+        mesh11.position.y = 0.3;
+        mesh11.position.x = 0.25;
+
+        camera.add(mesh6);
+        camera.add(mesh7);
+        camera.add(mesh8);
+        camera.add(mesh9);
+        camera.add(mesh10);
+        camera.add(mesh11);
+        camera.add(mesh12);
+        scene.add(camera);
+
+    });
+}
+
+
