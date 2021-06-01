@@ -136,21 +136,30 @@ new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function 
     scene.add(cam);
 });
 
-var enermy = new THREE.Mesh();
+var enemy = new THREE.Mesh();
 loader.load('Blender Models/Enemies/Enemies.gltf' , function (gltf)  {
-    enermy = gltf.scene;
-    enermy.scale.set(700,700,700);
-    enermy.position.set(2000,100,-20000);
-    scene.add(enermy);
+    enemy = gltf.scene;
+    enemy.scale.set(350,350,350);
+    enemy.position.set(2000,100,-20000);
+    scene.add(enemy);
 });
 HUD();
 Tasks();
 
 //ACTION!
+
+function turnTurret(r, obj){
+	if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)){
+		var ang = Math.atan2( ( cam.position.x - obj.position.x ), ( cam.position.z - obj.position.z ) );
+		obj.rotation.y = ang;
+	}
+}
+
 function drawScene(){
     renderer.render(scene, cam);
     checkCollision(cam,updateKeyboard,MovingCube);
     processKeyboard();
+    turnTurret(5000, enemy);
     requestAnimationFrame(drawScene);
     Player.decHealth(0.01);
     if(Player.getHealth() <= 0){
