@@ -41,7 +41,7 @@ function processKeyboard(){
 
 function updateKeyboard(isCollision){
     if (isCollision) {
-        appendText(" Hit ");
+        //appendText(" Hit ");
         switch (lastKeyPressed) {
             case "w":
                 speedW = 0;

@@ -78,7 +78,6 @@ scene.add(camera);
 document.body.appendChild(renderer.domElement);
 
 //keyboard and mouse controls
-
 let controls = new THREE.PointerLockControls(camera, renderer.domElement);
 let clock = new THREE.Clock();
 
@@ -86,8 +85,6 @@ let btn1 = document.querySelector("#button1");
 btn1.addEventListener('click', ()=>{
     controls.lock();
 });
-
-
 
 function setCamera(isPlay) {
     if (isPlay) {
@@ -121,7 +118,7 @@ function setCamera(isPlay) {
 function drawScene(){
     renderer.render(scene, camera);
     checkCollision(camera,updateKeyboard,MovingCube);
-    console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
+    //console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
     Progress()
     processKeyboard();
     requestAnimationFrame(drawScene);
