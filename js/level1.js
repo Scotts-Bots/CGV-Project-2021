@@ -75,7 +75,7 @@ const door = new THREE.Mesh(
     new THREE.BoxBufferGeometry(30, 520, 400),
     new THREE.MeshLambertMaterial({ color: 0x808080 })
 );
-door.position.set(950, -120, 1800);
+door.position.set(950, -120, 1850);
 if (unLocked == false) {
     scene.add(door);
 }
@@ -85,8 +85,11 @@ const door1 = new THREE.Mesh(
     new THREE.MeshLambertMaterial({ color: 0x808080 })
 );
 door1.rotateY(Math.PI/2);
-door1.position.set(1300, -120, 0);
+door1.position.set(1350, -120, 0);
 scene.add(door1);
+collidableMeshList.push(door1);
+
+collidableMeshList.push(door);
 
 const box = sky();
 box.translateY(14600);
@@ -313,6 +316,32 @@ new THREE.GLTFLoader().load('Blender Models/Level 1/Microscope/Microscope.gltf' 
     mScope2.position.set(-900, -170, 2300);
     scene.add(mScope2);
 });
+var bed = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Bed/Bed.gltf' , function (gltf)  {
+    bed = gltf.scene;
+    bed.scale.set(200,150,150);
+    //bed.rotation.y = (Math.PI/2);
+    bed.position.set(2500, -400, 2900);
+    scene.add(bed);
+});
+
+var shelf1 = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf' , function (gltf)  {
+    shelf1 = gltf.scene;
+    shelf1.scale.set(200,300,300);
+    shelf1.rotation.y = (Math.PI/2);
+    shelf1.position.set(3150, -400, 300);
+    scene.add(shelf1);
+});
+
+var shelf2 = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf' , function (gltf)  {
+    shelf2 = gltf.scene;
+    shelf2.scale.set(200,300,300);  
+    shelf2.rotation.y = (Math.PI/2);
+    shelf2.position.set(500, -400, 2900);
+    scene.add(shelf2);
+});
 
 HUD();
 Tasks();
@@ -366,6 +395,7 @@ function drawScene() {
         }
 
         if (success > 10) {
+            collidableMeshList.pop();
             EndGame();
             unLocked = true;
         }
@@ -423,7 +453,7 @@ function checkPopUps(){
     finderposition.setFromMatrixPosition( ammof.matrixWorld );
     fx = finderposition.x;
     fy = finderposition.z;
-    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <500){
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <700){
         AmmofPopup.visible = true;
     }else{
         AmmofPopup.visible = false;
@@ -441,7 +471,7 @@ function checkPopUps(){
     finderposition.setFromMatrixPosition( switchf2Popup.matrixWorld );
     fx = finderposition.x;
     fy = finderposition.z;
-    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <500){
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <700){
         switchf2Popup.visible = true;
     }else{
         switchf2Popup.visible = false;
@@ -450,7 +480,7 @@ function checkPopUps(){
     finderposition.setFromMatrixPosition( gunfPopup.matrixWorld );
     fx = finderposition.x;
     fy = finderposition.z;
-    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <500){
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <700){
         gunfPopup.visible = true;
     }else{
         gunfPopup.visible = false;
