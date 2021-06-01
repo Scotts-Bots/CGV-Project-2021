@@ -7,7 +7,7 @@ var isPlaying = false;
 var success = 0;
 var lines = [];
 var paused = false;
-var hitTargets = false;
+var target1;
 
 var wall;
 var wall1;
@@ -30,7 +30,7 @@ renderer.setSize(innerWidth, innerHeight);
 cam.position.set(2100, 50, 200);
 cam.lookAt(2900, 0, 2000);
 
-var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);//0.05
+var ambientLight = new THREE.AmbientLight(0xffffff, 0.05);//0.05
 scene.add(ambientLight);
 
 //back right room
@@ -354,12 +354,28 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf' , function
     scene.add(shelf2);
 });
 
-var target1 = new THREE.Mesh();
+target1 = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/target/target.gltf' , function (gltf)  {
     target1 = gltf.scene;
     target1.position.set(-1000, -100, 850);
     target1.scale.set(250, 250, 250);
     scene.add(target1);
+});
+
+const targetf = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(500, 500, 500),
+    new THREE.MeshLambertMaterial({ color: 0xffffff })
+);
+targetf.position.set(-900, 30, 600);
+targetf.visible = false;
+scene.add(targetf);
+
+const domEvent5 = new THREEx.DomEvents(cam, renderer.domElement);
+
+domEvent5.addEventListener(targetf, 'dblclick', event => {
+    scene.remove(target1);
+    shotTagets = true;
+   
 });
 
 HUD();
