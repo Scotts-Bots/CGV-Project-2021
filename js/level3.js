@@ -152,7 +152,10 @@ function drawScene(){
     checkCollision(cam,updateKeyboard,MovingCube);
     processKeyboard();
     requestAnimationFrame(drawScene);
-    Player.decHealth(0.02);
+    Player.decHealth(0.01);
+    if(Player.getHealth() <= 0){
+        window.location.href = "index.html";
+    }
     HUD();
     Tasks();
 }
