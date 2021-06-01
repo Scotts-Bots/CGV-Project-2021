@@ -21,6 +21,10 @@ setCollisionDetection(camera,MovingCube); //collision detection hitbox
 
 ///////////////////////////////////////////////////////////////////////////////////
 
+var keycard; 
+var found = false;
+var swipePad;
+
 //actual level
 const room = Room();
 room.scale.set(1.3,1,1.5);
@@ -28,9 +32,7 @@ room.scale.set(1.3,1,1.5);
 room.position.set(0,-300,0);
 scene.add(room);
 
-//loading blender models
-var gltfLoader = new THREE.GLTFLoader();
-loadAssets();
+
 
 //skybox
 const box = sky();
@@ -42,6 +44,10 @@ const renderer = new THREE.WebGL1Renderer({ antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+//loading blender models
+var gltfLoader = new THREE.GLTFLoader();
+loadAssets();
 
 //LIGHTING
     //adding ambient light
@@ -80,7 +86,7 @@ addReticle(camera,qf);
 scene.add(camera);
 
 document.body.appendChild(renderer.domElement);
-
+HUD();
 //assets
 
 
@@ -122,23 +128,97 @@ function setCamera(isPlay) {
     }
 }
 
+var pistol = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+    pistol = gltf.scene;
+    pistol.scale.set(3, 4, 4);
+    pistol.rotation.y = Math.PI;
+    pistol.position.z = -4;
+    pistol.position.x = 2;
+    pistol.position.y = -1;
+    camera.add(pistol)
+    scene.add(camera);
+});
+
 function drawScene(){
     renderer.render(scene, camera);
     checkCollision(camera,updateKeyboard,MovingCube);
     //console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
-    Progress()
     processKeyboard();
+    HUD();
+    Tasks();
     requestAnimationFrame(drawScene);
 }
 
 //ACTION!
 drawScene();
 
-function Progress(){
-    if (Player.getCards() == 3){
-        window.location.href = "level3.html";
+ function Tasks(){
+    check = document.getElementById("task");
+    if (check != null) {
+        check.parentNode.removeChild(check);
     }
-}
+    check = document.getElementById("task1");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+
+    check1 = document.getElementById("task2");
+    if (check1 != null) {
+        check1.parentNode.removeChild(check1);
+    }
+    check = document.getElementById("task3");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+
+    var task = document.createElement('div');
+    task.id = "task";
+    task.style.position = 'absolute';
+    task.style.color = "white";
+    task.style.fontSize = "20px";
+    task.style.letterSpacing = "2px";
+    task.style.fontFamily = "Helvetica";
+    task.style.width = 200;
+    task.style.height = 500;
+    task.innerHTML = "Task(s)";
+    task.style.top = 200 + 'px';
+    task.style.left = 70 + 'px';
+
+    var task1 = document.createElement('div');
+    task1.id = "task1";
+    task1.style.position = 'absolute';
+    task1.style.color = "white";
+    task1.style.fontSize = "20px";
+    task1.style.letterSpacing = "2px";
+    task1.style.fontFamily = "Helvetica";
+    task1.style.width = 200;
+    task1.style.height = 500;
+    task1.innerHTML = "> Find Key Card";
+    task1.style.top = 230 + 'px';
+    task1.style.left = 70 + 'px';
+
+    var task2 = document.createElement('div');
+    task2.id = "task2";
+    task2.style.position = 'absolute';
+    task2.style.color = "white";
+    task2.style.fontSize = "20px";
+    task2.style.letterSpacing = "2px";
+    task2.style.fontFamily = "Helvetica";
+    task2.style.width = 200;
+    task2.style.height = 500;
+    task2.innerHTML = "> Swipe Key Card";
+    task2.style.top = 260 + 'px';
+    task2.style.left = 70 + 'px';
+
+    
+    document.body.appendChild(task);
+    if (found == false){
+        document.body.appendChild(task1);
+        
+    }
+    document.body.appendChild(task2);
+ }
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
 function CeilingLight(px,py,pz,ry) {
@@ -241,7 +321,7 @@ function loadAssets(){
 
     var ceilingLight2 = CeilingLight(-100,850,-200,0);
 
-    var swipePad = new THREE.Mesh();
+    swipePad = new THREE.Mesh();
     gltfLoader.load('Blender Models/keycard/swipepad.gltf' , function (gltf)  {
         swipePad = gltf.scene;
         swipePad.scale.set(50,50,50);
@@ -250,8 +330,21 @@ function loadAssets(){
         swipePad.position.set(600,50,-3715);
         scene.add(swipePad);
     })
+    const kswipePadf = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(50, 50, 50),
+        new THREE.MeshLambertMaterial({ color: 0xffffff })
+    );
+    kswipePadf.position.set(600,50,-3715);
+    kswipePadf.visible = false;
+    scene.add(kswipePadf);
 
-    var keycard = new THREE.Mesh();
+    const domEvent3 = new THREEx.DomEvents(camera,  renderer.domElement);
+
+domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
+    window.location.href = "level3.html";
+});
+
+    keycard = new THREE.Mesh();
     gltfLoader.load('Blender Models/keycard/keycard.gltf' , function (gltf)  {
         keycard = gltf.scene;
         keycard.scale.set(200,150,200);
@@ -259,6 +352,21 @@ function loadAssets(){
         scene.add(keycard);
     })
 
+    const keycardf = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(50, 50, 50),
+        new THREE.MeshLambertMaterial({ color: 0xffffff })
+    );
+    keycardf.position.set(-830,-130,-200);
+    keycardf.visible = false;
+    scene.add(keycardf);
+
+    const domEvent2 = new THREEx.DomEvents(camera,  renderer.domElement);
+
+domEvent2.addEventListener(keycardf, 'dblclick', event =>{
+    scene.remove(keycard);//must remove object
+    Player.incCards();
+    found = true;
+});
 
     //shelves - function made above
         //main room shelves
