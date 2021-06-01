@@ -27,6 +27,7 @@ room.scale.set(1.3,1,1.5);
 //room.scale.setScalar(1.5);
 room.position.set(0,-300,0);
 scene.add(room);
+loadAssets();
 
 //skybox
 const box = sky();
@@ -41,14 +42,14 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 //LIGHTING
     //adding ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     scene.add(ambientLight);
 
     //ight 1
-    const pointLight1 = new THREE.PointLight( 0xffffff, 5, 3000, 3);
-    pointLight1.position.set(1000,500,-550);
+    const pointLight1 = new THREE.PointLight( 0xffffff, 1, 2000, 3);
+    pointLight1.position.set(-400,300,-3400);
     //pointLight1.castShadow = true; // default false
-    //scene.add(pointLight1);
+    scene.add(pointLight1);
 
     //light 2
     const pointLight2 = new THREE.PointLight( 0xffffff, 2, 5000, 2);
@@ -56,13 +57,13 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     //pointLight2.castShadow = true; // default false
     scene.add(pointLight2);
     
-    // const finder1 = new THREE.Mesh(
-    // new THREE.SphereBufferGeometry(50),
-    // new THREE.MeshLambertMaterial({color: 0x666666})
-    // );
-    // finder1.position.set(-600,500,-3700);
-    // finder1.castShadow = true;
-    // scene.add(finder1);
+    const finder1 = new THREE.Mesh(
+    new THREE.SphereBufferGeometry(50),
+    new THREE.MeshLambertMaterial({color: 0x666666})
+    );
+    finder1.position.set(-200,500,-1500);
+    //finder1.castShadow = true;
+    scene.add(finder1);
 
     // red light
     const pointLight3 = new THREE.PointLight( 0xff0000, 2, 4000, 3);
@@ -76,6 +77,9 @@ addReticle(camera,qf);
 scene.add(camera);
 
 document.body.appendChild(renderer.domElement);
+
+//assets
+
 
 //keyboard and mouse controls
 let controls = new THREE.PointerLockControls(camera, renderer.domElement);
@@ -96,7 +100,7 @@ function setCamera(isPlay) {
             100000 //far plane
         );
 
-        camera.position.set(300,0,-100);
+        camera.position.set(100,0,1000);
         camera.lookAt(300,200,-1000);
     } else {
         //setting up orthographic camera
@@ -134,6 +138,44 @@ function Progress(){
 }
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
+function loadAssets(){
+    var gltfLoader = new THREE.GLTFLoader();
+
+    var warningLight = new THREE.Mesh();
+    gltfLoader.load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
+        warningLight = gltf.scene;
+        warningLight.scale.set(50,-50,50);
+        warningLight.position.set(-2180,300,-1080);
+        scene.add(warningLight);
+    });
+
+    var ceilingLight1 = new THREE.Mesh();
+    gltfLoader.load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
+        ceilingLight1 = gltf.scene;
+        ceilingLight1.scale.set(175,175,200);
+        ceilingLight1.position.set(-100,850,-1800);
+        scene.add(ceilingLight1);
+    });
+
+    var ceilingLight2 = new THREE.Mesh();
+    gltfLoader.load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
+        ceilingLight2 = gltf.scene;
+        ceilingLight2.scale.set(175,175,200);
+        ceilingLight2.position.set(-100,850,-200);
+        scene.add(ceilingLight2);
+    });
+
+    var swipePad = new THREE.Mesh();
+    gltfLoader.load('Blender Models/keycard/swipepad.gltf' , function (gltf)  {
+        swipePad = gltf.scene;
+        swipePad.scale.set(50,50,50);
+        swipePad.rotateX(Math.PI/2);
+        swipePad.rotateY(-Math.PI/2);
+        swipePad.position.set(600,50,-3715);
+        scene.add(swipePad);
+    })
+
+}
 //generic floor mesh
 function Floor() {
     const floor = new THREE.Mesh(
@@ -309,9 +351,24 @@ function Room() {
 
         //end of level wall
         const w20 = Wall();
-        w20.scale.set(18,3,1);
-        w20.position.set(400,200,-2510);
+        w20.scale.set(11,3,1);
+        w20.position.set(-400,200,-2510);
         room.add(w20);
+
+        const w21 = Wall();
+        w21.scale.set(11,3,1);
+        w21.position.set(1000,200,-2510);
+        room.add(w21);
+
+        const w22 = Wall();
+        w22.scale.set(3,2,1);
+        w22.position.set(300,1300,-2550);
+        room.add(w22);
+
+        const door = Wall();
+        door.scale.set(3,1,1);
+        door.position.set(300,100,-2530);
+        room.add(door);
 
     //CEILING
         //c - ceiling
