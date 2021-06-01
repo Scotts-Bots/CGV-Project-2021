@@ -1,63 +1,11 @@
-
-// //creating a scene
-// const scene1 = new THREE.Scene();
-
-// // adding ambient light
-// const ambientLight1 = new THREE.AmbientLight(0xffffff, 0.6);
-// scene1.add(ambientLight1);
-
-// //adding directional light @ position 100,-300, 400
-// const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-// dirLight.position.set(100, -300, 400);
-// scene1.add(dirLight);
-
-// //adding orthographic camera
-// const aspectRatio = window.innerWidth / window.innerHeight;
-// const cameraWidth = 8000;
-// const cameraHeight = cameraWidth / aspectRatio;
-
-// const camera = new THREE.OrthographicCamera(
-//     cameraWidth / -2, //Left
-//     cameraWidth / 2, // Right
-//     cameraHeight / 2, //top
-//     cameraHeight / -2, // bottom
-//     -3000, //near
-//     10000 // far
-// );
-
-// camera.position.set(800, -800, 800);
-// camera.up.set(0, 0, 1);
-// //camera.position.set(0,0,300);
-// camera.lookAt(0, 0, 0);
-
-// /*Perspective camera code
-//     const aspectRatio = window.innerwidthh / width/innerheight;
-
-//     const camera = new THREE.PerspectiveCamera(
-//         20, vertical field of view
-//         aspectRatio, aspect ratio
-//         60, // near plane
-//         100 // far plane
-//     )
-
-// */
-
-// const room = Room();
-// room.scale.set(1, 1, 1);
-// scene1.add(room);
-
-// // setting up renderer
-// const renderer1 = new THREE.WebGL1Renderer({ antialias: true });
-// renderer1.setSize(window.innerWidth, window.innerHeight);
-// renderer1.render(scene1, camera);
-
-// document.body.appendChild(renderer1.domElement);
+//MODELLING SCENE FOR LEVEL 3
 
 function Floor(x, y, z) {
     const wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
         new THREE.MeshLambertMaterial({ color: 0xfaebd7 })
     );
+    collidableMeshList.push(wall);
     return wall;
 }
 
@@ -66,6 +14,7 @@ function Window(x, y, z) {
         new THREE.BoxBufferGeometry(x, y, z),
         new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 })
     );
+    collidableMeshList.push(wall);
     return wall;
 }
 
