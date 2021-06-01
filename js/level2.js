@@ -122,12 +122,19 @@ function drawScene(){
     renderer.render(scene, camera);
     checkCollision(camera,updateKeyboard,MovingCube);
     console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
+    Progress()
     processKeyboard();
     requestAnimationFrame(drawScene);
 }
 
 //ACTION!
 drawScene();
+
+function Progress(){
+    if (Player.getCards() == 3){
+        window.location.href = "level3.html";
+    }
+}
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
 //generic floor mesh

@@ -42,8 +42,8 @@ class Player {
         this.health = this.health - amt;
     }
 
-    static incCards(increase) {
-        this.cards = this.cards + increase;
+    static incCards() {
+        this.cards = this.cards + 1;
     }
 
     static decCards() {
