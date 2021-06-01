@@ -98,7 +98,7 @@ loader.load('Blender Models/rocketship/rocket.gltf' , function (gltf)  {
 });
 
 const rocketf = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(4000, 30000, 4000),
+    new THREE.BoxBufferGeometry(6000, 30000, 6000),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
 rocketf.position.set(5000,-2000,-50000);
@@ -117,7 +117,7 @@ domEvent1.addEventListener(rocketf, 'dblclick', event => {
     finderposition.setFromMatrixPosition( rocketf.matrixWorld );
     fx = finderposition.x;
     fy = finderposition.z;
-    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <10000){
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <15000){
         window.location.href = "index.html";
     }else{
         console.log(Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)));
