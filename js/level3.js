@@ -4,7 +4,7 @@
 const scene = new THREE.Scene();
 
 //camera and renderer
-var cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 100000);
+var cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 200000);
 var renderer = new THREE.WebGL1Renderer({antialias: true});
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -23,7 +23,7 @@ MovingCube.position.set(0, 0, 0);
 setCollisionDetection(cam,MovingCube); //collision detection hitbox
 
 //LIGHTING
-var directionalLight = new THREE.PointLight(0xffdead, 0.5);
+var directionalLight = new THREE.PointLight(0xffdead, 0.7);
 directionalLight.position.set(47500, 8000, 20000);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
@@ -47,7 +47,7 @@ scene.add(room);
 
 //skybox
 const box = sky();
-box.translateY(14600);
+box.translateY(29600);
 box.receiveShadow = true;
 scene.add(box);
 
@@ -65,12 +65,47 @@ btn1.addEventListener('click', ()=>{
     controls.lock();
 });
 
+var loader = new THREE.GLTFLoader();
+
+var rock1 = new THREE.Mesh();
+loader.load('Blender Models/Level 2/Rocks/Rock3.gltf' , function (gltf)  {
+    rock1 = gltf.scene;
+    rock1.scale.set(10000,10000,10000);
+    rock1.position.set(47500, 0, 20000);
+    scene.add(rock1);
+});
+var rock2 = new THREE.Mesh();
+loader.load('Blender Models/Level 2/Rocks/Rock3.gltf' , function (gltf)  {
+    rock2 = gltf.scene;
+    rock2.scale.set(10000,10000,10000);
+    rock2.position.set(47500, -1000, 20000);
+    scene.add(rock2);
+});
+var rock3 = new THREE.Mesh();
+loader.load('Blender Models/Level 2/Rocks/Rock1.gltf' , function (gltf)  {
+    rock3 = gltf.scene;
+    rock3.scale.set(10000,10000,10000);
+    rock3.position.set(100500, -10000, 100000);
+    scene.add(rock3);
+});
+
+var rocket = new THREE.Mesh();
+loader.load('Blender Models/rocketship/rocket.gltf' , function (gltf)  {
+    console.log('hi');
+    rocket = gltf.scene;
+    rocket.scale.set(200000,200000,200000);
+    rocket.position.set(-1500, 1000, -1200);
+    scene.add(rocket);
+});
+
+
 //ACTION!
 function drawScene(){
     renderer.render(scene, cam);
     checkCollision(cam,updateKeyboard,MovingCube);
     processKeyboard();
     requestAnimationFrame(drawScene);
+    Player.decHealth(0.02);
 }
 
 drawScene();
