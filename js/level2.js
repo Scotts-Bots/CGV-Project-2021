@@ -39,6 +39,7 @@ scene.add(room);
 //skybox
 const box = sky();
 box.translateY(14700);
+box.scale.set(0.5,0.5,0.5);
 scene.add(box);
 
 //setting up renderer
@@ -53,18 +54,18 @@ loadAssets();
 
 //LIGHTING
     //adding ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
     scene.add(ambientLight);
 
-    //ight 1
+    //light 1
     const pointLight1 = new THREE.PointLight( 0xffffff, 1, 2000, 3);
-    pointLight1.position.set(-400,300,-3400);
+    pointLight1.position.set(-100,700,-200);
     //pointLight1.castShadow = true; // default false
     scene.add(pointLight1);
 
     //light 2
-    const pointLight2 = new THREE.PointLight( 0xffffff, 2, 5000, 2);
-    pointLight2.position.set(-400,300,-3400);
+    const pointLight2 = new THREE.PointLight( 0xffffff, 1, 3000, 2);
+    pointLight2.position.set(-100,700,-1800);
     //pointLight2.castShadow = true; // default false
     scene.add(pointLight2);
     
@@ -77,7 +78,7 @@ loadAssets();
     // scene.add(finder1);
 
     // red light
-    const pointLight3 = new THREE.PointLight( 0xff0000, 2, 4000, 3);
+    const pointLight3 = new THREE.PointLight( 0xff0000, 1, 4000, 3);
     pointLight3.position.set(-2050,100,-1050);
     //pointLight3.castShadow = true; // default false
     scene.add(pointLight3);
@@ -406,9 +407,7 @@ function Floor() {
 function Wall() {
     const wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(100, 800, 60),
-        new THREE.MeshLambertMaterial({
              materialimg//color: 0xc99f63,
-             })
     );
     wall.receiveShadow = true;
     wall.castShadow = true;
