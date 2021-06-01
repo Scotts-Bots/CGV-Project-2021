@@ -96,10 +96,10 @@ HUD();
 let controls = new THREE.PointerLockControls(camera, renderer.domElement);
 let clock = new THREE.Clock();
 
-let btn1 = document.querySelector("#button1");
-btn1.addEventListener('click', ()=>{
-    controls.lock();
-});
+// let btn1 = document.querySelector("#button1");
+// btn1.addEventListener('click', ()=>{
+//     controls.lock();
+// });
 
 function setCamera(isPlay) {
     if (isPlay) {
