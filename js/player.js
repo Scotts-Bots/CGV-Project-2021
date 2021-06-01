@@ -2,7 +2,7 @@ class Player {
 
     static name = "Guest01";
     static health = 100;
-    static ammo = 0;
+    static ammo = 10;
     static cards = 0;
     static gun = false;
 

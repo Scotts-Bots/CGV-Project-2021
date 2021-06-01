@@ -374,8 +374,11 @@ scene.add(targetf);
 const domEvent5 = new THREEx.DomEvents(cam, renderer.domElement);
 
 domEvent5.addEventListener(targetf, 'dblclick', event => {
-    scene.remove(target1);
-    shotTagets = true;
+    if (Player.getAmmo() != 0 && Player.checkGun() == true){
+        scene.remove(target1);
+        shotTagets = true;
+    }
+    
    
 });
 
