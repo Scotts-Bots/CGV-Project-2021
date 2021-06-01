@@ -344,7 +344,9 @@ function loadAssets(){
     const domEvent3 = new THREEx.DomEvents(camera,  renderer.domElement);
 
 domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
-    window.location.href = "level3.html";
+    if (found) {
+        window.location.href = "level3.html";
+    }
 });
 
     keycard = new THREE.Mesh();
