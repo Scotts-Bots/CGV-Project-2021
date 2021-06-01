@@ -177,6 +177,10 @@ function turnTurret(r, obj){
 	if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)){
 		var ang = Math.atan2( ( cam.position.x - obj.position.x ), ( cam.position.z - obj.position.z ) );
 		obj.rotation.y = ang;
+        ran = Math.floor(Math.random() * 20);
+        if (ran == 2){
+            Player.decHealth(1.5);
+        }
 	}
 }
 
@@ -184,8 +188,8 @@ function drawScene(){
     renderer.render(scene, cam);
     checkCollision(cam,updateKeyboard,MovingCube);
     processKeyboard();
-    turnTurret(5000, enemy1);
-    turnTurret(5000, enemy2);
+    turnTurret(8000, enemy1);
+    turnTurret(8000, enemy2);
     requestAnimationFrame(drawScene);
     Player.decHealth(0.01);
     if(Player.getHealth() <= 0){
