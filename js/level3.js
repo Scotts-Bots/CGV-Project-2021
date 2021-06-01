@@ -10,8 +10,8 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setSize(innerWidth, innerHeight);
 //cam.position.set(500,50,2200);
-cam.position.set(2000,50,-20000);
-cam.lookAt(5000,0000,50000);
+cam.position.set(2000,50,-14000);
+cam.lookAt(5000,0,-50000);
 //cam.lookAt(-2000,0,15000)
 document.body.appendChild(renderer.domElement);
 
@@ -91,10 +91,9 @@ loader.load('Blender Models/Level 2/Rocks/Rock1.gltf' , function (gltf)  {
 
 var rocket = new THREE.Mesh();
 loader.load('Blender Models/rocketship/rocket.gltf' , function (gltf)  {
-    console.log('hi');
     rocket = gltf.scene;
-    rocket.scale.set(200000,200000,200000);
-    rocket.position.set(-1500, 1000, -1200);
+    rocket.scale.set(50,50,50);
+    rocket.position.set(5000,-2000,-50000);
     scene.add(rocket);
 });
 
