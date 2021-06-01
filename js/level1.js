@@ -354,11 +354,12 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf' , function
     scene.add(shelf2);
 });
 
-var pistol = new THREE.Mesh();
-new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
-    pistol = gltf.scene;
-    pistol.scale.set(100, 100, 100);
-    scene.add(pistol);
+var target1 = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/target/target.gltf' , function (gltf)  {
+    target1 = gltf.scene;
+    target1.position.set(-1000, -100, 850);
+    target1.scale.set(250, 250, 250);
+    scene.add(target1);
 });
 
 HUD();
