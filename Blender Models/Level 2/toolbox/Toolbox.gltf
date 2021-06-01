@@ -543,7 +543,7 @@
         {
             "doubleSided" : true,
             "emissiveFactor" : [
-                1,
+                0.37861472368240356,
                 0,
                 0
             ],
