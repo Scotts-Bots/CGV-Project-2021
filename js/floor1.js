@@ -1,12 +1,15 @@
-
+const materialimg = new THREE.MeshPhongMaterial();
+materialimg.map = new THREE.TextureLoader().load('Images/wall_texture.jpg');
 function Floor(x, y, z) {
     const wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
-        new THREE.MeshLambertMaterial({ color: 0x808080 })
+        materialimg
     );
     collidableMeshList.push(wall);
     return wall;
 }
+
+
 
 function Window1(x, y, z) {
     const window = new THREE.Mesh(

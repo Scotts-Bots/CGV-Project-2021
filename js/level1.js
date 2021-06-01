@@ -237,7 +237,7 @@ new THREE.GLTFLoader().load('Blender Models/Switch/Switch.gltf' , function (gltf
 const domEvent3 = new THREEx.DomEvents(cam, renderer.domElement);
 
 domEvent3.addEventListener(switchf2, 'dblclick', event => {
-    if(success>=10 && unLocked == true && Player.checkGun() != false && Player.getAmmo() > 0){
+    if(shotTagets == true && unLocked == true && Player.checkGun() != false && Player.getAmmo() > 0){
         window.location.href = "level2.html";
     }
 });
@@ -256,6 +256,17 @@ const domEvent4 = new THREEx.DomEvents(cam, renderer.domElement);
 domEvent4.addEventListener(gunf, 'dblclick', event => {
     scene.remove(pgun);
     Player.pickUpGun();
+    var pistol = new THREE.Mesh();
+    new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+        pistol = gltf.scene;
+        pistol.scale.set(3, 4, 4);
+        pistol.rotation.y = Math.PI;
+        pistol.position.z = -4;
+        pistol.position.x = 2;
+        pistol.position.y = -1;
+        cam.add(pistol)
+        scene.add(cam);
+    });
 });
 
 var bTable = new THREE.Mesh();
@@ -379,15 +390,6 @@ btn1.addEventListener('click', () => {
 });
 
 function drawScene() {
-
-    pistol.position.set(
-		cam.position.x - Math.sin(cam.rotation.y + Math.PI/6) * 0.75,
-		cam.position.y,//cam.position.y - 0.5 + Math.sin(time*4 + cam.position.x + cam.position.z)*0.01,
-		cam.position.z + Math.cos(cam.rotation.y + Math.PI/6) * 0.75 + 200
-	);
-    pistol.rotation.z = cam.rotation.z;
-    pistol.rotation.y = cam.rotation.y - Math.PI;
-    pistol.rotation.x = cam.rotation.x;
     
     if (isPlaying == true) {
         RemoveHUD();

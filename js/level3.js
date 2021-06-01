@@ -4,7 +4,7 @@
 const scene = new THREE.Scene();
 
 //camera and renderer
-var cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 200000);
+var cam = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 200000);
 var renderer = new THREE.WebGL1Renderer({antialias: true});
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -92,16 +92,48 @@ loader.load('Blender Models/Level 2/Rocks/Rock1.gltf' , function (gltf)  {
 var rocket = new THREE.Mesh();
 loader.load('Blender Models/rocketship/rocket.gltf' , function (gltf)  {
     rocket = gltf.scene;
-    rocket.scale.set(50,50,50);
+    rocket.scale.set(75,75,75);
     rocket.position.set(5000,-2000,-50000);
     scene.add(rocket);
+});
+
+const rocketf = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(4000, 30000, 4000),
+    new THREE.MeshLambertMaterial({ color: 0xffffff })
+);
+rocketf.position.set(5000,-2000,-50000);
+rocketf.visible = false;
+scene.add(rocketf);
+
+const domEvent1 = new THREEx.DomEvents(cam, renderer.domElement);
+
+domEvent1.addEventListener(rocketf, 'dblclick', event => {
+    camposition = new THREE.Vector3();
+    camposition.setFromMatrixPosition( cam.matrixWorld );
+    x = camposition.x;
+    y = camposition.z;
+    //finder object
+    finderposition = new THREE.Vector3();
+    finderposition.setFromMatrixPosition( rocketf.matrixWorld );
+    fx = finderposition.x;
+    fy = finderposition.z;
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <10000){
+        window.location.href = "index.html";
+    }else{
+        console.log(Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)));
+    }
 });
 
 var pistol = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
     pistol = gltf.scene;
-    pistol.scale.set(100, 100, 100);
-    scene.add(pistol);
+    pistol.scale.set(3, 4, 4);
+    pistol.rotation.y = Math.PI;
+    pistol.position.z = -4;
+    pistol.position.x = 2;
+    pistol.position.y = -1;
+    cam.add(pistol)
+    scene.add(cam);
 });
 
 
@@ -109,14 +141,6 @@ new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function 
 function drawScene(){
     renderer.render(scene, cam);
     checkCollision(cam,updateKeyboard,MovingCube);
-    pistol.position.set(
-		cam.position.x - Math.sin(cam.rotation.y + Math.PI/6) * 0.75,
-		cam.position.y,//cam.position.y - 0.5 + Math.sin(time*4 + cam.position.x + cam.position.z)*0.01,
-		cam.position.z + 200//+ Math.cos(cam.rotation.y + Math.PI/6) * 0.75 + 200
-	);
-    pistol.rotation.z = cam.rotation.z;
-    pistol.rotation.y = cam.rotation.y - Math.PI;
-    pistol.rotation.x = cam.rotation.x;
     processKeyboard();
     requestAnimationFrame(drawScene);
     Player.decHealth(0.02);
