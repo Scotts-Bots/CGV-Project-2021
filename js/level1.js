@@ -85,7 +85,7 @@ const door1 = new THREE.Mesh(
     new THREE.MeshLambertMaterial({ color: 0x808080 })
 );
 door1.rotateY(Math.PI/2);
-door1.position.set(1350, -120, 0);
+door1.position.set(1300, -120, 0);
 scene.add(door1);
 
 const box = sky();
@@ -104,6 +104,13 @@ ammof.position.set(2100, -50, 200);
 ammof.visible = false;
 scene.add(ammof);
 
+const geometry = new THREE.ConeGeometry( 20, 20, 4 );
+const material = new THREE.MeshBasicMaterial( {color: 0x00ff99} );
+const AmmofPopup = new THREE.Mesh( geometry, material );
+AmmofPopup.position.set(2100, -20, 200);
+AmmofPopup.rotateZ(Math.PI);
+scene.add( AmmofPopup );
+
 const switchf = new THREE.Mesh(
     new THREE.BoxBufferGeometry(50, 50, 50),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
@@ -111,6 +118,11 @@ const switchf = new THREE.Mesh(
 switchf.position.set(1000, -10, 1550);
 switchf.visible = false;
 scene.add(switchf);
+
+const switchfPopup = new THREE.Mesh( geometry, material );
+switchfPopup.position.set(1000, 20, 1550);
+switchfPopup.rotateZ(Math.PI);
+scene.add( switchfPopup );
 
 const switchf2 = new THREE.Mesh(
     new THREE.BoxBufferGeometry(50, 50, 50),
@@ -120,6 +132,11 @@ switchf2.position.set(1000, -10, 200);
 switchf2.visible = false;
 scene.add(switchf2);
 
+const switchf2Popup = new THREE.Mesh( geometry, material );
+switchf2Popup.position.set(1000, 20, 200);
+switchf2Popup.rotateZ(Math.PI);
+scene.add( switchf2Popup );
+
 const gunf = new THREE.Mesh(
     new THREE.BoxBufferGeometry(150, 150, 150),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
@@ -127,6 +144,12 @@ const gunf = new THREE.Mesh(
 gunf.position.set(-900, -120, 2600);
 gunf.visible = false;
 scene.add(gunf);
+
+const gunfPopup = new THREE.Mesh( geometry, material );
+gunfPopup.position.set(-900, -90, 2600);
+gunfPopup.rotateZ(Math.PI);
+scene.add( gunfPopup );
+
 
 
 
@@ -287,11 +310,12 @@ new THREE.GLTFLoader().load('Blender Models/Level 1/Microscope/Microscope.gltf' 
     mScope2 = gltf.scene;
     mScope2.scale.set(50,50,50);
     mScope2.rotation.y = (Math.PI/2);
-    mScope2.position.set(-900, -170, 1900);
+    mScope2.position.set(-900, -170, 2300);
     scene.add(mScope2);
 });
 
 HUD();
+Tasks();
 
 
 document.body.appendChild(renderer.domElement);
@@ -309,8 +333,6 @@ document.body.appendChild(renderer.domElement);
 
 // }
 
-const speedDefault = 7;
-var speedW = 10, speedA = 10, speedS = 10, speedD = 10;
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);
 var lastKeyPressed;
 let clock = new THREE.Clock();
@@ -320,48 +342,11 @@ btn1.addEventListener('click', () => {
     controls.lock();
 });
 
-let keyboard = [];
-addEventListener('keydown', (e) => {
-    keyboard[e.key] = true;
-});
-addEventListener('keyup', (e) => {
-    keyboard[e.key] = false;
-});
-
-function processKeyboard() {
-    if (keyboard['w']) {
-        if (isPlaying == true){
-            EndGame();
-        }
-        controls.moveForward(speedW);
-    }
-    else if (keyboard['a']) {
-        if (isPlaying == true){
-            EndGame();
-        }
-        controls.moveRight(-speedA);
-    }
-    else if (keyboard['s']) {
-        if (isPlaying == true){
-            EndGame();
-        }
-        controls.moveForward(-speedS);
-    }
-    else if (keyboard['d']) {
-        if (isPlaying == true){
-            EndGame();
-        }
-        controls.moveRight(speedD);
-    }
-    else if (keyboard['r']) {
-        controls.lock();
-    }
-}
-
 function drawScene() {
 
     if (isPlaying == true) {
         RemoveHUD();
+        RemoveTasks()
         ran = Math.floor(Math.random() * 20);
         if (ran == 2) {
 
@@ -386,31 +371,38 @@ function drawScene() {
         }
     }else if(paused == true){
     }else{
-        // if (len == 0) {
-        //     len = Math.floor(Math.random() * 10);
-        //     ran = Math.floor(Math.random() * 6);
-        //     if (ran == 2) {
-        //         intensity = 0.3;
-        //         light1.intensity = intensity;
-        //         light5.intensity = intensity;
-        //         light7.intensity = intensity;
-        //         light9.intensity = intensity;
-        //     } else {
-        //         intensity = 1;
-        //         light1.intensity = intensity;
-        //         light5.intensity = intensity;
-        //         light7.intensity = intensity;
-        //         light9.intensity = intensity;
-        //     }
-        // } else {
-        //     len = len - 1;
-        // }
+        if (len == 0) {
+            len = Math.floor(Math.random() * 10);
+            ran = Math.floor(Math.random() * 6);
+            if (ran == 2) {
+                intensity = 0.3;
+                light1.intensity = intensity;
+                light5.intensity = intensity;
+                light7.intensity = intensity;
+                light9.intensity = intensity;
+            } else {
+                intensity = 1;
+                light1.intensity = intensity;
+                light5.intensity = intensity;
+                light7.intensity = intensity;
+                light9.intensity = intensity;
+            }
+        } else {
+            len = len - 1;
+        }
     
         if (unLocked == true) {
             scene.remove(door);
         }
+
+        checkPopUps();
+    AmmofPopup.rotation.y +=0.02;
+    switchfPopup.rotation.y +=0.02;
+    switchf2Popup.rotation.y +=0.02;
+    gunfPopup.rotation.y +=0.02;
         
         HUD();
+        Tasks();
         
     }
 
@@ -421,28 +413,47 @@ function drawScene() {
     requestAnimationFrame(drawScene);
 }
 
-function updateKeyboard(isCollision){
-    if (isCollision) {
-        appendText(" Hit ");
-        switch (lastKeyPressed) {
-            case "w":
-                speedW = 0;
-                break;
-            case "a":
-                speedA = 0;
-                break;
-            case "s":
-                speedS = 0;
-                break;
-            case "d":
-                speedD = 0;
-                break;
-        }
-    } else {
-        speedA = speedDefault;
-        speedW = speedDefault;
-        speedS = speedDefault;
-        speedD = speedDefault;
+function checkPopUps(){
+    camposition = new THREE.Vector3();
+    camposition.setFromMatrixPosition( cam.matrixWorld );
+    x = camposition.x;
+    y = camposition.z;
+    //finder object
+    finderposition = new THREE.Vector3();
+    finderposition.setFromMatrixPosition( ammof.matrixWorld );
+    fx = finderposition.x;
+    fy = finderposition.z;
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <500){
+        AmmofPopup.visible = true;
+    }else{
+        AmmofPopup.visible = false;
+    }
+    finderposition = new THREE.Vector3();
+    finderposition.setFromMatrixPosition( switchfPopup.matrixWorld );
+    fx = finderposition.x;
+    fy = finderposition.z;
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <700){
+        switchfPopup.visible = true;
+    }else{
+        switchfPopup.visible = false;
+    }
+    finderposition = new THREE.Vector3();
+    finderposition.setFromMatrixPosition( switchf2Popup.matrixWorld );
+    fx = finderposition.x;
+    fy = finderposition.z;
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <500){
+        switchf2Popup.visible = true;
+    }else{
+        switchf2Popup.visible = false;
+    }
+    finderposition = new THREE.Vector3();
+    finderposition.setFromMatrixPosition( gunfPopup.matrixWorld );
+    fx = finderposition.x;
+    fy = finderposition.z;
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <500){
+        gunfPopup.visible = true;
+    }else{
+        gunfPopup.visible = false;
     }
 }
 
@@ -538,32 +549,7 @@ document.addEventListener('keydown', event => {
 // finder.position.set(2500,25,1500);
 // scene.add(finder);
 
-function HUD() {
-
-    let check = document.getElementById("Hbar");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("helper");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("Q");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("torch");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("ammo");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("Name");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
+function RemoveTasks(){
     check = document.getElementById("task");
     if (check != null) {
         check.parentNode.removeChild(check);
@@ -581,32 +567,26 @@ function HUD() {
     if (check != null) {
         check.parentNode.removeChild(check);
     }
-    check = document.getElementById("gun");
+}
+
+function Tasks(){
+    check = document.getElementById("task");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("task1");
     if (check != null) {
         check.parentNode.removeChild(check);
     }
 
-    var Name = document.createElement('div');
-    Name.id = "Name";
-    Name.style.position = 'absolute';
-    Name.style.color = "white";
-    Name.style.fontSize = "25px";
-    Name.style.letterSpacing = "2px";
-    Name.style.fontFamily = "Helvetica";
-    Name.style.width = 200;
-    Name.style.height = 500;
-    Name.innerHTML = Player.getName();
-    Name.style.top = 70 + 'px';
-    Name.style.left = 70 + 'px';
-
-    var Hbar = document.createElement('progress');
-    Hbar.id = "Hbar";
-    Hbar.style.position = 'absolute';
-    Hbar.value = Player.getHealth();
-    Hbar.max = 100;
-    Hbar.style.top = 100 + 'px';
-    Hbar.style.left = 75 + 'px';
-    Hbar.style.backgroundColor = 'green';
+    check1 = document.getElementById("task2");
+    if (check1 != null) {
+        check1.parentNode.removeChild(check1);
+    }
+    check = document.getElementById("task3");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
 
     var task = document.createElement('div');
     task.id = "task";
@@ -660,128 +640,15 @@ function HUD() {
     task3.style.top = 290 + 'px';
     task3.style.left = 70 + 'px';
 
-    var ammo = document.createElement('div');
-    ammo.id = "ammo"
-    ammo.style.position = 'absolute';
-    ammo.style.color = "white";
-    ammo.style.fontSize = "20px";
-    ammo.style.letterSpacing = "2px";
-    ammo.style.fontFamily = "Helvetica";
-    ammo.style.width = 200;
-    ammo.style.height = 500;
-    ammo.innerHTML = "Ammo: " + Player.getAmmo();
-    ammo.style.top = 750 + 'px';
-    ammo.style.left = 2200 + 'px';
-
-    var torch = document.createElement("img");
-    torch.id = "torch";
-    torch.style.position = 'absolute';
-    torch.src = "Images/torch.png";
-    torch.style.top = 850 + 'px';
-    torch.style.left = 2100 + 'px';
-    torch.width = 80;
-
-    var gun = document.createElement("img");
-    gun.id = "gun";
-    gun.style.position = 'absolute';
-    gun.src = "Images/gun.jpg";
-    gun.style.top = 850 + 'px';
-    gun.style.left = 2230 + 'px';
-    gun.width = 85;
-
-    var helper = document.createElement('div');
-    helper.id = "helper";
-    helper.style.position = 'absolute';
-    helper.style.color = "white";
-    helper.style.fontSize = "15px";
-    helper.style.letterSpacing = "2px";
-    helper.style.fontFamily = "Helvetica";
-    helper.style.width = 1500;
-    helper.style.height = 700;
-    helper.innerHTML = "To aim center the mouse on the reticle and press r, Shoot - single click,    Interact - double click,         Movement - WASD           PAUSE - P";
-    helper.style.top = 40 + 'px';
-    helper.style.left = 500 + 'px';
-
-    var Q = document.createElement('div');
-    Q.id ="Q";
-    Q.style.position = 'absolute';
-    Q.style.color = "white";
-    Q.style.fontSize = "20px";
-    Q.style.letterSpacing = "2px";
-    Q.style.fontFamily = "Helvetica";
-    Q.style.width = 200;
-    Q.style.height = 500;
-    Q.innerHTML = "Q";
-    Q.style.top = 820 + 'px';
-    Q.style.left = 2130 + 'px';
-
-
-    document.body.appendChild(Hbar);
-    document.body.appendChild(Name);
+    
     document.body.appendChild(task);
-    document.body.appendChild(ammo);
-    document.body.appendChild(torch);
-    document.body.appendChild(Q);
-    document.body.appendChild(helper);
     if (Player.checkGun() == false || Player.getAmmo() == 0) {
         document.body.appendChild(task1);
-    }
-    if (Player.checkGun() != false && Player.getAmmo() > 0) {
-        document.body.appendChild(gun);
     }
     if (unLocked == false) {
         document.body.appendChild(task2);
     }
     if (shotTagets == false) {
         document.body.appendChild(task3);
-    }
-
-}
-
-function RemoveHUD(){
-    check = document.getElementById("Hbar");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("helper");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("Q");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("torch");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("ammo");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("Name");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("task");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("task1");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-
-    check1 = document.getElementById("task2");
-    if (check1 != null) {
-        check1.parentNode.removeChild(check1);
-    }
-    check = document.getElementById("task3");
-    if (check != null) {
-        check.parentNode.removeChild(check);
-    }
-    check = document.getElementById("gun");
-    if (check != null) {
-        check.parentNode.removeChild(check);
     }
 }

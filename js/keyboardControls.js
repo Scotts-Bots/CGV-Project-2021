@@ -34,6 +34,9 @@ function processKeyboard(){
         controls.moveRight(speedD);
         lastKeyPressed = 'd';
     }
+    else if (keyboard['r']) {
+        controls.lock();
+    }
 }
 
 function updateKeyboard(isCollision){
