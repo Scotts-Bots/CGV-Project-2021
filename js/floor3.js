@@ -12,7 +12,7 @@ function Floor(x, y, z) {
 function Window(x, y, z) {
     const wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
-        new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 })
+        new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 1 })
     );
     collidableMeshList.push(wall);
     return wall;

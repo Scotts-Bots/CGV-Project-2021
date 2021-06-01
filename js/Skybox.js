@@ -78,7 +78,7 @@
         }
                
     
-        const skyBoxGeo = new THREE.BoxGeometry(100000,30000,100000);
+        const skyBoxGeo = new THREE.BoxGeometry(200000,60000,200000);
         const skyBox = new THREE.Mesh(skyBoxGeo,materialArray);
     
         return skyBox
