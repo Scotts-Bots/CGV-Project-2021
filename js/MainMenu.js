@@ -71,13 +71,13 @@ animate();
 
 const domEvent1 = new THREEx.DomEvents(cam,  renderer.domElement);
 
-domEvent1.addEventListener(back2, 'dblclick', event =>{
+domEvent1.addEventListener(back2, 'click', event =>{
     window.location.href = "level1.html";
 });
 
 const domEvent2 = new THREEx.DomEvents(cam,  renderer.domElement);
 
-domEvent2.addEventListener(back4, 'dblclick', event =>{
+domEvent2.addEventListener(back4, 'click', event =>{
     RemovePause();
         AddCredit();
 });
@@ -275,7 +275,7 @@ function AddCredit(){
 
             font: font,
 
-            size: 0.013,
+            size: 0.018,
             height: 0.001,
             curveSegments: 2,
 
@@ -316,7 +316,7 @@ function AddCredit(){
         mesh11 = new THREE.Mesh(dArrow, textMaterial);
         mesh11.position.z = -1;
         mesh11.position.y = 0.3;
-        mesh11.position.x = 0.25;
+        mesh11.position.x = 0.2;
 
         cam.add(mesh6);
         cam.add(mesh7);

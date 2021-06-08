@@ -50,7 +50,7 @@ function Room() {
     const b2 = Floor(450, 25, 300);
     const b3 = Floor(750, 25, 300);
     const fl = Floor(775, 1100, 10);
-    //fl.receiveShadow = true;
+    fl.receiveShadow = true;
     const b4 = Floor(500, 25, 300);
     const b5 = Floor(1100, 25, 300);
     const b6 = Floor(225, 25, 300);
@@ -61,11 +61,11 @@ function Room() {
     const b910 = Floor(100, 25, 100);
     const b10 = Floor(240, 25, 300);
     const b11 = Floor(240, 25, 300);
-    //b11.receiveShadow = true;
+    b11.castShadow = true;
     const b1112 = Floor(100, 25, 100);
-    //b1112.receiveShadow = true;
+    b1112.castShadow = true;
     const b_12 = Floor(410, 25, 300);
-    //b_12.receiveShadow = true;
+    b_12.castShadow = true;
     const b613 = Floor(400, 25, 70);
     const b13 = Floor(225, 25, 300);
     const b14 = Floor(400, 25, 70);

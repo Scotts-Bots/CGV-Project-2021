@@ -1,5 +1,5 @@
 const scene = new THREE.Scene();
-intensity = 1;
+intensity = 0.4;
 len = 10;
 var unLocked = false;
 var shotTagets = false;
@@ -61,7 +61,7 @@ scene.add(light3);
 //flourescent light
 const light1 = new THREE.PointLight(0xffffff, intensity, 6000, 2);
 light1.position.set(2500, 375, 1500);
-//light1.castShadow = true;
+light1.castShadow = true;
 //light1.shadow.bias = -0.0001;
 scene.add(light1);
 
@@ -167,7 +167,7 @@ new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.glt
 var ELight = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
     ELight = gltf.scene;
-    ELight.scale.set(40,20,40);
+    ELight.scale.set(30,30,30);
     ELight.rotation.z = 3*Math.PI/2;
     ELight.position.set(1780, 240, 1200);
     scene.add(ELight);
@@ -415,7 +415,7 @@ function drawScene() {
     if (isPlaying == true) {
         RemoveHUD();
         RemoveTasks()
-        ran = Math.floor(Math.random() * 20);
+        ran = Math.floor(Math.random() * 30);
         if (ran == 2) {
 
             if (lines.length < 4) {
@@ -433,7 +433,7 @@ function drawScene() {
             }
         }
 
-        if (success > 10) {
+        if (success > 5) {
             collidableMeshList.pop();
             EndGame();
             unLocked = true;
@@ -442,15 +442,15 @@ function drawScene() {
     }else{
         if (len == 0) {
             len = Math.floor(Math.random() * 10);
-            ran = Math.floor(Math.random() * 6);
+            ran = Math.floor(Math.random() * 20);
             if (ran == 2) {
-                intensity = 0.3;
+                intensity = 0.2;
                 light1.intensity = intensity;
                 light5.intensity = intensity;
                 light7.intensity = intensity;
                 light9.intensity = intensity;
             } else {
-                intensity = 1;
+                intensity = 0.4;
                 light1.intensity = intensity;
                 light5.intensity = intensity;
                 light7.intensity = intensity;
