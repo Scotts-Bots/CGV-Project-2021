@@ -358,16 +358,16 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf' , function
 target1 = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/target/target.gltf' , function (gltf)  {
     target1 = gltf.scene;
-    target1.position.set(-1000, -100, 850);
+    target1.position.set(-1200, -100, 850);
     target1.scale.set(250, 250, 250);
     scene.add(target1);
 });
 
 const targetf = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(500, 500, 500),
+    new THREE.BoxBufferGeometry(370, 370, 370),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
-targetf.position.set(-900, 30, 600);
+targetf.position.set(-1020, 150, 600);
 targetf.visible = false;
 scene.add(targetf);
 
@@ -384,6 +384,24 @@ domEvent5.addEventListener(targetf, 'dblclick', event => {
 
 HUD();
 Tasks();
+
+geometry1 = new THREE.PlaneGeometry(500, 500);
+let bMat2 = new THREE.MeshStandardMaterial({ color: 0x000000, wireframe: false });
+verticalMirror1 = new  Mesh(geometry1, bMat2);
+verticalMirror1.position.set(2100,25,2940);
+verticalMirror1.rotation.y = Math.PI;
+scene.add(verticalMirror1);
+
+geomet = new THREE.PlaneGeometry(490, 490);
+verticalMirror = new Reflector(geomet, {
+    clipBias: 0.003,
+    textureWidth: window.innerWidth * window.devicePixelRatio,
+    textureHeight: window.innerHeight * window.devicePixelRatio,
+    color: 0x889999,
+});
+verticalMirror.position.set(2100,25,2900);
+verticalMirror.rotation.y = Math.PI;
+scene.add(verticalMirror);
 
 
 document.body.appendChild(renderer.domElement);
@@ -419,7 +437,7 @@ function drawScene() {
         if (ran == 2) {
 
             if (lines.length < 4) {
-                let line = new Line();
+                let line = new drawLine();
                 cam.add(line);
                 scene.add(cam);
                 lines.push(line);
@@ -587,7 +605,7 @@ function playgame(){
 
 drawScene();
 
-function Line() {
+function drawLine() {
     const wall4 = new THREE.Mesh(
         new THREE.BoxBufferGeometry(0.02, 0.1, 5),
         new THREE.MeshLambertMaterial({ color: 0xffffff })
