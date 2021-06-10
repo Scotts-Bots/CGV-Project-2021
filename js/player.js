@@ -2,6 +2,7 @@ class Player {
 
     static name = "Guest01";
     static health = 100;
+    static oxygen = 100;
     static ammo = 10;
     static cards = 0;
     static gun = false;
@@ -16,6 +17,10 @@ class Player {
 
     static getHealth() {
         return this.health;
+    }
+
+    static getOxygen() {
+        return this.oxygen;
     }
 
     static getAmmo() {
@@ -38,8 +43,16 @@ class Player {
         this.health = 100;
     }
 
+    static resetOxygen() {
+        this.oxygen = 100;
+    }
+
     static decHealth(amt) {
         this.health = this.health - amt;
+    }
+
+    static decOxygen(amt) {
+        this.oxygen = this.oxygen - amt;
     }
 
     static incCards() {

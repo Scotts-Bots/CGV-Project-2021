@@ -13,6 +13,7 @@ var wall;
 var wall1;
 var wall2;
 var wall3;
+var helpCounter = 0;
 
 var cam = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100000);
 var renderer = new THREE.WebGL1Renderer({ antialias: true });
@@ -240,6 +241,9 @@ const domEvent3 = new THREEx.DomEvents(cam, renderer.domElement);
 domEvent3.addEventListener(switchf2, 'dblclick', event => {
     if(shotTagets == true && unLocked == true && Player.checkGun() != false && Player.getAmmo() > 0){
         window.location.href = "level2.html";
+    }else{
+        ShowHelp(true);
+        helpCounter = 60;
     }
 });
 
@@ -487,6 +491,12 @@ function drawScene() {
     switchfPopup.rotation.y +=0.02;
     switchf2Popup.rotation.y +=0.02;
     gunfPopup.rotation.y +=0.02;
+
+    if (helpCounter == 0){
+        ShowHelp(false);
+    }else{
+        helpCounter-=1;
+    }
         
         HUD();
         Tasks();

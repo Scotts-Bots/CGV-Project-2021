@@ -1,4 +1,5 @@
 //LEVEL 2
+var helpCounter = 0;
 
 //creating a scene
 const scene = new THREE.Scene();
@@ -146,6 +147,11 @@ new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function 
 function drawScene(){
     renderer.render(scene, camera);
     checkCollision(camera,updateKeyboard,MovingCube);
+    if (helpCounter == 0){
+        ShowHelp(false);
+    }else{
+        helpCounter-=1;
+    }
     //console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
     processKeyboard();
     HUD();
@@ -221,6 +227,7 @@ drawScene();
         
     }
     document.body.appendChild(task2);
+    
  }
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
@@ -346,6 +353,9 @@ function loadAssets(){
 domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
     if (found) {
         window.location.href = "level3.html";
+    }else{
+        ShowHelp(true);
+        helpCounter = 60;
     }
 });
 
@@ -982,4 +992,44 @@ function AddCredit(){
 
     });
 }
+
+/// helper text
+var helpText;
+
+var loader = new THREE.FontLoader();
+
+    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+
+        var helperText = new THREE.TextGeometry("Complete all tasks before proceeding to next level", {
+
+            font: font,
+
+            size: 0.02,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+
+        helpText = new THREE.Mesh(helperText, textMaterial);
+        helpText.position.z = -1;
+        helpText.position.y = 0.03;
+        helpText.position.x = -0.325;
+
+
+    });
+
+    function ShowHelp(help){
+    
+        if (help){
+            camera.add(helpText);
+            scene.add(camera);
+        }else{
+            camera.remove(helpText);
+        scene.add(camera);
+        }
+        
+    }
+
 

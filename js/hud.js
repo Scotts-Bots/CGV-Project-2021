@@ -1,6 +1,49 @@
+var helpText;
+
+var loader = new THREE.FontLoader();
+
+    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+
+        var helperText = new THREE.TextGeometry("Complete all tasks before proceeding to next level", {
+
+            font: font,
+
+            size: 0.02,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+
+        helpText = new THREE.Mesh(helperText, textMaterial);
+        helpText.position.z = -1;
+        helpText.position.y = 0.03;
+        helpText.position.x = -0.325;
+
+
+    });
+
+    function ShowHelp(help){
+    
+        if (help){
+            cam.add(helpText);
+            scene.add(cam);
+        }else{
+            cam.remove(helpText);
+        scene.add(cam);
+        }
+        
+    }
+
+
 function HUD() {
 
     let check = document.getElementById("Hbar");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("Obar");
     if (check != null) {
         check.parentNode.removeChild(check);
     }
@@ -50,6 +93,15 @@ function HUD() {
     Hbar.style.top = 100 + 'px';
     Hbar.style.left = 75 + 'px';
     Hbar.style.backgroundColor = 'green';
+
+    var Obar = document.createElement('progress');
+    Obar = document.createElement('progress');
+    Obar.id = "Obar";
+    Obar.style.position = 'absolute';
+    Obar.value = Player.getOxygen();
+    Obar.max = 100;
+    Obar.style.top = 120 + 'px';
+    Obar.style.left = 75 + 'px';
 
     var ammo = document.createElement('div');
     ammo.id = "ammo"
@@ -108,6 +160,7 @@ function HUD() {
 
 
     document.body.appendChild(Hbar);
+    document.body.appendChild(Obar);
     document.body.appendChild(Name);
     document.body.appendChild(ammo);
     document.body.appendChild(torch);
@@ -121,6 +174,10 @@ function HUD() {
 
 function RemoveHUD(){
     check = document.getElementById("Hbar");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("Obar");
     if (check != null) {
         check.parentNode.removeChild(check);
     }
@@ -149,3 +206,4 @@ function RemoveHUD(){
         check.parentNode.removeChild(check);
     }
 }
+
