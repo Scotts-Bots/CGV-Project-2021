@@ -33,7 +33,8 @@ let bMat = new THREE.MeshStandardMaterial({color: 0x00ff00, wireframe: false});
 let cube = new THREE.Mesh(bGeo, bMat);
 cube.castShadow = true;
 cube.receiveShadow = true;
-//scene.add(cube);
+cube.position.set(3, 0, -30);
+scene.add(cube);
 scene.updateMatrixWorld(true);
 var position = new THREE.Vector3();
 position.setFromMatrixPosition(cube.matrixWorld);
@@ -41,12 +42,7 @@ position.setFromMatrixPosition(cube.matrixWorld);
 var gun = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Laser Turret/LaserTurret.gltf' , function (gltf)  {
     gun = gltf.scene;
-    // gun.traverse(function (node){
-    //     if (node.isMesh){
-    //         node.castShadow = true;
-    //     }
-    // });
-    scene.add(gun);
+    //scene.add(gun);
 });
 
 var pistol = new THREE.Mesh();
@@ -118,37 +114,27 @@ function processKeyboard(){
     else if(keyboard['r']){
         controls.lock();
     }
-    else if (keyboard['x']){
-        var bullet = new THREE.Mesh(
-            new THREE.SphereGeometry(0.5, 8, 8),
-            new THREE.MeshBasicMaterial({color: 0xffffff})
-        );
-        bullet.alive = true;
-        setTimeout(function(){
-            bullet.alive = false;
-            scene.remove(bullet);
-        }, 1000);
-        scene.add(bullet);
-    }
     
+}
+
+function lerp(a, b, t) {return a + (b - a) * t}
+function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
+var t = 0;
+function loop(mesh, x, y, z){
+    var newX = lerp(mesh.position.x, x, ease(t));
+    var newY = lerp(mesh.position.y, y, ease(t));
+    var newZ = lerp(mesh.position.z, z, ease(t));
+    t += 0.002;
+    mesh.position.set(newX, newY, newZ);
 }
 
 function drawScene(){
     renderer.render(scene, cam);
-    //processKeyboard();
-    addShooting();
-    var relativeCameraOffset = new THREE.Vector3(0, 5, 20);
-    var cameraOffset = relativeCameraOffset.applyMatrix4(pistol.matrixWorld);
-    pistol.position.set(
-		camera.position.x - Math.sin(camera.rotation.y + Math.PI/6) * 0.75,
-		camera.position.y ,//- 0.5 + Math.sin(time*4 + camera.position.x + camera.position.z)*0.01,
-		camera.position.z + Math.cos(camera.rotation.y + Math.PI/6) * 0.75
-	);
-	pistol.rotation.set(
-		camera.rotation.x,
-		camera.rotation.y - Math.PI,
-		camera.rotation.z
-	);
+    loop(cube, cam.position.x, cam.position.y, cam.position.z);
+    setInterval(function(){
+        cube.position.set(0, 0, -30);
+    }, 1500);
+    processKeyboard();
     if (inRadius(10, cam.position.x, cam.position.y, cam.position.z) == 0){
         var ang = Math.atan2( ( cam.position.x - gun.position.x ), ( cam.position.z - gun.position.z ) );
 
