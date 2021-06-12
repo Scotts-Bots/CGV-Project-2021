@@ -71,6 +71,10 @@ function HUD() {
     if (check != null) {
         check.parentNode.removeChild(check);
     }
+    check = document.getElementById("card");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
 
     var Name = document.createElement('div');
     Name.id = "Name";
@@ -132,6 +136,14 @@ function HUD() {
     gun.style.left = 2230 + 'px';
     gun.width = 85;
 
+    var card = document.createElement("img");
+    card.id = "card";
+    card.style.position = 'absolute';
+    card.src = "Images/keycard.jpg";
+    card.style.top = 650 + 'px';
+    card.style.left = 2200 + 'px';
+    card.height = 80;
+
     var helper = document.createElement('div');
     helper.id = "helper";
     helper.style.position = 'absolute';
@@ -169,11 +181,18 @@ function HUD() {
     if (Player.checkGun() != false && Player.getAmmo() > 0) {
         document.body.appendChild(gun);
     }
+    if (Player.getCards() > 0) {
+        document.body.appendChild(card);
+    }
 
 }
 
 function RemoveHUD(){
     check = document.getElementById("Hbar");
+    if (check != null) {
+        check.parentNode.removeChild(check);
+    }
+    check = document.getElementById("card");
     if (check != null) {
         check.parentNode.removeChild(check);
     }
