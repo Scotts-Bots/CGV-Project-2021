@@ -1,5 +1,9 @@
 //LEVEL 2
 var helpCounter = 0;
+var kswipePadPopup;
+var keycardPopup;
+var keycardf;
+var kswipePadf;
 
 //creating a scene
 const scene = new THREE.Scene();
@@ -153,6 +157,9 @@ function drawScene(){
         helpCounter-=1;
     }
     //console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
+    keycardPopup.rotation.y +=0.02;
+    kswipePadPopup.rotation.y +=0.02;
+    checkPopUps();
     processKeyboard();
     HUD();
     Tasks();
@@ -161,6 +168,32 @@ function drawScene(){
 
 //ACTION!
 drawScene();
+
+function checkPopUps(){
+    camposition = new THREE.Vector3();
+    camposition.setFromMatrixPosition( camera.matrixWorld );
+    x = camposition.x;
+    y = camposition.z;
+    //finder object
+    finderposition = new THREE.Vector3();
+    finderposition.setFromMatrixPosition( keycardf.matrixWorld );
+    fx = finderposition.x;
+    fy = finderposition.z;
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <700){
+        keycardPopup.visible = true;
+    }else{
+        keycardPopup.visible = false;
+    }
+    finderposition = new THREE.Vector3();
+    finderposition.setFromMatrixPosition( kswipePadf.matrixWorld );
+    fx = finderposition.x;
+    fy = finderposition.z;
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <700){
+        kswipePadPopup.visible = true;
+    }else{
+        kswipePadPopup.visible = false;
+    }
+}
 
  function Tasks(){
     check = document.getElementById("task");
@@ -319,6 +352,9 @@ function Chair(s,ry,px,py,pz) {
 
 function loadAssets(){
 
+    const geometry = new THREE.ConeGeometry( 20, 20, 4 );
+    const material = new THREE.MeshBasicMaterial( {color: 0x00ff99} );
+
     var warningLight = new THREE.Mesh();
     gltfLoader.load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
         warningLight = gltf.scene;
@@ -340,13 +376,20 @@ function loadAssets(){
         swipePad.position.set(600,50,-3715);
         scene.add(swipePad);
     })
-    const kswipePadf = new THREE.Mesh(
+
+    
+    kswipePadf = new THREE.Mesh(
         new THREE.BoxBufferGeometry(50, 50, 50),
         new THREE.MeshLambertMaterial({ color: 0xffffff })
     );
     kswipePadf.position.set(600,50,-3715);
     kswipePadf.visible = false;
     scene.add(kswipePadf);
+
+    kswipePadPopup = new THREE.Mesh( geometry, material );
+    kswipePadPopup.position.set(600,90,-3715);
+    kswipePadPopup.rotateZ(Math.PI);
+scene.add( kswipePadPopup );
 
     const domEvent3 = new THREEx.DomEvents(camera,  renderer.domElement);
 
@@ -367,7 +410,7 @@ domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
         scene.add(keycard);
     })
 
-    const keycardf = new THREE.Mesh(
+    keycardf = new THREE.Mesh(
         new THREE.BoxBufferGeometry(50, 50, 50),
         new THREE.MeshLambertMaterial({ color: 0xffffff })
     );
@@ -375,9 +418,15 @@ domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
     keycardf.visible = false;
     scene.add(keycardf);
 
+    keycardPopup = new THREE.Mesh( geometry, material );
+    keycardPopup.position.set(-830,-90,-200);
+    keycardPopup.rotateZ(Math.PI);
+scene.add( keycardPopup );
+
     const domEvent2 = new THREEx.DomEvents(camera,  renderer.domElement);
 
 domEvent2.addEventListener(keycardf, 'dblclick', event =>{
+    scene.remove( keycardPopup );
     scene.remove(keycard);//must remove object
     Player.incCards();
     found = true;

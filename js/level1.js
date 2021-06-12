@@ -215,6 +215,7 @@ const domEvent2 = new THREEx.DomEvents(cam,  renderer.domElement);
 
 domEvent2.addEventListener(ammof, 'dblclick', event =>{
     scene.remove(Ammo);//must remove object
+    scene.remove(AmmofPopup);
     Player.incAmmo();
 });
 
@@ -265,6 +266,7 @@ const domEvent4 = new THREEx.DomEvents(cam, renderer.domElement);
 
 domEvent4.addEventListener(gunf, 'dblclick', event => {
     scene.remove(pgun);
+    scene.remove(gunfPopup);
     Player.pickUpGun();
     var pistol = new THREE.Mesh();
     new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
@@ -452,7 +454,7 @@ if (frame < 0.4){
         RemoveHUD();
         RemoveTasks();
         
-        ran = Math.floor(Math.random() * 30);
+        ran = Math.floor(Math.random() * 50);
         if (ran == 2) {
 
             if (lines.length < 4) {
@@ -474,6 +476,7 @@ if (frame < 0.4){
             collidableMeshList.pop();
             EndGame();
             unLocked = true;
+            scene.remove(switchfPopup);
         }
     }else if(paused == true){
     }else{
@@ -566,7 +569,7 @@ function checkPopUps(){
     finderposition.setFromMatrixPosition( gunfPopup.matrixWorld );
     fx = finderposition.x;
     fy = finderposition.z;
-    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <700){
+    if (Math.sqrt(Math.pow((x-fx),2) + Math.pow((y-fy),2)) <1500){
         gunfPopup.visible = true;
     }else{
         gunfPopup.visible = false;
