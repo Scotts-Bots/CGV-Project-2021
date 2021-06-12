@@ -232,27 +232,27 @@ function Tasks() {
     task.id = "task";
     task.style.position = 'absolute';
     task.style.color = "white";
-    task.style.fontSize = "20px";
-    task.style.letterSpacing = "2px";
+    task.style.fontSize = window.innerWidth*0.01+"px";
+    task.style.letterSpacing = window.innerWidth*0.001+"px";
     task.style.fontFamily = "Helvetica";
     task.style.width = 200;
     task.style.height = 500;
     task.innerHTML = "Task(s)";
-    task.style.top = 200 + 'px';
-    task.style.left = 70 + 'px';
+    task.style.top = window.innerHeight*0.2 + 'px';
+    task.style.left = window.innerWidth*0.02 + 'px';
 
     var task1 = document.createElement('div');
     task1.id = "task1";
     task1.style.position = 'absolute';
     task1.style.color = "white";
-    task1.style.fontSize = "20px";
-    task1.style.letterSpacing = "2px";
+    task1.style.fontSize = window.innerWidth*0.01+"px";
+    task1.style.letterSpacing = window.innerWidth*0.001+"px";
     task1.style.fontFamily = "Helvetica";
     task1.style.width = 200;
     task1.style.height = 500;
     task1.innerHTML = "> Get to the rocketship";
-    task1.style.top = 230 + 'px';
-    task1.style.left = 70 + 'px';
+    task1.style.top = window.innerHeight*0.23 + 'px';
+    task1.style.left = window.innerWidth*0.02 + 'px';
 
     document.body.appendChild(task);
     document.body.appendChild(task1);
