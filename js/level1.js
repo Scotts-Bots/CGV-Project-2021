@@ -8,6 +8,7 @@ var success = 0;
 var lines = [];
 var paused = false;
 var target1;
+var frame = 0;
 
 var wall;
 var wall1;
@@ -434,6 +435,15 @@ let clock = new THREE.Clock();
 
 function drawScene() {
     
+if (frame < 0.4){
+    light1.intensity = frame;
+    light3.intensity = frame*7.5;
+                light5.intensity = frame;
+                light7.intensity = frame;
+                light9.intensity = frame;
+    frame += 0.0015;
+}
+
     if (isPlaying == true) {
         RemoveHUD();
         RemoveTasks()
@@ -472,11 +482,15 @@ function drawScene() {
                 light7.intensity = intensity;
                 light9.intensity = intensity;
             } else {
-                intensity = 0.4;
+                if (frame >= 0.4){
+                    intensity = 0.4;
                 light1.intensity = intensity;
+                light3.intensity = 3;
                 light5.intensity = intensity;
                 light7.intensity = intensity;
                 light9.intensity = intensity;
+                }
+                
             }
         } else {
             len = len - 1;
