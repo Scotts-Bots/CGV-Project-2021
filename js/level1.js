@@ -9,6 +9,10 @@ var lines = [];
 var paused = false;
 var target1;
 var frame = 0;
+var rules;
+var rulesText;
+var rulesText2;
+var successText;
 
 var wall;
 var wall1;
@@ -446,7 +450,8 @@ if (frame < 0.4){
 
     if (isPlaying == true) {
         RemoveHUD();
-        RemoveTasks()
+        RemoveTasks();
+        
         ran = Math.floor(Math.random() * 30);
         if (ran == 2) {
 
@@ -465,7 +470,7 @@ if (frame < 0.4){
             }
         }
 
-        if (success > 5) {
+        if (success >= 5) {
             collidableMeshList.pop();
             EndGame();
             unLocked = true;
@@ -582,6 +587,9 @@ function EndGame() {
     cam.remove(wall1);
     cam.remove(wall2);
     cam.remove(wall3);
+    cam.remove(rules);
+    cam.remove(rulesText);
+    cam.remove(rulesText2);
     isPlaying = false;
 }
 
@@ -622,6 +630,66 @@ function playgame(){
     wall3.position.x = -1;
     cam.add(wall3);
     scene.add(cam);
+
+    var loader = new THREE.FontLoader();
+
+    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+
+    var rulesGeo = new THREE.TextGeometry("Rules:", {
+
+        font: font,
+
+        size: 0.03,
+        height: 0.001,
+        curveSegments: 20,
+
+    });
+
+    var rulesTxtGeo = new THREE.TextGeometry("1. Press space bar when lines are inside the red area to score a point", {
+
+        font: font,
+
+        size: 0.02,
+        height: 0.001,
+        width : 0.0002,
+        curveSegments: 20,
+
+    });
+
+    var rulesTxtGeo2 = new THREE.TextGeometry("2. Score 5 points to complete the game", {
+
+        font: font,
+
+        size: 0.02,
+        height: 0.001,
+        width : 0.0002,
+        curveSegments: 20,
+
+    });
+
+    const textMaterial = new THREE.MeshPhongMaterial({ color: 0x110000 });
+
+    rules = new THREE.Mesh(rulesGeo, textMaterial);
+    rules.position.z = -1;
+    rules.position.y = -0.08;
+    rules.position.x = -0.62;
+
+    rulesText = new THREE.Mesh(rulesTxtGeo, textMaterial);
+    rulesText.position.z = -1;
+    rulesText.position.y = -0.12;
+    rulesText.position.x = -0.62;
+
+    rulesText2 = new THREE.Mesh(rulesTxtGeo2, textMaterial);
+    rulesText2.position.z = -1;
+    rulesText2.position.y = -0.17;
+    rulesText2.position.x = -0.62;
+
+    cam.add(rules);
+    cam.add(rulesText);
+    cam.add(rulesText2);
+    scene.add(cam);
+
+});
 }
 
 

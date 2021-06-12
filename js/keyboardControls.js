@@ -26,7 +26,7 @@ function processKeyboard(){
         controls.moveRight(-speedA);
         lastKeyPressed = 'a';
     }
-    else if(keyboard['s']){
+    else if(keyboard['s']){ 
         controls.moveForward(-speedS);
         lastKeyPressed = 's';
     }
