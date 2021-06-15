@@ -3,7 +3,9 @@ var enemy1;
 var enemy2;
 var enemy3;
 var enemy4;
+var rover;
 var frameCount = 0;
+var roverCount = 0;
 
 //scene
 const scene = new THREE.Scene();
@@ -170,6 +172,16 @@ loader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
     scene.add(enemy4);
 });
 
+rover = new THREE.Mesh();
+loader.load('Blender Models/Rover/Rover.gltf', function (gltf) {
+    rover = gltf.scene;
+    rover.scale.set(150, 150, 150);
+    rover.position.x = 100*Math.cos(frameCount) - 1000;
+    rover.position.y = -400;
+    rover.position.z = 100*Math.sin(frameCount) - 27000;
+    scene.add(rover);
+});
+
 enemy2 = new THREE.Mesh();
 loader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
     enemy2 = gltf.scene;
@@ -207,7 +219,7 @@ function turnTurret(r, obj) {
         obj.rotation.y = ang;
         ran = Math.floor(Math.random() * 20);
         if (ran == 2){
-            Player.decHealth(1.5);
+            Player.decHealth(1);
         }
     }
 }
@@ -235,16 +247,16 @@ function drawScene() {
     requestAnimationFrame(drawScene);
     
 
-    // if (Player.getHealth() <= 0) {
-    //     window.location.href = "GameOver.html";
-    // }else{
-    //     if (Player.getOxygen() == 0) {
-    //         Player.decHealth(0.07);
-    //     } else {
-    //         Player.decHealth(0.03);
-    //         Player.decOxygen(0.07);
-    //     }
-    // }
+    if (Player.getHealth() <= 0) {
+        window.location.href = "GameOver.html";
+    }else{
+        if (Player.getOxygen() == 0) {
+            Player.decHealth(0.07);
+        } else {
+            Player.decHealth(0.03);
+            Player.decOxygen(0.07);
+        }
+    }
 
     enemy1.position.x = 9000*Math.cos(frameCount) + 2000;
     enemy1.position.z = 1000*Math.sin(frameCount) - 20000;
@@ -252,8 +264,12 @@ function drawScene() {
     enemy3.position.z = 6000*Math.sin(frameCount) - 30000;
     enemy4.position.x = 4200*Math.cos(frameCount) - 1000;
     enemy4.position.z = 5700*Math.sin(frameCount) - 27000;
+    rover.position.x = 12000*Math.cos(roverCount) + 2000;
+    rover.position.z = 6000*Math.sin(roverCount) - 27000;
+    rover.rotation.y = (-roverCount % 360);//-Math.sin(frameCount/2)
 
-    frameCount+=0.01;
+    roverCount+=0.002;
+    frameCount+=0.007;
 
     HUD();
     Tasks();
