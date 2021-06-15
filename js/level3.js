@@ -182,6 +182,12 @@ loader.load('Blender Models/Rover/Rover.gltf', function (gltf) {
     scene.add(rover);
 });
 
+var bullet = new THREE.Mesh(
+    new THREE.SphereGeometry(0.05, 8, 8),
+    new THREE.MeshBasicMaterial({color: 0xffffff})
+);
+bullet.scale.set(500, 500, 500);
+
 enemy2 = new THREE.Mesh();
 loader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
     enemy2 = gltf.scene;
@@ -189,6 +195,8 @@ loader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
     enemy2.position.x = 100*Math.cos(frameCount) + 7000;
     enemy2.position.y = -400;
     enemy2.position.z = 100*Math.sin(frameCount) - 15000;
+    bullet.position.set(enemy2.position.x, -210, enemy2.position.z);
+    scene.add(bullet);
     scene.add(enemy2);
 });
 
@@ -213,20 +221,35 @@ Tasks();
 
 //ACTION!
 
+function lerp(a, b, t) {return a + (b - a) * t}
+function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
+var t = 0;
+function loop(mesh, x, y, z){
+    var newX = lerp(mesh.position.x, x, ease(t));
+    var newY = mesh.position.y; //lerp(mesh.position.y, y, ease(t));
+    var newZ = lerp(mesh.position.z, z, ease(t));
+    t += 0.0005;
+    mesh.position.set(newX, newY, newZ);
+}
+
 function turnTurret(r, obj) {
     if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
         var ang = Math.atan2((cam.position.x - obj.position.x), (cam.position.z - obj.position.z));
         obj.rotation.y = ang;
         ran = Math.floor(Math.random() * 20);
+        loop(bullet, cam.position.x, cam.position.z, cam.position.z)
         if (ran == 2){
-            Player.decHealth(1);
+            //Player.decHealth(1);
         }
+    }
+    else{
+        //scene.remove(bullet);
     }
 }
 
 function getPacks(r, obj) {
     if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
-        Player.resetHealth();
+        //Player.resetHealth();
         scene.remove(obj);
 
     }
@@ -253,8 +276,8 @@ function drawScene() {
         if (Player.getOxygen() == 0) {
             Player.decHealth(0.07);
         } else {
-            Player.decHealth(0.03);
-            Player.decOxygen(0.07);
+            //Player.decHealth(0.03);
+            //Player.decOxygen(0.07);
         }
     }
 
