@@ -195,7 +195,7 @@ loader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
     enemy2.position.x = 100*Math.cos(frameCount) + 7000;
     enemy2.position.y = -400;
     enemy2.position.z = 100*Math.sin(frameCount) - 15000;
-    bullet.position.set(enemy2.position.x, -210, enemy2.position.z);
+    bullet.position.set(7000, -210, -15000);
     scene.add(bullet);
     scene.add(enemy2);
 });
@@ -225,10 +225,10 @@ function lerp(a, b, t) {return a + (b - a) * t}
 function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
 var t = 0;
 function loop(mesh, x, y, z){
-    var newX = lerp(mesh.position.x, x, ease(t));
+    var newX = lerp(mesh.position.x, x, t);
     var newY = mesh.position.y; //lerp(mesh.position.y, y, ease(t));
-    var newZ = lerp(mesh.position.z, z, ease(t));
-    t += 0.0005;
+    var newZ = lerp(mesh.position.z, z, t);
+    t += 0.0002;
     mesh.position.set(newX, newY, newZ);
 }
 
@@ -237,13 +237,13 @@ function turnTurret(r, obj) {
         var ang = Math.atan2((cam.position.x - obj.position.x), (cam.position.z - obj.position.z));
         obj.rotation.y = ang;
         ran = Math.floor(Math.random() * 20);
-        loop(bullet, cam.position.x, cam.position.z, cam.position.z)
+        loop(bullet, cam.position.x, cam.position.y, cam.position.z)
         if (ran == 2){
             //Player.decHealth(1);
         }
     }
     else{
-        //scene.remove(bullet);
+        bullet.position.set(7000, -210, -15000);
     }
 }
 
@@ -261,10 +261,10 @@ function drawScene() {
     otank2.rotation.y += 0.05;
     checkCollision(cam, updateKeyboard, MovingCube);
     processKeyboard();
-    turnTurret(5000, enemy1);
+    //turnTurret(5000, enemy1);
     turnTurret(5000, enemy2);
-    turnTurret(5000, enemy3);
-    turnTurret(5000, enemy4);
+    //turnTurret(5000, enemy3);
+    //turnTurret(5000, enemy4);
     getPacks(500, otank1);
     getPacks(500, otank2);
     requestAnimationFrame(drawScene);
