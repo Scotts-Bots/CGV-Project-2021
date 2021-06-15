@@ -1,4 +1,9 @@
 //LEVEL 3//
+var enemy1;
+var enemy2;
+var enemy3;
+var enemy4;
+var frameCount = 0;
 
 //scene
 const scene = new THREE.Scene();
@@ -136,19 +141,42 @@ new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf', function (
     scene.add(cam);
 });
 
-var enemy1 = new THREE.Mesh();
+enemy1 = new THREE.Mesh();
 loader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
     enemy1 = gltf.scene;
     enemy1.scale.set(350, 350, 350);
-    enemy1.position.set(2000, 100, -20000);
+    enemy1.position.x = 100*Math.cos(frameCount) + 2000;
+    enemy1.position.y = 100;
+    enemy1.position.z = 100*Math.sin(frameCount) - 20000;
     scene.add(enemy1);
 });
 
-var enemy2 = new THREE.Mesh();
+enemy3 = new THREE.Mesh();
+loader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
+    enemy3 = gltf.scene;
+    enemy3.scale.set(350, 350, 350);
+    enemy3.position.x = 100*Math.cos(frameCount) + 5000;
+    enemy3.position.y = 100;
+    enemy3.position.z = 100*Math.sin(frameCount) - 30000;
+    scene.add(enemy3);
+});
+enemy4 = new THREE.Mesh();
+loader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
+    enemy4 = gltf.scene;
+    enemy4.scale.set(350, 350, 350);
+    enemy4.position.x = 100*Math.cos(frameCount) - 1000;
+    enemy4.position.y = 100;
+    enemy4.position.z = 100*Math.sin(frameCount) - 27000;
+    scene.add(enemy4);
+});
+
+enemy2 = new THREE.Mesh();
 loader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
     enemy2 = gltf.scene;
     enemy2.scale.set(350, 350, 350);
-    enemy2.position.set(7000, 100, -15000);
+    enemy2.position.x = 100*Math.cos(frameCount) + 7000;
+    enemy2.position.y = -400;
+    enemy2.position.z = 100*Math.sin(frameCount) - 15000;
     scene.add(enemy2);
 });
 
@@ -200,21 +228,33 @@ function drawScene() {
     processKeyboard();
     turnTurret(5000, enemy1);
     turnTurret(5000, enemy2);
+    turnTurret(5000, enemy3);
+    turnTurret(5000, enemy4);
     getPacks(500, otank1);
     getPacks(500, otank2);
     requestAnimationFrame(drawScene);
     
 
-    if (Player.getHealth() <= 0) {
-        window.location.href = "GameOver.html";
-    }else{
-        if (Player.getOxygen() == 0) {
-            Player.decHealth(0.07);
-        } else {
-            Player.decHealth(0.03);
-            Player.decOxygen(0.07);
-        }
-    }
+    // if (Player.getHealth() <= 0) {
+    //     window.location.href = "GameOver.html";
+    // }else{
+    //     if (Player.getOxygen() == 0) {
+    //         Player.decHealth(0.07);
+    //     } else {
+    //         Player.decHealth(0.03);
+    //         Player.decOxygen(0.07);
+    //     }
+    // }
+
+    enemy1.position.x = 9000*Math.cos(frameCount) + 2000;
+    enemy1.position.z = 1000*Math.sin(frameCount) - 20000;
+    enemy3.position.x = 2000*Math.cos(frameCount) + 5000;
+    enemy3.position.z = 6000*Math.sin(frameCount) - 30000;
+    enemy4.position.x = 4200*Math.cos(frameCount) - 1000;
+    enemy4.position.z = 5700*Math.sin(frameCount) - 27000;
+
+    frameCount+=0.01;
+
     HUD();
     Tasks();
 }
