@@ -401,12 +401,18 @@ domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
         helpCounter = 60;
     }
 });
+    var keycardpos1 = [-830,-130,-200];
+    var keycardpos2 = [800, -135, -750];
+    var keycardpos3 = [800, -135, 830];
+
+    var keycardposs = [keycardpos1, keycardpos2, keycardpos3];
+    var keycardpos = keycardposs[Math.floor(Math.random() * 3)];
 
     keycard = new THREE.Mesh();
     gltfLoader.load('Blender Models/keycard/keycard.gltf' , function (gltf)  {
         keycard = gltf.scene;
         keycard.scale.set(200,150,200);
-        keycard.position.set(-830,-130,-200);
+        keycard.position.set(keycardpos[0],keycardpos[1],keycardpos[2]);
         scene.add(keycard);
     })
 
@@ -414,12 +420,12 @@ domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
         new THREE.BoxBufferGeometry(50, 50, 50),
         new THREE.MeshLambertMaterial({ color: 0xffffff })
     );
-    keycardf.position.set(-830,-130,-200);
+    keycardf.position.set(keycardpos[0],keycardpos[1],keycardpos[2]);
     keycardf.visible = false;
     scene.add(keycardf);
 
     keycardPopup = new THREE.Mesh( geometry, material );
-    keycardPopup.position.set(-830,-90,-200);
+    keycardPopup.position.set(keycardpos[0],keycardpos[1]+40,keycardpos[2]);
     keycardPopup.rotateZ(Math.PI);
 scene.add( keycardPopup );
 
