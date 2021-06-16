@@ -9,12 +9,18 @@
   //This class contains information about the player including stats and name,
 //and functions to update respective members.
 class Player {
-    static name = localStorage["name"];
-    static health = localStorage["health"];
-    static oxygen = localStorage["oxygen"];
-    static ammo = localStorage["ammo"];
-    static cards = localStorage["cards"];
-    static gun = localStorage["gun"];
+    // static name = localStorage["name"];
+    // static health = localStorage["health"];
+    // static oxygen = localStorage["oxygen"];
+    // static ammo = localStorage["ammo"];
+    // static cards = localStorage["cards"];
+    // static gun = localStorage["gun"];
+    static name = "Guest";
+    static health = 100;
+    static oxygen = 100;
+    static ammo = 0;
+    static cards = 0;
+    static gun = false;
 
     static setName(Name) {
         this.name = Name;

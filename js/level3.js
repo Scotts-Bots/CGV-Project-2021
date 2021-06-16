@@ -77,6 +77,10 @@ let clock = new THREE.Clock();
 var enemy1, enemy2, enemy3, enemy4, bullet;
 var frameCount = 0;
 
+//enemy hitboxes and counters
+var enemy1HitCount=0, enemy2HitCount=0, enemy3HitCount=0, enemy4HitCount=0;
+var enemy1Hitbox, enemy2Hitbox, enemy3Hitbox, enemy4Hitbox;
+
 //moving rover model
 var rover;
 var roverCount = 0;
@@ -93,6 +97,14 @@ scene.add(cam);
 HUD();
 Tasks();
 
+//event for shooting
+window.addEventListener( 'mousedown', Attack, false );
+
+function Attack(){
+    if (Player.getAmmo()>0 && Player.checkGun() == true){
+        Player.decAmmo();
+    }
+}
 
 //ACTION!
 drawScene();
@@ -137,9 +149,9 @@ function loadAssets() {
     rocketf.visible = false;
     scene.add(rocketf);
 
-    const domEvent1 = new THREEx.DomEvents(cam, renderer.domElement);
+    const RocketClick = new THREEx.DomEvents(cam, renderer.domElement);
 
-    domEvent1.addEventListener(rocketf, 'dblclick', event => {
+    RocketClick.addEventListener(rocketf, 'dblclick', event => {
         camposition = new THREE.Vector3();
         camposition.setFromMatrixPosition(cam.matrixWorld);
         x = camposition.x;
@@ -178,6 +190,30 @@ function loadAssets() {
         scene.add(enemy1);
     });
 
+    enemy1Hitbox = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(500, 500, 500),
+        new THREE.MeshLambertMaterial({ color: 0xffffff })
+    );
+    enemy1Hitbox.position.x = 100*Math.cos(frameCount) + 2050;
+    enemy1Hitbox.position.y = 100;
+    enemy1Hitbox.position.z = 100*Math.sin(frameCount) - 20000;
+    enemy1Hitbox.visible = false;
+    scene.add(enemy1Hitbox);
+    
+    const attackEnemy1 = new THREEx.DomEvents(cam, renderer.domElement);
+    
+    attackEnemy1.addEventListener(enemy1Hitbox, 'click', event => {
+        
+        if (Player.getAmmo() > 0){
+            enemy1HitCount++;
+            Player.decAmmo();
+            if (enemy1HitCount >= 3){
+                scene.remove(enemy1);
+                scene.remove(enemy1Hitbox);
+            }
+        }
+    });
+
     bullet = new THREE.Mesh(
         new THREE.SphereGeometry(0.05, 8, 8),
         new THREE.MeshBasicMaterial({color: 0xffffff})
@@ -196,6 +232,30 @@ function loadAssets() {
         scene.add(enemy2);
     });
 
+    enemy2Hitbox = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(500, 500, 500),
+        new THREE.MeshLambertMaterial({ color: 0xffffff })
+    );
+    enemy2Hitbox.position.x = 100*Math.cos(frameCount) + 7000;
+    enemy2Hitbox.position.y = -400;
+    enemy2Hitbox.position.z = 100*Math.sin(frameCount) - 15000;
+    enemy2Hitbox.visible = false;
+    scene.add(enemy2Hitbox);
+    
+    const attackEnemy2 = new THREEx.DomEvents(cam, renderer.domElement);
+    
+    attackEnemy2.addEventListener(enemy2Hitbox, 'click', event => {
+        
+        if (Player.getAmmo() > 0){
+            enemy1HitCount++;
+            Player.decAmmo();
+            if (enemy1HitCount >= 3){
+                scene.remove(enemy2);
+                scene.remove(enemy2Hitbox);
+            }
+        }
+    });
+
     enemy3 = new THREE.Mesh();
     gltfLoader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
         enemy3 = gltf.scene;
@@ -206,6 +266,30 @@ function loadAssets() {
         scene.add(enemy3);
     });
 
+    enemy3Hitbox = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(500, 500, 500),
+        new THREE.MeshLambertMaterial({ color: 0xffffff })
+    );
+    enemy3Hitbox.position.y = 100;
+    enemy3Hitbox.position.x = 2000*Math.cos(frameCount) + 5050;
+    enemy3Hitbox.position.z = 6000*Math.sin(frameCount) - 30000;
+    enemy3Hitbox.visible = false;
+    scene.add(enemy3Hitbox);
+    
+    const attackEnemy3 = new THREEx.DomEvents(cam, renderer.domElement);
+    
+    attackEnemy3.addEventListener(enemy3Hitbox, 'click', event => {
+        
+        if (Player.getAmmo() > 0){
+            enemy1HitCount++;
+            Player.decAmmo();
+            if (enemy1HitCount >= 3){
+                scene.remove(enemy3);
+                scene.remove(enemy3Hitbox);
+            }
+        }
+    });
+
     enemy4 = new THREE.Mesh();
     gltfLoader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
         enemy4 = gltf.scene;
@@ -214,6 +298,30 @@ function loadAssets() {
         enemy4.position.y = 100;
         enemy4.position.z = 100*Math.sin(frameCount) - 27000;
         scene.add(enemy4);
+    });
+
+    enemy4Hitbox = new THREE.Mesh(
+        new THREE.BoxBufferGeometry(500, 500, 500),
+        new THREE.MeshLambertMaterial({ color: 0xffffff })
+    );
+    enemy4Hitbox.position.y = 100;
+    enemy4Hitbox.position.x = 4200*Math.cos(frameCount) - 1000;
+    enemy4Hitbox.position.z = 5700*Math.sin(frameCount) - 27000;
+    enemy4Hitbox.visible = false;
+    scene.add(enemy4Hitbox);
+    
+    const attackEnemy4 = new THREEx.DomEvents(cam, renderer.domElement);
+    
+    attackEnemy4.addEventListener(enemy4Hitbox, 'click', event => {
+        
+        if (Player.getAmmo() > 0){
+            enemy4HitCount++;
+            Player.decAmmo();
+            if (enemy4HitCount >= 3){
+                scene.remove(enemy4);
+                scene.remove(enemy4Hitbox);
+            }
+        }
     });
 
     rover = new THREE.Mesh();
@@ -306,13 +414,19 @@ function drawScene() {
 
     enemy1.position.x = 9000*Math.cos(frameCount) + 2000;
     enemy1.position.z = 1000*Math.sin(frameCount) - 20000;
+    enemy1Hitbox.position.x = 9000*Math.cos(frameCount) + 2050;
+    enemy1Hitbox.position.z = 1000*Math.sin(frameCount) - 20000;
     enemy3.position.x = 2000*Math.cos(frameCount) + 5000;
     enemy3.position.z = 6000*Math.sin(frameCount) - 30000;
+    enemy3Hitbox.position.x = 2000*Math.cos(frameCount) + 5050;
+    enemy3Hitbox.position.z = 6000*Math.sin(frameCount) - 30000;
     enemy4.position.x = 4200*Math.cos(frameCount) - 1000;
     enemy4.position.z = 5700*Math.sin(frameCount) - 27000;
+    enemy4Hitbox.position.x = 4200*Math.cos(frameCount) - 1000;
+    enemy4Hitbox.position.z = 5700*Math.sin(frameCount) - 27000;
     rover.position.x = 12000*Math.cos(roverCount) + 2000;
     rover.position.z = 6000*Math.sin(roverCount) - 27000;
-    rover.rotation.y = (-roverCount % 360);//-Math.sin(frameCount/2)
+    rover.rotation.y = (-roverCount % 360);
 
     roverCount+=0.002;
     frameCount+=0.007;

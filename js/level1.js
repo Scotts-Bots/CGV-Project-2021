@@ -85,6 +85,15 @@ light1.castShadow = true;
 //light1.shadow.bias = -0.0001;
 scene.add(light1);
 
+//event for shooting
+window.addEventListener( 'mousedown', Attack, false );
+
+function Attack(){
+    if (Player.getAmmo()>0 && Player.checkGun() == true){
+        Player.decAmmo();
+    }
+}
+
 
 const room = Room();
 room.scale.set(4, 4, 2.5);
@@ -137,15 +146,6 @@ water.position.set(2300,-370,2500)
 water.rotation.x = - Math.PI / 2;
 
 scene.add(water);
-
-const gui = new dat.GUI();
-
-const waterUniforms = water.material.uniforms;
-
-const folderWater = gui.addFolder('Water');
-folderWater.add(waterUniforms.distortionScale, 'value', 0, 8, 0.1).name('distortionScale');
-folderWater.add(waterUniforms.size, 'value', 0.1, 10, 0.1).name('size');
-folderWater.open();
 
 var cup = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/cup/cup.gltf', function (gltf) {
