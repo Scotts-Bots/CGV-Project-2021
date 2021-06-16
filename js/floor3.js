@@ -1,45 +1,44 @@
-//MODELLING SCENE FOR LEVEL 3
+//SCENE MODELLING FOR LEVEL 3
 
-function Floor(x, y, z) {
-    const wall = new THREE.Mesh(
+//generic wall mesh
+function Wall(x, y, z) {
+    var wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
         new THREE.MeshLambertMaterial({ color: 0xfaebd7 })
     );
-    collidableMeshList.push(wall);
+    collidableMeshList.push(wall); //add wall to objects that affect collision detection
     return wall;
 }
 
+//window mesh
 function Window(x, y, z) {
-    const wall = new THREE.Mesh(
+    var wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
         new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 1 })
     );
-    collidableMeshList.push(wall);
+    collidableMeshList.push(wall); //add window to objects that affect collision detection
     return wall;
 }
 
+//entire level structure
 function Room() {
+    var room = new THREE.Group();
+    var level1 = new THREE.Group();
+    var level2 = new THREE.Group();
+    var level22 = new THREE.Group();
 
-    const room = new THREE.Group();
-
-    const level1 = new THREE.Group();
-
-    const level2 = new THREE.Group();
-
-    const level22 = new THREE.Group();
-
-    const b1 = Floor(553, 25, 300);
-    const b12 = Floor(100, 25, 100);
-    const b2 = Floor(450, 25, 300);
-    const b3 = Floor(750, 25, 300);
-    const fl = Floor(775, 1106.5, 10);
-    const b5 = Floor(1100, 25, 300);
-    const b6 = Floor(225, 25, 300);
-    const b613 = Floor(400, 25, 70);
-    const b13 = Floor(225, 25, 300);
-    const b14 = Floor(400, 25, 70);
-    const window = Window(400, 23, 160);
-    const roof = Floor(775, 1106.5, 10);
+    var b1 = Wall(553, 25, 300);
+    var b12 = Wall(100, 25, 100);
+    var b2 = Wall(450, 25, 300);
+    var b3 = Wall(750, 25, 300);
+    var fl = Wall(775, 1106.5, 10);
+    var b5 = Wall(1100, 25, 300);
+    var b6 = Wall(225, 25, 300);
+    var b613 = Wall(400, 25, 70);
+    var b13 = Wall(225, 25, 300);
+    var b14 = Wall(400, 25, 70);
+    var window = Window(400, 23, 160);
+    var roof = Wall(775, 1106.5, 10);
 
     b1.translateX(10);
     b3.rotateZ(Math.PI / 2);
@@ -76,45 +75,37 @@ function Room() {
     roof.translateX(-375);
     roof.translateY(-286.5);
 
-    level1.add(b3);
-    level1.add(b1);
-    level1.add(b2);
-    level1.add(b12);
-    level1.add(fl);
-    level1.add(b5);
-    level1.add(b6);
-    level1.add(b13);
-    level1.add(b613);
-    level1.add(b14);
-    level1.add(window);
-    level1.add(roof);
-
+    //add meshes to level 1 group
+    var level1Meshes = [b3,b1,b2,b12,fl,b5,b6,b13,b613,b14,window,roof];
+    for (let i=0; i<level1Meshes.length; ++i) {
+        level1.add(level1Meshes[i]);
+    }
+    //transform level 1 group and add to room
     level1.translateY(-600);
     level1.translateZ(20);
     level1.scale.set(1,1,1.2);
-
     room.add(level1);
 
-    const geometry = new THREE.CylinderGeometry(150, 150, 600, 32);
-    const material = new THREE.MeshLambertMaterial({ color: 0xfaebd7 });
-    const cylinder = new THREE.Mesh(geometry, material);
+    //add tunnel bridge between level 1 structure and level 2 structure
+    var geometry = new THREE.CylinderGeometry(150, 150, 600, 32);
+    var material = new THREE.MeshLambertMaterial({ color: 0xfaebd7 });
+    var cylinder = new THREE.Mesh(geometry, material);
     cylinder.scale.set(1,1,2)
     cylinder.translateX(400);
     cylinder.translateY(-300);
     cylinder.translateZ(-150);
-
     room.add(cylinder);
 
-    const _b1 = Floor(1100, 25, 300);
-    const _b3 = Floor(750, 25, 300);
-    const _fl = Floor(775, 1106.5, 10);
-    const _b5 = Floor(1100, 25, 300);
-    const _b6 = Floor(225, 25, 300);
-    const _b613 = Floor(400, 25, 70);
-    const _b13 = Floor(225, 25, 300);
-    const _b14 = Floor(400, 25, 70);
-    const _window = Window(400, 23, 160);
-    const _roof = Floor(775, 1106.5, 10);
+    var _b1 = Wall(1100, 25, 300);
+    var _b3 = Wall(750, 25, 300);
+    var _fl = Wall(775, 1106.5, 10);
+    var _b5 = Wall(1100, 25, 300);
+    var _b6 = Wall(225, 25, 300);
+    var _b613 = Wall(400, 25, 70);
+    var _b13 = Wall(225, 25, 300);
+    var _b14 = Wall(400, 25, 70);
+    var _window = Window(400, 23, 160);
+    var _roof = Wall(775, 1106.5, 10);
 
     _b1.translateX(290);
     _b3.rotateZ(Math.PI / 2);
@@ -148,29 +139,23 @@ function Room() {
     _roof.translateX(-375);
     _roof.translateY(-286.5);
 
-    level2.add(_b3);
-    level2.add(_b1);
-    level2.add(_fl);
-    level2.add(_b5);
-    level2.add(_b6);
-    level2.add(_b13);
-    level2.add(_b613);
-    level2.add(_b14);
-    level2.add(_window);
-    level2.add(_roof);
+    //add meshes to level 2 group
+    var level2Meshes = [_b3,_b1,_fl,_b5,_b6,_b13,_b613,_b14,_window,_roof];
+    for (let i=0; i<level2Meshes.length; ++i) {
+        level1.add(level2Meshes[i]);
+    }
+    //transform level 2 group and add to room
     level2.rotateZ(Math.PI);
     level2.translateY(13);
     level2.translateX(-200);
-    
-
     room.add(level2);
 
-    const _2b1 = Floor(1100, 25, 300);
-    const _2b3 = Floor(750, 25, 300);
-    const _2fl = Floor(775, 1106.5, 10);
-    const _2b5 = Floor(1100, 25, 300);
-    const _2b6 = Floor(750, 25, 300);
-    const _2roof = Floor(775, 1106.5, 10);
+    var _2b1 = Wall(1100, 25, 300);
+    var _2b3 = Wall(750, 25, 300);
+    var _2fl = Wall(775, 1106.5, 10);
+    var _2b5 = Wall(1100, 25, 300);
+    var _2b6 = Wall(750, 25, 300);
+    var _2roof = Wall(775, 1106.5, 10);
 
     _2b1.translateX(290);
     _2b3.rotateZ(Math.PI / 2);
@@ -197,12 +182,11 @@ function Room() {
     level22.add(_2b6);
     level22.add(_2roof);
 
+    //transform level 22 group and add to room
     level22.translateY(1500);
     level22.translateZ(160);
     level22.scale.set(1,2,2);
-
     room.add(level22);
 
     return room;
-
 }

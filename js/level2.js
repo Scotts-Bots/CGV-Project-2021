@@ -1,9 +1,4 @@
-//LEVEL 2
-var helpCounter = 0;
-var kswipePadPopup;
-var keycardPopup;
-var keycardf;
-var kswipePadf;
+//LEVEL 2//
 
 //creating a scene
 const scene = new THREE.Scene();
@@ -15,20 +10,29 @@ const aspectRatio = window.innerWidth / window.innerHeight;
 const cameraWidth = 3500;
 const cameraHeight = cameraWidth / aspectRatio;
 var camera;
+//function to switch between different cameras for editing purposes
 setCamera(play);
+///////////////////////////////////////////////////////////////////////////////////
 
 //player hit box
 var cubeGeometry = new THREE.BoxBufferGeometry(100,100,100,3,3,3);
 var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:false } );
 MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
 MovingCube.position.set(0, 0, 0);
-setCollisionDetection(camera,MovingCube); //collision detection hitbox
+//setting collision detection to camera which is the player
+setCollisionDetection(camera,MovingCube); 
 
-///////////////////////////////////////////////////////////////////////////////////
-
+//variables to determine if the keycard is found
 var keycard; 
 var found = false;
 var swipePad;
+
+//keycard gameplay data
+var kswipePadPopup;
+var keycardPopup;
+var keycardf;
+var kswipePadf;
+var helpCounter = 0;
 
 //load textures
 const materialimg = new THREE.MeshPhongMaterial();
@@ -42,70 +46,42 @@ room.position.set(0,-300,0);
 scene.add(room);
 
 //skybox
-const box = sky();
+const box = skyBox();
 box.translateY(14700);
 box.scale.set(0.5,0.5,0.5);
 scene.add(box);
+
+//LIGHTING
+var ambientLight;
+sceneLights(); 
+
+//setting camera for pause menu
+pauseCam = camera;
 
 //setting up renderer
 const renderer = new THREE.WebGL1Renderer({ antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
 
 //loading blender models
 var gltfLoader = new THREE.GLTFLoader();
-loadAssets();
+loadAssets();   
 
-//LIGHTING
-    //adding ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-    scene.add(ambientLight);
-
-    //light 1
-    const pointLight1 = new THREE.PointLight( 0xffffff, 1, 2000, 3);
-    pointLight1.position.set(-100,700,-200);
-    //pointLight1.castShadow = true; // default false
-    scene.add(pointLight1);
-
-    //light 2
-    const pointLight2 = new THREE.PointLight( 0xffffff, 1, 3000, 2);
-    pointLight2.position.set(-100,700,-1800);
-    //pointLight2.castShadow = true; // default false
-    scene.add(pointLight2);
-    
-    // const finder1 = new THREE.Mesh(
-    // new THREE.SphereBufferGeometry(50),
-    // new THREE.MeshLambertMaterial({color: 0x666666})
-    // );
-    // finder1.position.set(-200,500,-1500);
-    // //finder1.castShadow = true;
-    // scene.add(finder1);
-
-    // red light
-    const pointLight3 = new THREE.PointLight( 0xff0000, 1, 4000, 3);
-    pointLight3.position.set(-2050,100,-1050);
-    //pointLight3.castShadow = true; // default false
-    scene.add(pointLight3);
-
-//reticle
+//reticle and HUD
 var qf = [1,1,1,  1,1,1,  1,1,1];
 addReticle(camera,qf);
 scene.add(camera);
-
-document.body.appendChild(renderer.domElement);
 HUD();
-//assets
-
+Tasks();
 
 //keyboard and mouse controls
-let controls = new THREE.PointerLockControls(camera, renderer.domElement);
-let clock = new THREE.Clock();
+var controls = new THREE.PointerLockControls(camera, renderer.domElement);
+var clock = new THREE.Clock();
 
-// let btn1 = document.querySelector("#button1");
-// btn1.addEventListener('click', ()=>{
-//     controls.lock();
-// });
+//ACTION!
+drawScene();
 
 function setCamera(isPlay) {
     if (isPlay) {
@@ -136,46 +112,37 @@ function setCamera(isPlay) {
     }
 }
 
-var pistol = new THREE.Mesh();
-new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
-    pistol = gltf.scene;
-    pistol.scale.set(3, 4, 4);
-    pistol.rotation.y = Math.PI;
-    pistol.position.z = -4;
-    pistol.position.x = 2;
-    pistol.position.y = -1;
-    camera.add(pistol)
-    scene.add(camera);
-});
-
 function drawScene(){
-    renderer.render(scene, camera);
+    renderer.render(scene,camera);
+    //This function is called to check if there is a collision at each frame and how to react appropriately.
     checkCollision(camera,updateKeyboard,MovingCube);
+
+    //help prompts
     if (helpCounter == 0){
-        ShowHelp(false);
+        ShowHelp(false,camera);
     }else{
         helpCounter-=1;
     }
-    //console.log(lastKeyPressed, speedA, speedD, speedS, speedW);
+    //collectable indicator
     keycardPopup.rotation.y +=0.02;
     kswipePadPopup.rotation.y +=0.02;
     checkPopUps();
+
+    //Functions for keyboard controls, and displaying the HUD and Tasks in each frame.
     processKeyboard();
     HUD();
     Tasks();
     requestAnimationFrame(drawScene);
 }
 
-//ACTION!
-drawScene();
-
 function checkPopUps(){
-    camposition = new THREE.Vector3();
+    var camposition = new THREE.Vector3();
     camposition.setFromMatrixPosition( camera.matrixWorld );
     x = camposition.x;
     y = camposition.z;
+
     //finder object
-    finderposition = new THREE.Vector3();
+    var finderposition = new THREE.Vector3();
     finderposition.setFromMatrixPosition( keycardf.matrixWorld );
     fx = finderposition.x;
     fy = finderposition.z;
@@ -184,7 +151,8 @@ function checkPopUps(){
     }else{
         keycardPopup.visible = false;
     }
-    finderposition = new THREE.Vector3();
+
+    var finderposition = new THREE.Vector3();
     finderposition.setFromMatrixPosition( kswipePadf.matrixWorld );
     fx = finderposition.x;
     fy = finderposition.z;
@@ -264,6 +232,46 @@ function checkPopUps(){
  }
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
+
+//all the lights in the scene
+function sceneLights() {
+    //adding ambient light
+    ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+
+    //light 1
+    var pointLight1 = new THREE.PointLight( 0xffffff, 1, 2000, 3);
+    pointLight1.position.set(-100,700,-200);
+    //pointLight1.castShadow = true; // default false
+    scene.add(pointLight1);
+
+    //light 2
+    var pointLight2 = new THREE.PointLight( 0xffffff, 1, 3000, 2);
+    pointLight2.position.set(-100,700,-1800);
+    //pointLight2.castShadow = true; // default false
+    scene.add(pointLight2);
+
+    // const finder1 = new THREE.Mesh(
+    // new THREE.SphereBufferGeometry(50),
+    // new THREE.MeshLambertMaterial({color: 0x666666})
+    // );
+    // finder1.position.set(-200,500,-1500);
+    // //finder1.castShadow = true;
+    // scene.add(finder1);
+
+    //red light
+    var pointLight3 = new THREE.PointLight( 0xff0000, 1, 4000, 3);
+    pointLight3.position.set(-2050,100,-1050);
+    //pointLight3.castShadow = true; // default false
+    scene.add(pointLight3);
+}
+
+/* These are functions used to load multiple of the same types of blender models.
+p - position (px,py,pz)
+ry - rotation about y-axis, rx, rz
+s - scale factor (sx,sy,sz)*/
+
+//ceiling light blender model
 function CeilingLight(px,py,pz,ry) {
     var ceilingLight = new THREE.Mesh();
     gltfLoader.load('Blender Models/LIghts/Flourescent Light/F Light.gltf' , function (gltf)  {
@@ -276,7 +284,7 @@ function CeilingLight(px,py,pz,ry) {
     return ceilingLight;
 }
 
-
+//shelf blender model
 function Shelf(sx,sy,sz,px,py,pz) {
     var shelf = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/Shelf/Shelf.gltf' , function (gltf)  {
@@ -288,7 +296,7 @@ function Shelf(sx,sy,sz,px,py,pz) {
     return shelf;
 }
 
-//rotated shelf
+//rotated shelf blender model
 function rShelf(sx,sy,sz,px,py,pz) {
     var rshelf = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/Shelf/Shelf.gltf' , function (gltf)  {
@@ -301,7 +309,7 @@ function rShelf(sx,sy,sz,px,py,pz) {
     return rshelf;
 }
 
-//toolbox
+//toolbox blender model
 function Toolbox(sx,sy,sz,px,py,pz,ry) {
     var toolbox = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/toolbox/Toolbox.gltf' , function (gltf)  {
@@ -314,6 +322,7 @@ function Toolbox(sx,sy,sz,px,py,pz,ry) {
     return toolbox;
 }
 
+//ladder blender model
 function Ladder(s,ry,px,py,pz) {
     var ladder = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/ladder/Ladder.gltf' , function (gltf)  {
@@ -326,6 +335,7 @@ function Ladder(s,ry,px,py,pz) {
     return ladder;
 }
 
+//table blender model
 function Table(s,ry,px,py,pz) {
     var table = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/table/Table.gltf' , function (gltf)  {
@@ -338,6 +348,7 @@ function Table(s,ry,px,py,pz) {
     return table;
 }
 
+//chair blender model
 function Chair(s,ry,px,py,pz) {
     var chair = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/chair/Chair.gltf' , function (gltf)  {
@@ -350,11 +361,35 @@ function Chair(s,ry,px,py,pz) {
     return chair;
 }
 
+//green hovering pyramid indicator
+function hoveringIndicator(px,py,pz,rz){
+    var geometry = new THREE.ConeGeometry( 20, 20, 4 );
+    var material = new THREE.MeshBasicMaterial( {color: 0x00ff99} );
+
+    var popup = new THREE.Mesh( geometry, material );
+    popup.position.set(px,py,pz);
+    popup.rotateZ(rz);
+
+    return popup;
+}
+
+//ADDING ALL THE BLENDER MODELS INTO THE SCENE
 function loadAssets(){
+    
+    //the player's gun attached to camera
+    var pistol = new THREE.Mesh();
+    gltfLoader.load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
+        pistol = gltf.scene;
+        pistol.scale.set(3, 4, 4);
+        pistol.rotation.y = Math.PI;
+        pistol.position.z = -4;
+        pistol.position.x = 2;
+        pistol.position.y = -1;
+        camera.add(pistol)
+        scene.add(camera);
+    });
 
-    const geometry = new THREE.ConeGeometry( 20, 20, 4 );
-    const material = new THREE.MeshBasicMaterial( {color: 0x00ff99} );
-
+    //red light in the corner of side room
     var warningLight = new THREE.Mesh();
     gltfLoader.load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
         warningLight = gltf.scene;
@@ -363,10 +398,11 @@ function loadAssets(){
         scene.add(warningLight);
     });
 
+    //ceiling lights
     var ceilingLight1 = CeilingLight(-100,850,-1800,0);
-
     var ceilingLight2 = CeilingLight(-100,850,-200,0);
 
+    //swipe pad next to exit door
     swipePad = new THREE.Mesh();
     gltfLoader.load('Blender Models/keycard/swipepad.gltf' , function (gltf)  {
         swipePad = gltf.scene;
@@ -377,7 +413,8 @@ function loadAssets(){
         scene.add(swipePad);
     })
 
-    
+    //invisible box that determines whether the player is in range of the keycard swipe pad
+    //and shows green pop-up if player within range
     kswipePadf = new THREE.Mesh(
         new THREE.BoxBufferGeometry(50, 50, 50),
         new THREE.MeshLambertMaterial({ color: 0xffffff })
@@ -386,57 +423,57 @@ function loadAssets(){
     kswipePadf.visible = false;
     scene.add(kswipePadf);
 
-    kswipePadPopup = new THREE.Mesh( geometry, material );
-    kswipePadPopup.position.set(600,90,-3715);
-    kswipePadPopup.rotateZ(Math.PI);
-scene.add( kswipePadPopup );
+    //green pop-up for swipe pad
+    kswipePadPopup = hoveringIndicator(600,90,-3715,Math.PI);
+    scene.add(kswipePadPopup);
 
-    const domEvent3 = new THREEx.DomEvents(camera,  renderer.domElement);
+    //This event listener decides what to do when the player interacts with keycard swipe pad
+    var domEvent3 = new THREEx.DomEvents(camera,  renderer.domElement);
+    domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
+        //move to next level if key card is in possession
+        if (found) {
+            window.location.href = "level3.html";
+        //provide text hint if key card not in possession
+        } else {
+            ShowHelp(true,camera);
+            helpCounter = 60;
+        }
+    });
 
-domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
-    if (found) {
-        window.location.href = "level3.html";
-    }else{
-        ShowHelp(true);
-        helpCounter = 60;
-    }
-});
-    var keycardpos1 = [-830,-130,-200];
-    var keycardpos2 = [800, -135, -750];
-    var keycardpos3 = [800, -135, 830];
+    //randomise keycard locations
+    var keycardLocs = [[-830,-130,-200],[800, -135, -750],[800, -135, 830]];
+    var keyCardLoc = keycardLocs[Math.floor(Math.random() * keycardLocs.length)];
 
-    var keycardposs = [keycardpos1, keycardpos2, keycardpos3];
-    var keycardpos = keycardposs[Math.floor(Math.random() * 3)];
-
+    //key card object
     keycard = new THREE.Mesh();
     gltfLoader.load('Blender Models/keycard/keycard.gltf' , function (gltf)  {
         keycard = gltf.scene;
         keycard.scale.set(200,150,200);
-        keycard.position.set(keycardpos[0],keycardpos[1],keycardpos[2]);
+        keycard.position.set(keyCardLoc[0],keyCardLoc[1],keyCardLoc[2]);
         scene.add(keycard);
     })
 
+    //invisible detection box for keycard
     keycardf = new THREE.Mesh(
         new THREE.BoxBufferGeometry(50, 50, 50),
         new THREE.MeshLambertMaterial({ color: 0xffffff })
     );
-    keycardf.position.set(keycardpos[0],keycardpos[1],keycardpos[2]);
+    keycardf.position.set(keyCardLoc[0],keyCardLoc[1],keyCardLoc[2]);
     keycardf.visible = false;
     scene.add(keycardf);
 
-    keycardPopup = new THREE.Mesh( geometry, material );
-    keycardPopup.position.set(keycardpos[0],keycardpos[1]+40,keycardpos[2]);
-    keycardPopup.rotateZ(Math.PI);
-scene.add( keycardPopup );
+    //green pop-up for keycard
+    keycardPopup = hoveringIndicator(keyCardLoc[0],keyCardLoc[1]+40,keyCardLoc[2],Math.PI);
+    scene.add(keycardPopup);
 
-    const domEvent2 = new THREEx.DomEvents(camera,  renderer.domElement);
-
-domEvent2.addEventListener(keycardf, 'dblclick', event =>{
-    scene.remove( keycardPopup );
-    scene.remove(keycard);//must remove object
-    Player.incCards();
-    found = true;
-});
+    //This event listener decides what to do when the player interacts with keycard
+    var domEvent2 = new THREEx.DomEvents(camera,  renderer.domElement);
+    domEvent2.addEventListener(keycardf, 'dblclick', event =>{
+        scene.remove( keycardPopup );
+        scene.remove(keycard);//must remove object
+        Player.incCards();
+        found = true;
+    });
 
     //shelves - function made above
         //main room shelves
@@ -459,12 +496,12 @@ domEvent2.addEventListener(keycardf, 'dblclick', event =>{
     var chair1 = Chair(100,-Math.PI/2,-1000,-250,-350);
 
 }
-//generic floor meshw
+
+//generic floor mesh
 function Floor() {
-    const floor = new THREE.Mesh(
+    var floor = new THREE.Mesh(
         new THREE.BoxBufferGeometry(200, 100, 200),
         materialimg
-        //new THREE.MeshLambertMaterial({ color: 0x888888 })
     );
     floor.receiveShadow = true;
     return floor;
@@ -472,48 +509,48 @@ function Floor() {
 
 //generic wall mesh
 function Wall() {
-    const wall = new THREE.Mesh(
+    var wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(100, 800, 60),
-             materialimg//color: 0xc99f63,
+             materialimg
     );
     wall.receiveShadow = true;
     wall.castShadow = true;
-    collidableMeshList.push(wall);
+    collidableMeshList.push(wall); //add wall to objects that affect collision detection
     return wall;
 }
 
-//transparent box
+//transparent box for window
 function Window(x, y, z) {
-    const window = new THREE.Mesh(
+    var window = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
         new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.5})
     );
-    collidableMeshList.push(window);
+    collidableMeshList.push(window); //add window to objects that affect collision detection
     return window;
 }
 
 //wall with a single window
 function WindowedWall() {
-    windowedWall = new THREE.Group();
+    var windowedWall = new THREE.Group();
     var wallHeight = 0;
 
-    const leftWall = Wall();
+    var leftWall = Wall();
     leftWall.scale.set(2,1,1);
     leftWall.position.set(-400,wallHeight,0);
     windowedWall.add(leftWall);
 
-    const rightWall = Wall();
+    var rightWall = Wall();
     rightWall.scale.set(2,1,1);
     rightWall.position.set(400,wallHeight,0);
     windowedWall.add(rightWall);
 
-    const topWall = Wall();
+    var topWall = Wall();
     topWall.scale.set(1,0.8,1);
     topWall.rotateZ(Math.PI/2);
     topWall.position.set(0,350 + wallHeight,0);
     windowedWall.add(topWall);
 
-    const bottomWall = Wall();
+    var bottomWall = Wall();
     bottomWall.scale.set(4,0.8,1);
     bottomWall.rotateZ(Math.PI/2);
     bottomWall.position.set(0,-200 + wallHeight,0);
@@ -524,32 +561,32 @@ function WindowedWall() {
 
 //Room unit that gets repeated multiple times
 function RoomPart() {
-    const roomPart = new THREE.Group();
+    var roomPart = new THREE.Group();
 
     //walls 2 - 6
-    const w2 = Wall();
+    var w2 = Wall();
     w2.scale.set(5,3,1);
     w2.rotateY(Math.PI/2);
     w2.position.set(820,200,600);
     roomPart.add(w2);
 
-    const w6 = Wall();
+    var w6 = Wall();
     w6.scale.set(5,3,1);
     w6.rotateY(Math.PI/2);
     w6.position.set(820,200,-600);
     roomPart.add(w6);
 
-    const w5 = Wall();
+    var w5 = Wall();
     w5.scale.set(5,3,1);
     w5.position.set(725,200,-325);
     roomPart.add(w5);
 
-    const w3 = Wall();
+    var w3 = Wall();
     w3.scale.set(5,3,1);
     w3.position.set(725,200,325);
     roomPart.add(w3);
 
-    const w4 = Wall();
+    var w4 = Wall();
     w4.scale.set(7,3,1);
     w4.rotateY(Math.PI/2);
     w4.position.set(452,200,0);
@@ -560,531 +597,112 @@ function RoomPart() {
 
 //Entire room of level
 function Room() {
-    const room = new THREE.Group();
+    var room = new THREE.Group();
 
     //SUB ROOMS
-        const roomPart1 = RoomPart();
-        room.add(roomPart1);
+    var roomPart1 = RoomPart();
+    room.add(roomPart1);
 
-        const roomPart3 = RoomPart();
-        roomPart3.position.set(400,0,-1650);
-        room.add(roomPart3);
+    var roomPart3 = RoomPart();
+    roomPart3.position.set(400,0,-1650);
+    room.add(roomPart3);
 
     //FLOOR
-        const f = Floor();
-        f.scale.set(15,1,18);
-        f.position.set(-200,0,-800);
-        room.add(f);
+    var f = Floor();
+    f.scale.set(15,1,18);
+    f.position.set(-200,0,-800);
+    room.add(f);
     
     //WALLS
-        //walls 1,7
-        const w1 = Wall();
-        w1.scale.set(25,3,1);
-        w1.position.set(-450,200,810);
-        room.add(w1);
+    //walls 1,7
+    var w1 = Wall();
+    w1.scale.set(25,3,1);
+    w1.position.set(-450,200,810);
+    room.add(w1);
 
-        const w7 = Wall();
-        w7.scale.set(12,3,1);
-        w7.position.set(-1100,200,-825);
-        room.add(w7);
+    var w7 = Wall();
+    w7.scale.set(12,3,1);
+    w7.position.set(-1100,200,-825);
+    room.add(w7);
 
-        //walls 10,13,3r
-        const w10 = Wall();
-        w10.scale.set(9,1,1);
-        w10.rotateY(Math.PI/2);
-        w10.position.set(-1700,200,350);
-        room.add(w10);
+    //walls 10,13,3r
+    var w10 = Wall();
+    w10.scale.set(9,1,1);
+    w10.rotateY(Math.PI/2);
+    w10.position.set(-1700,200,350);
+    room.add(w10);
 
-        const w13 = Wall();
-        w13.scale.set(2.5,3,1);
-        w13.rotateY(Math.PI/2);
-        w13.position.set(-500,200,755);
-        room.add(w13);
+    var w13 = Wall();
+    w13.scale.set(2.5,3,1);
+    w13.rotateY(Math.PI/2);
+    w13.position.set(-500,200,755);
+    room.add(w13);
 
-        const w3r = Wall();
-        w3r.scale.set(4,3,1);
-        w3r.position.set(1035,200,-825);
-        room.add(w3r);
+    var w3r = Wall();
+    w3r.scale.set(4,3,1);
+    w3r.position.set(1035,200,-825);
+    room.add(w3r);
 
-        //walls with windows
-        const w9 = WindowedWall();
-        w9.scale.set(0.8,1,1);
-        w9.rotateY(Math.PI/2);
-        w9.position.set(-1700,200,-450);
-        room.add(w9);
+    //walls with windows
+    var w9 = WindowedWall();
+    w9.scale.set(0.8,1,1);
+    w9.rotateY(Math.PI/2);
+    w9.position.set(-1700,200,-450);
+    room.add(w9);
 
-        const window9 = Window(480,300,50);
-        window9.rotateY(Math.PI/2);
-        window9.position.set(-1700,350,-450);
-        room.add(window9);
+    var window9 = Window(480,300,50);
+    window9.rotateY(Math.PI/2);
+    window9.position.set(-1700,350,-450);
+    room.add(window9);
 
-        const rightWall = Wall();
-        rightWall.scale.set(29,3,0.5);
-        rightWall.rotateY(Math.PI/2);
-        rightWall.position.set(-500,200,-1050);
-        room.add(rightWall);
+    var rightWall = Wall();
+    rightWall.scale.set(29,3,0.5);
+    rightWall.rotateY(Math.PI/2);
+    rightWall.position.set(-500,200,-1050);
+    room.add(rightWall);
 
-        const w14r = Wall();
-        w14r.scale.set(2.3,1.3,0.5);
-        w14r.rotateY(Math.PI/2);
-        w14r.position.set(-500,900,515);
-        room.add(w14r);
+    var w14r = Wall();
+    w14r.scale.set(2.3,1.3,0.5);
+    w14r.rotateY(Math.PI/2);
+    w14r.position.set(-500,900,515);
+    room.add(w14r);
 
-        //end of level wall
-        const w20 = Wall();
-        w20.scale.set(11,3,1);
-        w20.position.set(-400,200,-2510);
-        room.add(w20);
+    //end of level wall
+    var w20 = Wall();
+    w20.scale.set(11,3,1);
+    w20.position.set(-400,200,-2510);
+    room.add(w20);
 
-        const w21 = Wall();
-        w21.scale.set(11,3,1);
-        w21.position.set(1000,200,-2510);
-        room.add(w21);
+    var w21 = Wall();
+    w21.scale.set(11,3,1);
+    w21.position.set(1000,200,-2510);
+    room.add(w21);
 
-        const w22 = Wall();
-        w22.scale.set(3,2,1);
-        w22.position.set(300,1300,-2550);
-        room.add(w22);
+    var w22 = Wall();
+    w22.scale.set(3,2,1);
+    w22.position.set(300,1300,-2550);
+    room.add(w22);
 
-        const door = Wall();
-        door.scale.set(3,1,1);
-        door.position.set(300,100,-2530);
-        room.add(door);
+    var door = Wall();
+    door.scale.set(3,1,1);
+    door.position.set(300,100,-2530);
+    room.add(door);
 
     //CEILING
-        //c - ceiling
-        const c1 = Floor();
-        c1.scale.set(6,1,9);
-        c1.position.set(-1100,650,0);
-        room.add(c1);
+    //c - ceiling
+    var c1 = Floor();
+    c1.scale.set(6,1,9);
+    c1.position.set(-1100,650,0);
+    room.add(c1);
 
-        const c2 = Floor();
-        c2.scale.set(10,1,18);
-        c2.position.set(300,1400,-800);
-        room.add(c2);
+    var c2 = Floor();
+    c2.scale.set(10,1,18);
+    c2.position.set(300,1400,-800);
+    room.add(c2);
         
     return room;
 }
 
 
-//PAUSE MENU
-var mesh;
-var mesh1;
-var mesh2;
-var mesh3;
-var mesh4;
-var mesh5;
-var mesh6;
-var mesh7;
-var mesh8;
-var mesh9;
-var mesh10;
-var mesh11;
-var mesh12;
-var back;
-var back1;
-var back2;
-var back3;
-var back4;
-var cback;
-
-document.addEventListener('keydown', event => {
-    if (event.code === "ArrowLeft") {
-        paused = false;
-        
-    ambientLight.intensity = 0.05;
-    RemoveCredit();
-        RemovePause();
-    }
-});
-
-document.addEventListener('keydown', event => {
-    if (event.code === "ArrowUp") {
-        window.location.href = "index.html";
-    }
-});
-
-document.addEventListener('keydown', event => {
-    if (event.code === "ArrowDown") {
-        RemoveCredit();
-        AddPause();
-    }
-});
-
-document.addEventListener('keydown', event => {
-    if (event.code === "ArrowRight") {
-
-        RemovePause();
-        AddCredit();
-
-    }
-});
-
-document.addEventListener('keydown', event => {
-    if (event.code === "KeyP") {
-        RemoveHUD();
-        paused = true;
-        ambientLight.intensity = 1;
-        AddPause();
-    }
-});
-
-function AddPause(){
-    back = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(1, 0.7, 0.001),
-        new THREE.MeshLambertMaterial({ color: 0x696969 })
-    );
-    back.position.z = -1;
-    back.position.x = -0.05;
-    camera.add(back);
-    scene.add(camera);
-
-    back1 = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(0.9, 0.6, 0.001),
-        new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
-    );
-    back1.position.z = -1;
-    back1.position.x = -0.05;
-    camera.add(back1);
-    scene.add(camera);
-
-    back2 = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
-        new THREE.MeshLambertMaterial({ color: 0x696969 })
-    );
-    back2.position.z = -1;
-    back2.position.y = 0.19;
-    back2.position.x = -0.04;
-    camera.add(back2);
-    scene.add(camera);
-
-    back3 = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
-        new THREE.MeshLambertMaterial({ color: 0x696969 })
-    );
-    back3.position.z = -1;
-    back3.position.y = 0.01;
-    back3.position.x = -0.04;
-    camera.add(back3);
-    scene.add(camera);
-
-    back4 = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
-        new THREE.MeshLambertMaterial({ color: 0x696969 })
-    );
-    back4.position.z = -1;
-    back4.position.y = -0.16;
-    back4.position.x = -0.04;
-    camera.add(back4);
-    scene.add(camera);
-
-
-    var loader = new THREE.FontLoader();
-
-    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-
-        var restartText = new THREE.TextGeometry("Restart", {
-
-            font: font,
-
-            size: 0.05,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        var resumeText = new THREE.TextGeometry("Resume", {
-
-            font: font,
-
-            size: 0.05,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        var creditText = new THREE.TextGeometry("Credits", {
-
-            font: font,
-
-            size: 0.05,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        var rArrow = new THREE.TextGeometry("right arrow key", {
-
-            font: font,
-
-            size: 0.015,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        var lArrow = new THREE.TextGeometry("left arrow key", {
-
-            font: font,
-
-            size: 0.015,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        var uArrow = new THREE.TextGeometry("up arrow key", {
-
-            font: font,
-
-            size: 0.015,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
-
-        mesh = new THREE.Mesh(restartText, textMaterial);
-        mesh.position.z = -1;
-        mesh.position.y = 0.17;
-        mesh.position.x = -0.15;
-
-        mesh1 = new THREE.Mesh(resumeText, textMaterial);
-        mesh1.position.z = -1;
-        mesh1.position.y = -0.01;
-        mesh1.position.x = -0.15;
-
-        mesh2 = new THREE.Mesh(creditText, textMaterial);
-        mesh2.position.z = -1;
-        mesh2.position.y = -0.18;
-        mesh2.position.x = -0.15;
-
-        mesh3 = new THREE.Mesh(rArrow, textMaterial);
-        mesh3.position.z = -1;
-        mesh3.position.y = -0.205;
-        mesh3.position.x = -0.1;
-
-        mesh4 = new THREE.Mesh(lArrow, textMaterial);
-        mesh4.position.z = -1;
-        mesh4.position.y = -0.035;
-        mesh4.position.x = -0.1;
-
-        mesh5 = new THREE.Mesh(uArrow, textMaterial);
-        mesh5.position.z = -1;
-        mesh5.position.y = 0.145;
-        mesh5.position.x = -0.1;
-
-        camera.add(mesh);
-        camera.add(mesh1);
-        camera.add(mesh2);
-        camera.add(mesh3);
-        camera.add(mesh4);
-        camera.add(mesh5);
-        scene.add(camera);
-
-    });
-}
-
-function RemoveCredit(){
-    camera.remove(mesh6);
-        camera.remove(mesh7);
-        camera.remove(mesh8);
-        camera.remove(mesh9);
-        camera.remove(mesh10);
-        camera.remove(mesh11);
-        camera.remove(mesh12);
-        camera.remove(cback);
-
-        scene.add(camera);
-}
-function RemovePause(){
-        camera.remove(mesh);
-        camera.remove(mesh1);
-        camera.remove(mesh2);
-        camera.remove(mesh3);
-        camera.remove(mesh4);
-        camera.remove(mesh5);
-        camera.remove(back);
-        camera.remove(back1);
-        camera.remove(back2);
-        camera.remove(back3);
-        camera.remove(back4);
-
-
-        scene.add(camera);
-}
-
-function AddCredit(){
-    cback = new THREE.Mesh(
-        new THREE.BoxBufferGeometry(1, 0.7, 0.001),
-        new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
-    );
-    cback.position.z = -1;
-    cback.position.x = -0.05;
-    camera.add(cback);
-    scene.add(camera);
-
-    let loader = new THREE.FontLoader();
-
-    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-
-        let credit1 = new THREE.TextGeometry("SkyBox images: MegaKosan - https://gamebanana.com/mods/7912", {
-
-            font: font,
-
-            size: 0.017,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        let credit2 = new THREE.TextGeometry("Threex library: Jerome Etienne - https://github.com/jeromeetienne/threex.domevents", {
-
-            font: font,
-
-            size: 0.017,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        let credit = new THREE.TextGeometry("Credits", {
-
-            font: font,
-
-            size: 0.05,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        let credit3 = new THREE.TextGeometry("Collision dectection: Three.js tutorials by Lee Stemkoski Date: July 2013 (three.js v59dev)", {
-
-            font: font,
-
-            size: 0.017,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        let credit4 = new THREE.TextGeometry("Gun view: saucecode - https://github.com/saucecode/threejs-demos/tree/master/08_GunView", {
-
-            font: font,
-
-            size: 0.0155,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        let credit5 = new THREE.TextGeometry("Main menu background: flowforfrank - https://github.com/flowforfrank/threejs", {
-
-            font: font,
-
-            size: 0.017,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        let dArrow = new THREE.TextGeometry("Down arrow to close", {
-
-            font: font,
-
-            size: 0.013,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
-
-        mesh6 = new THREE.Mesh(credit1, textMaterial);
-        mesh6.position.z = -1;
-        mesh6.position.y = 0.17;
-        mesh6.position.x = -0.5;
-
-        mesh7 = new THREE.Mesh(credit2, textMaterial);
-        mesh7.position.z = -1;
-        mesh7.position.y = -0.01;
-        mesh7.position.x = -0.5;
-
-        mesh8 = new THREE.Mesh(credit, textMaterial);
-        mesh8.position.z = -1;
-        mesh8.position.y = 0.25;
-        mesh8.position.x = -0.15;
-
-        mesh9 = new THREE.Mesh(credit3, textMaterial);
-        mesh9.position.z = -1;
-        mesh9.position.y = 0.08;
-        mesh9.position.x = -0.5;
-
-        mesh10 = new THREE.Mesh(credit4, textMaterial);
-        mesh10.position.z = -1;
-        mesh10.position.y = -0.105;
-        mesh10.position.x = -0.5;
-
-        mesh12 = new THREE.Mesh(credit5, textMaterial);
-        mesh12.position.z = -1;
-        mesh12.position.y = -0.19;
-        mesh12.position.x = -0.5;
-
-        mesh11 = new THREE.Mesh(dArrow, textMaterial);
-        mesh11.position.z = -1;
-        mesh11.position.y = 0.3;
-        mesh11.position.x = 0.25;
-
-        camera.add(mesh6);
-        camera.add(mesh7);
-        camera.add(mesh8);
-        camera.add(mesh9);
-        camera.add(mesh10);
-        camera.add(mesh11);
-        camera.add(mesh12);
-        scene.add(camera);
-
-    });
-}
-
-/// helper text
-var helpText;
-
-var loader = new THREE.FontLoader();
-
-    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-
-        var helperText = new THREE.TextGeometry("Complete all tasks before proceeding to next level", {
-
-            font: font,
-
-            size: 0.02,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
-
-        helpText = new THREE.Mesh(helperText, textMaterial);
-        helpText.position.z = -1;
-        helpText.position.y = 0.03;
-        helpText.position.x = -0.325;
-
-
-    });
-
-    function ShowHelp(help){
-    
-        if (help){
-            camera.add(helpText);
-            scene.add(camera);
-        }else{
-            camera.remove(helpText);
-        scene.add(camera);
-        }
-        
-    }
 
 

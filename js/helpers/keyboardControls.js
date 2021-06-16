@@ -6,7 +6,6 @@ var speedS = speedDefault;
 var speedD = speedDefault;
 var lastKeyPressed;
 
-
 let keyboard = [];
 addEventListener('keydown', (e)=>{
     keyboard[e.key] = true;
@@ -15,8 +14,7 @@ addEventListener('keyup', (e)=>{
     keyboard[e.key] = false;
 });
 
-
-
+//processes the input of the player for keys W,A,S,D and R to fix the cursor
 function processKeyboard(){
     if (keyboard['w']){
         controls.moveForward(speedW);
@@ -39,6 +37,7 @@ function processKeyboard(){
     }
 }
 
+//this function is to block and unblock keys for collision detection
 function updateKeyboard(isCollision){
     if (isCollision) {
         //appendText(" Hit ");

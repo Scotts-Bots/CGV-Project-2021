@@ -3,6 +3,7 @@
 //Level 1 and 3 qf = [2000,1,2000,  2000,1,2000,  2000,1,2000]
 //Level 2 qf = [1,1,1,  1,1,1,  1,1,1]
 
+//adds reticle to the camera in the scene
 function addReticle(cam, qF) {
     var reticle = new THREE.Group();
 

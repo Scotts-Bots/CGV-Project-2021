@@ -39,6 +39,9 @@ cam.lookAt(2900, 0, 2000);
 var ambientLight = new THREE.AmbientLight(0xffffff, 0.05);//0.05
 scene.add(ambientLight);
 
+//setting camera for pause menu
+pauseCam = cam;
+
 //back right room
 const light9 = new THREE.PointLight(0xffffff, intensity, 2200, 2);
 light9.position.set(-100, 375, 2100);
@@ -142,7 +145,7 @@ new THREE.GLTFLoader().load('Blender Models/cup/cup.gltf', function (gltf) {
     scene.add(cup);
 });
 
-const box = sky();
+const box = skyBox();
 box.scale.set(0.5, 0.5, 0.5);
 box.translateY(14600);
 scene.add(box);
@@ -293,7 +296,7 @@ domEvent3.addEventListener(switchf2, 'dblclick', event => {
     if (shotTagets == true && unLocked == true && Player.checkGun() != false && Player.getAmmo() > 0) {
         window.location.href = "level2.html";
     } else {
-        ShowHelp(true);
+        ShowHelp(true,cam);
         helpCounter = 60;
     }
 });
@@ -562,7 +565,7 @@ function drawScene() {
         gunfPopup.rotation.y += 0.02;
 
         if (helpCounter == 0) {
-            ShowHelp(false);
+            ShowHelp(false,cam);
         } else {
             helpCounter -= 1;
         }

@@ -1,25 +1,30 @@
+//SCENE MODELLING FOR LEVEL 1
+
+//texture image
 const materialimg = new THREE.MeshPhongMaterial();
 materialimg.map = new THREE.TextureLoader().load('Images/wall_texture.jpg');
-function Floor(x, y, z) {
-    const wall = new THREE.Mesh(
+
+//generic wall mesh
+function Wall(x, y, z) {
+    var wall = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
         materialimg
     );
-    collidableMeshList.push(wall);
+    collidableMeshList.push(wall); //add wall to objects that affect collision detection
     return wall;
 }
 
-
-
+//window mesh
 function Window1(x, y, z) {
-    const window = new THREE.Mesh(
+    var window = new THREE.Mesh(
         new THREE.BoxBufferGeometry(x, y, z),
         new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.8})
     );
-    collidableMeshList.push(window);
+    collidableMeshList.push(window); //add window to objects that affect collision detection
     return window;
 }
 
+//entire room of level
 function Room() {
 
     // D - DOOR     | - WALL
@@ -43,34 +48,34 @@ function Room() {
     // ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  
     //               [b5]                   [b5]              [b5]       
 
-    const room = new THREE.Group();
+    var room = new THREE.Group();
 
-    const b1 = Floor(553, 25, 300);
-    const b12 = Floor(100, 25, 100);
-    const b2 = Floor(450, 25, 300);
-    const b3 = Floor(750, 25, 300);
-    const fl = Floor(775, 1100, 10);
+    var b1 = Wall(553, 25, 300);
+    var b12 = Wall(100, 25, 100);
+    var b2 = Wall(450, 25, 300);
+    var b3 = Wall(750, 25, 300);
+    var fl = Wall(775, 1100, 10);
     fl.receiveShadow = true;
-    const b4 = Floor(500, 25, 300);
-    const b5 = Floor(1100, 25, 300);
-    const b6 = Floor(225, 25, 300);
-    const b7 = Floor(240, 25, 300);
-    const b78 = Floor(100, 25, 100);
-    const b8 = Floor(30, 25, 300);
-    const b9 = Floor(30, 25, 300);
-    const b910 = Floor(100, 25, 100);
-    const b10 = Floor(240, 25, 300);
-    const b11 = Floor(240, 25, 300);
+    var b4 = Wall(500, 25, 300);
+    var b5 = Wall(1100, 25, 300);
+    var b6 = Wall(225, 25, 300);
+    var b7 = Wall(240, 25, 300);
+    var b78 = Wall(100, 25, 100);
+    var b8 = Wall(30, 25, 300);
+    var b9 = Wall(30, 25, 300);
+    var b910 = Wall(100, 25, 100);
+    var b10 = Wall(240, 25, 300);
+    var b11 = Wall(240, 25, 300);
     b11.castShadow = true;
-    const b1112 = Floor(100, 25, 100);
+    var b1112 = Wall(100, 25, 100);
     b1112.castShadow = true;
-    const b_12 = Floor(410, 25, 300);
+    var b_12 = Wall(410, 25, 300);
     b_12.castShadow = true;
-    const b613 = Floor(400, 25, 70);
-    const b13 = Floor(225, 25, 300);
-    const b14 = Floor(400, 25, 70);
-    const window = Window1(400,23,160);
-    const roof = Floor(775, 1100, 10);
+    var b613 = Wall(400, 25, 70);
+    var b13 = Wall(225, 25, 300);
+    var b14 = Wall(400, 25, 70);
+    var window = Window1(400,23,160);
+    var roof = Wall(775, 1100, 10);
 
     b1.translateX(10);
     b3.rotateZ(Math.PI / 2);
@@ -138,29 +143,11 @@ function Room() {
     roof.translateX(-375);
     roof.translateY(-280);
 
-    room.add(b3);
-    room.add(b1);
-    room.add(b2);
-    room.add(b12);
-    room.add(fl);
-    room.add(b4);
-    room.add(b5);
-    room.add(b6);
-    room.add(b7);
-    room.add(b78);
-    room.add(b8);
-    room.add(b9);
-    room.add(b910);
-    room.add(b10);
-    room.add(b11);
-    room.add(b1112);
-    room.add(b_12);
-    room.add(b13);
-    room.add(b613);
-    room.add(b14);
-    room.add(window);
-    room.add(roof);
+    //add all objects to the room group
+    var addMeshList = [b3,b1,b2,b12,fl,b4,b5,b6,b7,b78,b8,b9,b910,b10,b11,b1112,b_12,b13,b613,b14,window,roof];
+    for (let i=0; i<addMeshList.length; ++i) {
+        room.add(addMeshList[i]);
+    }
 
     return room;
-
 }

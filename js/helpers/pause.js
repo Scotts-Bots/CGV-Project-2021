@@ -1,63 +1,52 @@
-var mesh;
-var mesh1;
-var mesh2;
-var mesh3;
-var mesh4;
-var mesh5;
-var mesh6;
-var mesh7;
-var mesh8;
-var mesh9;
-var mesh10;
-var mesh11;
-var mesh12;
-var back;
-var back1;
-var back2;
-var back3;
-var back4;
-var cback;
 
-document.addEventListener('keydown', event => {
-    if (event.code === "ArrowLeft") {
-        paused = false;
-        
-    ambientLight.intensity = 0.05;
-    RemoveCredit();
-        RemovePause();
-    }
-});
+var mesh, mesh1, mesh2, mesh3, mesh4, mesh5, mesh6, mesh7, mesh8, mesh9, mesh10, mesh11, mesh12;
+var back, back1, back2, back3, back4, cback;
 
-document.addEventListener('keydown', event => {
-    if (event.code === "ArrowUp") {
-        window.location.href = "level1.html";
-    }
-});
+//if the pause menu is up
+var isPaused = false;
+var pauseCam;
 
-document.addEventListener('keydown', event => {
-    if (event.code === "ArrowDown") {
-        AddPause();
-    }
-});
-
-document.addEventListener('keydown', event => {
-    if (event.code === "ArrowRight") {
-
-        window.location.href = "index.html";
-
-    }
-});
-
+//Press <P> to go to pause menu
 document.addEventListener('keydown', event => {
     if (event.code === "KeyP") {
         RemoveHUD();
         paused = true;
         ambientLight.intensity = 1;
-        AddPause();
+        AddPause(pauseCam);
     }
 });
 
-function AddPause(){
+//keys only respond if game is paused - check ifPaused
+//Press left key to leave pause menu and resume game.
+document.addEventListener('keydown', event => {
+    if (event.code === "ArrowLeft" && isPaused) {
+        paused = false;
+        ambientLight.intensity = 0.05;
+        RemoveCredit(pauseCam);
+        RemovePause(pauseCam);
+    }
+});
+
+//Press up key to restart game.
+document.addEventListener('keydown', event => {
+    if (event.code === "ArrowUp" && isPaused) {
+        window.location.href = "level1.html";
+    }
+});
+
+//Press right key to go back to main menu
+document.addEventListener('keydown', event => {
+    if (event.code === "ArrowRight" && isPaused) {
+        window.location.href = "index.html";
+    }
+});
+
+//Adds pause menu to the scene
+//cam is the camera
+function AddPause(cam){
+    //enable pause keys functionality
+    isPaused = true;
+
     back = new THREE.Mesh(
         new THREE.BoxBufferGeometry(1, 0.7, 0.001),
         new THREE.MeshLambertMaterial({ color: 0x696969 })
@@ -108,67 +97,47 @@ function AddPause(){
 
 
     var loader = new THREE.FontLoader();
-
     loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-
         var restartText = new THREE.TextGeometry("Restart", {
-
             font: font,
-
             size: 0.05,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         var resumeText = new THREE.TextGeometry("Resume", {
-
             font: font,
-
             size: 0.05,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         var creditText = new THREE.TextGeometry("Main Menu", {
-
             font: font,
-
             size: 0.05,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         var rArrow = new THREE.TextGeometry("right arrow key", {
-
             font: font,
-
             size: 0.015,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         var lArrow = new THREE.TextGeometry("left arrow key", {
-
             font: font,
-
             size: 0.015,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         var uArrow = new THREE.TextGeometry("up arrow key", {
-
             font: font,
-
             size: 0.015,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
@@ -210,41 +179,23 @@ function AddPause(){
         cam.add(mesh4);
         cam.add(mesh5);
         scene.add(cam);
-
     });
 }
 
-function RemoveCredit(){
-    cam.remove(mesh6);
-        cam.remove(mesh7);
-        cam.remove(mesh8);
-        cam.remove(mesh9);
-        cam.remove(mesh10);
-        cam.remove(mesh11);
-        cam.remove(mesh12);
-        cam.remove(cback);
+//Removes the pause menu when player resumes game
+function RemovePause(cam){
+    //Disable pause keys functionality
+    isPaused = false;
 
-        scene.add(cam);
+    var removeMeshes = [mesh,mesh1,mesh2,mesh3,mesh4,mesh5,back,back1,back2,back3,back4];
+    for (let i=0; i<removeMeshes.length; ++i) {
+        cam.remove(removeMeshes[i])
+    }
+    scene.add(cam);
 }
 
-function RemovePause(){
-        cam.remove(mesh);
-        cam.remove(mesh1);
-        cam.remove(mesh2);
-        cam.remove(mesh3);
-        cam.remove(mesh4);
-        cam.remove(mesh5);
-        cam.remove(back);
-        cam.remove(back1);
-        cam.remove(back2);
-        cam.remove(back3);
-        cam.remove(back4);
-
-
-        scene.add(cam);
-}
-
-function AddCredit(){
+//Adds credits screen
+function AddCredit(cam){
     cback = new THREE.Mesh(
         new THREE.BoxBufferGeometry(1, 0.7, 0.001),
         new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
@@ -255,77 +206,55 @@ function AddCredit(){
     scene.add(cam);
 
     let loader = new THREE.FontLoader();
-
     loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
 
-        let credit1 = new THREE.TextGeometry("SkyBox images: MegaKosan - https://gamebanana.com/mods/7912", {
-
+        var credit1 = new THREE.TextGeometry("SkyBox images: MegaKosan - https://gamebanana.com/mods/7912", {
             font: font,
-
             size: 0.017,
             height: 0.001,
             curveSegments: 2,
-
         });
 
-        let credit2 = new THREE.TextGeometry("Threex library: Jerome Etienne - https://github.com/jeromeetienne/threex.domevents", {
-
+        var credit2 = new THREE.TextGeometry("Threex library: Jerome Etienne - https://github.com/jeromeetienne/threex.domevents", {
             font: font,
-
             size: 0.017,
             height: 0.001,
             curveSegments: 2,
-
         });
 
-        let credit = new THREE.TextGeometry("Credits", {
-
+        var credit = new THREE.TextGeometry("Credits", {
             font: font,
-
             size: 0.05,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         let credit3 = new THREE.TextGeometry("Collision dectection: Three.js tutorials by Lee Stemkoski Date: July 2013 (three.js v59dev)", {
-
             font: font,
-
             size: 0.017,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         let credit4 = new THREE.TextGeometry("Gun view: saucecode - https://github.com/saucecode/threejs-demos/tree/master/08_GunView", {
-
             font: font,
-
             size: 0.0155,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         let credit5 = new THREE.TextGeometry("Main menu background: flowforfrank - https://github.com/flowforfrank/threejs", {
-
             font: font,
-
             size: 0.017,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         let dArrow = new THREE.TextGeometry("Down arrow to close", {
-
             font: font,
-
             size: 0.013,
             height: 0.001,
             curveSegments: 2,
-
         });
 
         textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
@@ -377,3 +306,11 @@ function AddCredit(){
     });
 }
 
+//Removes credits screen
+function RemoveCredit(cam){
+    var removeMeshes = [mesh6,mesh7,mesh8,mesh9,mesh10,mesh11,mesh12,cback];
+    for (let i=0; i<removeMeshes.length; ++i) {
+        cam.remove(removeMeshes[i])
+    }
+    scene.add(cam);
+}

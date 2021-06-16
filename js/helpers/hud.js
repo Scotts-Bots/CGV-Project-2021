@@ -1,45 +1,37 @@
+//HUD file
 var helpText;
+const loader = new THREE.FontLoader();
 
-var loader = new THREE.FontLoader();
-
-    loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-
-        var helperText = new THREE.TextGeometry("Complete all tasks before proceeding to next level", {
-
-            font: font,
-
-            size: 0.02,
-            height: 0.001,
-            curveSegments: 2,
-
-        });
-
-        textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
-
-        helpText = new THREE.Mesh(helperText, textMaterial);
-        helpText.position.z = -1;
-        helpText.position.y = 0.03;
-        helpText.position.x = -0.325;
-
-
+loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+    var helperText = new THREE.TextGeometry("Complete all tasks before proceeding to next level", {
+        font: font,
+        size: 0.02,
+        height: 0.001,
+        curveSegments: 2,
     });
 
-    function ShowHelp(help){
-    
-        if (help){
-            cam.add(helpText);
-            scene.add(cam);
-        }else{
-            cam.remove(helpText);
-        scene.add(cam);
-        }
-        
+    textMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+
+    helpText = new THREE.Mesh(helperText, textMaterial);
+    helpText.position.z = -1;
+    helpText.position.y = 0.03;
+    helpText.position.x = -0.325;
+});
+
+//function that shows a text pop up telling the player what needs to be done
+function ShowHelp(help,camera){
+    if (help){
+        camera.add(helpText);
+        scene.add(camera);
+    }else{
+        camera.remove(helpText);
+        scene.add(camera);
     }
+}
 
 
 function HUD() {
-
-    let check = document.getElementById("Hbar");
+    var check = document.getElementById("Hbar");
     if (check != null) {
         check.parentNode.removeChild(check);
     }
@@ -173,7 +165,6 @@ function HUD() {
     Q.style.top = window.innerHeight*0.75 + 'px';
     Q.style.left = window.innerWidth*0.8825 + 'px';
 
-
     document.body.appendChild(Hbar);
     document.body.appendChild(Obar);
     document.body.appendChild(Name);
@@ -191,7 +182,7 @@ function HUD() {
 }
 
 function RemoveHUD(){
-    check = document.getElementById("Hbar");
+    var check = document.getElementById("Hbar");
     if (check != null) {
         check.parentNode.removeChild(check);
     }

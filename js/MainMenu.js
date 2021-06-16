@@ -1,15 +1,4 @@
-var mesh;
-var mesh2;
-var mesh6;
-var mesh7;
-var mesh8;
-var mesh9;
-var mesh10;
-var mesh11;
-var mesh12;
-var back2;
-var back4;
-var cback;
+var mesh, mesh2, mesh6, mesh7, mesh8, mesh9, mesh10, mesh11, mesh12, back2, back4, cback;
 
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -329,4 +318,11 @@ function AddCredit(){
 
     });
 }
+
+localStorage["name"] = "Jafed";
+localStorage["health"] = 100;
+localStorage["oxygen"] = 100;
+localStorage["ammo"] = 10;
+localStorage["cards"]  = 0;
+localStorage["gun"] = false;
 

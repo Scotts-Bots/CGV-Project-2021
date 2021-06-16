@@ -1,11 +1,20 @@
-class Player {
+// function supports_html5_storage() {
+//     try {
+//       return 'localStorage' in window && window['localStorage'] !== null;
+//     } catch (e) {
+//       return false;
+//     }
+// }
 
-    static name = "Guest01";
-    static health = 100;
-    static oxygen = 100;
-    static ammo = 10;
-    static cards = 0;
-    static gun = false;
+  //This class contains information about the player including stats and name,
+//and functions to update respective members.
+class Player {
+    static name = localStorage["name"];
+    static health = localStorage["health"];
+    static oxygen = localStorage["oxygen"];
+    static ammo = localStorage["ammo"];
+    static cards = localStorage["cards"];
+    static gun = localStorage["gun"];
 
     static setName(Name) {
         this.name = Name;
