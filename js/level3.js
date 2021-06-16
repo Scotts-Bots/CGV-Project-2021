@@ -15,6 +15,18 @@ cam.lookAt(5000, 0, -50000);
 //cam.lookAt(-2000,0,15000)
 document.body.appendChild(renderer.domElement);
 
+//music for outside level
+const listener = new THREE.AudioListener();
+cam.add(listener);
+const sound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('Sounds/Outside ambience.wav', function(buffer){
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play();
+})
+
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
 var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });

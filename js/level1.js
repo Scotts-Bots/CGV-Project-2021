@@ -25,6 +25,17 @@ var renderer = new THREE.WebGL1Renderer({ antialias: true });
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+const listener = new THREE.AudioListener();
+cam.add(listener);
+const sound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('Sounds/Atmosphere inside.wav', function(buffer){
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play();
+})
+
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
 var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });

@@ -6,14 +6,30 @@ renderer.shadowMap.enabled = true;
 scene.background = new THREE.Color(0xfafafa);
 renderer.setSize(innerWidth, innerHeight);
 cam.position.z = 5;
-cam.position.y = 2;
+cam.position.y = 10;
 document.body.appendChild(renderer.domElement);
 var directionalLight = new THREE.PointLight();
-directionalLight.position.set(5, 5, 5);
+directionalLight.position.set(5, 100, 5);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 // var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 // scene.add(ambientLight);
+
+const listener = new THREE.AudioListener();
+cam.add(listener);
+const sound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+
+// const listener = new THREE.AudioListener();
+// cam.add(listener);
+// const sound = new THREE.Audio(listener);
+// const audioLoader = new THREE.AudioLoader();
+// audioLoader.load('Sounds/Atmosphere With Jump Scare.wav', function(buffer){
+//     sound.setBuffer(buffer);
+//     sound.setLoop(true);
+//     sound.setVolume(0.5);
+//     sound.play();
+// })
 
 var groundMaterial = new THREE.MeshStandardMaterial();
 
@@ -46,16 +62,16 @@ new THREE.GLTFLoader().load('Blender Models/Laser Turret/LaserTurret.gltf' , fun
 });
 
 var pistol = new THREE.Mesh();
-new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
-    pistol = gltf.scene;
-    // pistol.scale.set(5, 5, 5);
-    // pistol.position.y = -5;
-    // pistol.position.z = -15;
-    // pistol.position.x = 10;
-    // cam.add(pistol);
-    //pistol.lookAt(cam.quaternion.x*2000,cam.quaternion.y,cam.quaternion.z*2000);
-    scene.add(pistol);
-});
+    new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf', function (gltf) {
+        pistol = gltf.scene;
+        pistol.scale.set(3, 4, 4);
+        pistol.rotation.y = Math.PI;
+        pistol.position.z = -4;
+        pistol.position.x = 2;
+        pistol.position.y = -1;
+        cam.add(pistol)
+        scene.add(cam);
+    });
 
 var bullets = [];
 
@@ -130,16 +146,19 @@ function loop(mesh, x, y, z){
 
 function drawScene(){
     renderer.render(scene, cam);
-    loop(cube, cam.position.x, cam.position.y, cam.position.z);
-    setInterval(function(){
-        cube.position.set(0, 0, -30);
-    }, 1500);
     processKeyboard();
     if (inRadius(10, cam.position.x, cam.position.y, cam.position.z) == 0){
         var ang = Math.atan2( ( cam.position.x - gun.position.x ), ( cam.position.z - gun.position.z ) );
 
         gun.rotation.y = ang;
     }
+    window.addEventListener("mousedown", function(){
+        audioLoader.load('Sounds/laser-gun-19sf.mp3', function(buffer){
+            sound.setBuffer(buffer);
+            sound.setVolume(0.5);
+            sound.play();
+        })
+	});
     requestAnimationFrame(drawScene);
 }
 

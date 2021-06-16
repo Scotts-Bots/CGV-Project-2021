@@ -14,6 +14,18 @@ var camera;
 setCamera(play);
 ///////////////////////////////////////////////////////////////////////////////////
 
+//adding music to the level
+const listener = new THREE.AudioListener();
+cam.add(listener);
+const sound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('Sounds/Atmosphere inside.wav', function(buffer){
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play();
+})
+
 //player hit box
 var cubeGeometry = new THREE.BoxBufferGeometry(100,100,100,3,3,3);
 var wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:false } );

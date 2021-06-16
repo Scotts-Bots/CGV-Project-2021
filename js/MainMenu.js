@@ -4,6 +4,17 @@ const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 
+const listener = new THREE.AudioListener();
+cam.add(listener);
+const sound = new THREE.Audio(listener);
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('Sounds/Atmosphere With Jump Scare.wav', function(buffer){
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+    sound.play();
+})
+
 const geometry = new THREE.SphereGeometry(1, 32, 32);
 const material = new THREE.MeshPhongMaterial();
 const mars = new THREE.Mesh(geometry, material);
