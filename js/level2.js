@@ -55,6 +55,15 @@ scene.add(box);
 var ambientLight;
 sceneLights(); 
 
+//event for shooting
+window.addEventListener( 'mousedown', Attack, false );
+
+function Attack(){
+    if (Player.getAmmo()>0 && Player.checkGun() == true){
+        Player.decAmmo();
+    }
+}
+
 //setting camera for pause menu
 pauseCam = camera;
 
