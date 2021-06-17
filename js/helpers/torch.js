@@ -22,10 +22,10 @@ function initTorch(){
     // spotLight.shadow.camera.far = 4000;
     // spotLight.shadow.camera.fov = 30;
 
-    torchPointLight = new THREE.PointLight( 0xffffff, 1, 3000, 3);
+    torchPointLight = new THREE.PointLight( 0xffffff, 0.8, 3000, 3);
     torchPointLight.position.set(-30,-20,-400);
     torchPointLight.castShadow = true; // default false
-    pauseCam.add(torchPointLight);
+    //pauseCam.add(torchPointLight);
 
     //torch blender model
     torch = new THREE.Mesh();

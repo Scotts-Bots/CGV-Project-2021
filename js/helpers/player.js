@@ -67,7 +67,7 @@ class Player {
     }
 
     static decHealth(amt) {
-        this.health = this.health - 0;
+        this.health = this.health - amt;
         localStorage["health"] = this.health;
     }
 

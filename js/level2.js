@@ -97,6 +97,9 @@ scene.add(camera);
 HUD();
 Tasks();
 
+//initialize torch
+initTorch();
+
 //keyboard and mouse controls
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 var clock = new THREE.Clock();
