@@ -102,6 +102,45 @@ Tasks();
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 var clock = new THREE.Clock();
 
+bullet = new THREE.Mesh(
+    new THREE.SphereGeometry(0.05, 8, 8),
+    new THREE.MeshBasicMaterial({color: 0xff0000})
+);
+bullet.scale.set(350, 350, 350);
+var turret = new THREE.Mesh();
+gltfLoader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
+    turret = gltf.scene;
+    turret.scale.set(200, 200, 200);
+    turret.position.set(-250,-250,-3000);
+    bullet.position.set(-250,-250,-3000);
+    scene.add(bullet);
+    scene.add(turret);
+});
+var enemy1HitCount=0; var turretHitbox;
+turretHitbox = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(500, 500, 500),
+    new THREE.MeshLambertMaterial({ color: 0xffffff })
+);
+turretHitbox.position.x = turret.position.x;
+turretHitbox.position.y = turret.position.y;
+turretHitbox.position.z = turret.position.z;
+turretHitbox.visible = false;
+scene.add(turretHitbox);
+const attackEnemy = new THREEx.DomEvents(camera, renderer.domElement);
+    
+    attackEnemy.addEventListener(turretHitbox, 'click', event => {
+        
+        if (Player.getAmmo() > 0){
+            enemy1HitCount++;
+            Player.decAmmo();
+            if (enemy1HitCount >= 3){
+                scene.remove(turret);
+                scene.remove(bullet);
+                scene.remove(turretHitbox);
+            }
+        }
+    });
+
 //ACTION!
 drawScene();
 
@@ -148,12 +187,14 @@ function drawScene(){
     }else{
         helpCounter-=1;
     }
+    
     //collectable indicator
     keycardPopup.rotation.y +=0.02;
     kswipePadPopup.rotation.y +=0.02;
     checkPopUps();
 
     //animations
+    turnTurret(2500, turret, camera, bullet, turret.position.x, turret.position.y + 90, turret.position.z);
     pointLight4.intensity = Math.sin(frame/15)*0.5 + 0.2
 
     //Functions for keyboard controls, and displaying the HUD and Tasks in each frame.
@@ -410,16 +451,16 @@ function Chair(s,ry,px,py,pz) {
 }
 
 //enemy turret model with bullets
-function Turret(){
-    var enemy = new THREE.Mesh();
-    gltfLoader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
-        enemy = gltf.scene;
-        enemy.scale.set(200, 200, 200);
-        enemy.position.set(-250,-250,-3000);
-        scene.add(enemy);
-    });
-    return enemy;
-}
+// function Turret(){
+//     var enemy = new THREE.Mesh();
+//     gltfLoader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
+//         enemy = gltf.scene;
+//         enemy.scale.set(200, 200, 200);
+//         enemy.position.set(-250,-250,-3000);
+//         scene.add(enemy);
+//     });
+//     return enemy;
+// }
 
 //green hovering pyramid indicator
 function hoveringIndicator(px,py,pz,rz){
@@ -433,10 +474,30 @@ function hoveringIndicator(px,py,pz,rz){
     return popup;
 }
 
-function turnTurret(r, obj) {
+function lerp(a, b, t) {return a + (b - a) * t}
+
+function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
+
+var t = 0;
+function loop(mesh, x, y, z){
+    var newX = lerp(mesh.position.x, x, t);
+    var newY = lerp(mesh.position.y, y, t);
+    var newZ = lerp(mesh.position.z, z, t);
+    t += 0.0002;
+    mesh.position.set(newX, newY, newZ);
+}
+
+function turnTurret(r, obj, cam, bullet, x, y, z) {
     if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
         var ang = Math.atan2((cam.position.x - obj.position.x), (cam.position.z - obj.position.z));
         obj.rotation.y = ang;
+        ran = Math.floor(Math.random() * 20);
+        loop(bullet, cam.position.x, cam.position.y, cam.position.z)
+        if (ran == 2){
+            Player.decHealth(1);
+        }
+    } else {
+        bullet.position.set(x, y, z);
     }
 }
 
@@ -556,7 +617,6 @@ function loadAssets(){
     var table1 = Table(150,Math.PI/2,-800,-350,-50);
     var table2 = Table(150,Math.PI/2,-1850,-350,-1000);
     var chair1 = Chair(100,-Math.PI/2,-1000,-250,-350);
-    var turret = Turret();
 
 }
 
