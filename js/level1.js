@@ -18,6 +18,7 @@ var wall2;
 var wall3;
 var helpCounter = 0;
 var check;
+var astro;
 
 //creating a scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -50,12 +51,13 @@ localStorage["playtime"] = 0;
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
 var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
 MovingCube = new THREE.Mesh(cubeGeometry, wireMaterial);
+MovingCube.visible = false;
 MovingCube.position.set(0, 0, 0);
 setCollisionDetection(cam, MovingCube); //collision detection hitbox added to camera
 
 //setting the render size and camera position
 renderer.setSize(innerWidth, innerHeight);
-cam.position.set(2100, 50, 200);
+cam.position.set(2100, 50, 400);
 cam.lookAt(2900, 0, 2000);
 
 //adding amient light to the scene
@@ -522,6 +524,23 @@ verticalMirror.position.set(2100, 25, 2940);
 verticalMirror.rotation.y = Math.PI;
 scene.add(verticalMirror);
 
+//adding astronaut model
+astro = new THREE.Mesh();
+new THREE.GLTFLoader().load('Blender Models/Astronaut/Astronauta1.gltf', function (gltf) {
+    astro = gltf.scene;
+    camposition = new THREE.Vector3();
+    camposition.setFromMatrixPosition(cam.matrixWorld);
+    x = camposition.x;
+    z = camposition.z;
+
+    astro.position.z = z-50;
+    astro.position.x = x;
+    astro.position.y = -350;
+    astro.scale.set(200, 230, 200);
+    scene.add(astro);
+});
+
+
 //calling HUD function and task function
 HUD();
 Tasks();
@@ -631,6 +650,14 @@ function drawScene() {
         } else {
             helpCounter -= 1;
         }
+
+        camposition = new THREE.Vector3();
+    camposition.setFromMatrixPosition(cam.matrixWorld);
+    x = camposition.x;
+    z = camposition.z;
+
+    astro.position.z = z-50;
+    astro.position.x = x;
 
         //updating tasks and hud
         HUD();

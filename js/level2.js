@@ -131,6 +131,7 @@ turretHitbox = new THREE.Mesh(
 turretHitbox.position.set(-250,-250,-3000);
 turretHitbox.visible = false;
 scene.add(turretHitbox);
+var turretPresent = true;
 const attackEnemy = new THREEx.DomEvents(camera, renderer.domElement);
     
     attackEnemy.addEventListener(turretHitbox, 'click', event => {
@@ -142,6 +143,7 @@ const attackEnemy = new THREEx.DomEvents(camera, renderer.domElement);
                 scene.remove(turret);
                 scene.remove(bullet);
                 scene.remove(turretHitbox);
+                turretPresent = false;
             }
         }
     });
@@ -199,7 +201,9 @@ function drawScene(){
     checkPopUps();
 
     //animations
-    turnTurret(2500, turret, camera, bullet, turret.position.x, turret.position.y + 90, turret.position.z);
+    if (turretPresent){
+        turnTurret(2500, turret, camera, bullet, turret.position.x, turret.position.y + 90, turret.position.z);
+    }
     pointLight4.intensity = Math.sin(frame/15)*0.5 + 0.2
 
     //Functions for keyboard controls, and displaying the HUD and Tasks in each frame.
