@@ -25,7 +25,7 @@ audioLoader.load('Sounds/Outside ambience.wav', function(buffer){
     sound.setLoop(true);
     sound.setVolume(0.5);
     sound.play();
-})
+});
 
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
@@ -448,6 +448,19 @@ function drawScene() {
     otank2.rotation.y += 0.05;
     checkCollision(cam, updateKeyboard, MovingCube);
     processKeyboard();
+    setInterval( function(){
+        window.addEventListener("mousedown", function(){
+            var listener2 = new THREE.AudioListener();
+            cam.add(listener2);
+            var sound2 = new THREE.Audio(listener2);
+            var audioLoader2 = new THREE.AudioLoader();
+            audioLoader2.load('Sounds/laser-gun-19sf.mp3', function(buffer){
+                sound2.setBuffer(buffer);
+                sound2.setVolume(0.5);
+                sound2.play();
+            });
+        });
+    }, 1500);
     turnTurret(5000, enemy1, bullet2, enemy1.position.x, enemy1.position.y, enemy1.position.z);
     turnTurret(5000, enemy2, bullet, 7000, -210, -15000);
     turnTurret(5000, enemy3, bullet3, enemy3.position.x, enemy3.position.y, enemy3.position.z);
