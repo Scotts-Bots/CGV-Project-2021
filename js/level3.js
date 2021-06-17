@@ -121,6 +121,7 @@ drawScene();
 
 //ADDING ALL THE BLENDER MODELS INTO THE SCENE
 function loadAssets() {
+    ////////////////////////////////////////rock assets////////////////////////////////////////
     var rock1 = new THREE.Mesh();
     gltfLoader.load('Blender Models/Level 2/Rocks/Rock3.gltf', function (gltf) {
         rock1 = gltf.scene;
@@ -142,7 +143,9 @@ function loadAssets() {
         rock3.position.set(100500, -10000, 100000);
         scene.add(rock3);
     });
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //rocket model with rocket hitbox
     var rocket = new THREE.Mesh();
     gltfLoader.load('Blender Models/rocketship/rocket.gltf', function (gltf) {
         rocket = gltf.scene;
@@ -180,6 +183,7 @@ function loadAssets() {
         }
     });
 
+    //gun and laser bullet for gun
     bullet1 = new THREE.Mesh(
         new THREE.CylinderGeometry(0.05, 0.05, 10),
         new THREE.MeshBasicMaterial({color: 0x0000ff})
@@ -203,6 +207,7 @@ function loadAssets() {
         scene.add(cam);
     });
 
+    //////////////////////////enemies and the trajectory bullets for enemies/////////////////////////////////////////////
     bullet2 = new THREE.Mesh(
         new THREE.SphereGeometry(0.05, 8, 8),
         new THREE.MeshBasicMaterial({color: 0xff0000})
@@ -221,6 +226,7 @@ function loadAssets() {
         scene.add(enemy1);
     });
 
+    //hit detection implemented for enemies
     enemy1Hitbox = new THREE.Mesh(
         new THREE.BoxBufferGeometry(500, 500, 500),
         new THREE.MeshLambertMaterial({ color: 0xffffff })
@@ -374,7 +380,9 @@ function loadAssets() {
             }
         }
     });
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    //mars rover model
     rover = new THREE.Mesh();
     gltfLoader.load('Blender Models/Rover/Rover.gltf', function (gltf) {
         rover = gltf.scene;
@@ -385,6 +393,7 @@ function loadAssets() {
         scene.add(rover);
     });
 
+    //health pack model
     otank1 = new THREE.Mesh();
     gltfLoader.load('Blender Models/Health Packs/HealthPack.gltf', function (gltf) {
         otank1 = gltf.scene;
@@ -393,6 +402,7 @@ function loadAssets() {
         scene.add(otank1);
     });
 
+    //oxygen tank model
     otank2 = new THREE.Mesh();
     gltfLoader.load('Blender Models/oxygen tank/Otank.gltf', function (gltf) {
         otank2 = gltf.scene;
@@ -402,10 +412,9 @@ function loadAssets() {
     });
 }
 
+//translation functions to have bullet from enemies travel towards the player
 function lerp(a, b, t) {return a + (b - a) * t}
-
 function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
-
 var t = 0;
 function loop(mesh, x, y, z){
     var newX = lerp(mesh.position.x, x, t);
@@ -415,20 +424,27 @@ function loop(mesh, x, y, z){
     mesh.position.set(newX, newY, newZ);
 }
 
+//have the enemy track the player within a certain radius
 function turnTurret(r, obj, bullet, x, y, z) {
+    //check if player is in enemy radius
     if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
+        //determine which direction to look at player
         var ang = Math.atan2((cam.position.x - obj.position.x), (cam.position.z - obj.position.z));
+        //turn towards player
         obj.rotation.y = ang;
         ran = Math.floor(Math.random() * 20);
         loop(bullet, cam.position.x, cam.position.y, cam.position.z)
         if (ran == 2){
+            //decrease health when being shot
             Player.decHealth(1);
         }
     } else {
+        //return to enemy
         bullet.position.set(x, y, z);
     }
 }
 
+//replenish health when picking up health pack
 function getPacks(r, obj) {
     if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
         Player.resetHealth();
@@ -437,6 +453,7 @@ function getPacks(r, obj) {
     }
 }
 
+//replenish oxygen when picking up oxygen tank
 function getAir(r, obj) {
     if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
         Player.resetOxygen();
@@ -451,19 +468,6 @@ function drawScene() {
     otank2.rotation.y += 0.05;
     checkCollision(cam, updateKeyboard, MovingCube);
     processKeyboard();
-    // setInterval( function(){
-    //     window.addEventListener("mousedown", function(){
-    //         var listener2 = new THREE.AudioListener();
-    //         cam.add(listener2);
-    //         var sound2 = new THREE.Audio(listener2);
-    //         var audioLoader2 = new THREE.AudioLoader();
-    //         audioLoader2.load('Sounds/laser-gun-19sf.mp3', function(buffer){
-    //             sound2.setBuffer(buffer);
-    //             sound2.setVolume(0.5);
-    //             sound2.play();
-    //         });
-    //     });
-    // }, 1500);
     turnTurret(5000, enemy1, bullet2, enemy1.position.x, enemy1.position.y, enemy1.position.z);
     turnTurret(5000, enemy2, bullet, 7000, -210, -15000);
     turnTurret(5000, enemy3, bullet3, enemy3.position.x, enemy3.position.y, enemy3.position.z);
@@ -474,10 +478,12 @@ function drawScene() {
     requestAnimationFrame(drawScene);
     
 
+    //decrease player health through level
     if (Player.getHealth() <= 0) {
         window.location.href = "GameOver.html";
     }else{
         if (Player.getOxygen() == 0) {
+            //decrease health when oxygen runs out
             Player.decHealth(0.07);
         } else {
             Player.decHealth(0.03);
@@ -485,6 +491,7 @@ function drawScene() {
         }
     }
 
+    //enemy and rover movements
     enemy1.position.x = 9000*Math.cos(frameCount) + 2000;
     enemy1.position.z = 1000*Math.sin(frameCount) - 20000;
     enemy1Hitbox.position.x = 9000*Math.cos(frameCount) + 2050;
@@ -506,6 +513,7 @@ function drawScene() {
     HUD();
     Tasks();
     updateParticleSystem();
+    //determine if the player has ammo, shoot if yes
     if (bulletCount<=0){
         bullet1.visible = false;
     }else{
@@ -513,6 +521,7 @@ function drawScene() {
     }
 }
 
+//display current tasks on screen
 function Tasks() {
     check = document.getElementById("task");
     if (check != null) {

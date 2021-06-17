@@ -401,6 +401,17 @@ function Shelf(sx,sy,sz,px,py,pz) {
         scene.add(shelf);
     });
     shelf.receiveShadow = true;
+
+    //collision detection hitbox
+    let cubeGeometry = new THREE.BoxBufferGeometry(100,100,100,3,3,3);
+    let wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
+    let MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
+    MovingCube.position.set(px,py+250,pz-250);
+    MovingCube.scale.set(3,3,5);//sx,sy,sz
+    MovingCube.visible = false;
+    scene.add(MovingCube);
+    collidableMeshList.push(MovingCube);
+    
     return shelf;
 }
 
@@ -414,6 +425,17 @@ function rShelf(sx,sy,sz,px,py,pz) {
         rshelf.rotateY(Math.PI/2);
         scene.add(rshelf);
     });
+
+    //collision detection hitbox
+    let cubeGeometry = new THREE.BoxBufferGeometry(100,100,100,3,3,3);
+    let wireMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
+    let MovingCube = new THREE.Mesh( cubeGeometry, wireMaterial );
+    MovingCube.position.set(px-300,py+250,pz-150);
+    MovingCube.scale.set(3,3,5);//sx,sy,sz
+    MovingCube.rotateY(Math.PI/2);
+    MovingCube.visible = false;
+    scene.add(MovingCube);
+    collidableMeshList.push(MovingCube);
     return rshelf;
 }
 
