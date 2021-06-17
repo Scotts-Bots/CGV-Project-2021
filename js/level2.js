@@ -16,7 +16,7 @@ setCamera(play);
 
 //adding music to the level
 const listener = new THREE.AudioListener();
-cam.add(listener);
+camera.add(listener);
 const sound = new THREE.Audio(listener);
 const audioLoader = new THREE.AudioLoader();
 audioLoader.load('Sounds/Atmosphere inside.wav', function(buffer){

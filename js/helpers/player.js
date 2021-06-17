@@ -9,18 +9,18 @@
   //This class contains information about the player including stats and name,
 //and functions to update respective members.
 class Player {
-    // static name = localStorage["name"];
-    // static health = localStorage["health"];
-    // static oxygen = localStorage["oxygen"];
-    // static ammo = localStorage["ammo"];
-    // static cards = localStorage["cards"];
-    // static gun = localStorage["gun"];
-    static name = "Guest";
-    static health = 100;
-    static oxygen = 100;
-    static ammo = 0;
-    static cards = 0;
-    static gun = false;
+    static name = localStorage["name"];
+    static health = parseInt(localStorage["health"]);
+    static oxygen = parseInt(localStorage["oxygen"]);
+    static ammo = parseInt(localStorage["ammo"]);
+    static cards = parseInt(localStorage["cards"]);
+    static gun = localStorage["gun"];
+    // static name = "Guest";
+    // static health = 100;
+    // static oxygen = 100;
+    // static ammo = 0;
+    // static cards = 0;
+    // static gun = false;
 
     static setName(Name) {
         this.name = Name;
@@ -48,34 +48,42 @@ class Player {
 
     static incAmmo() {
         this.ammo = this.ammo + 16;
+        localStorage["ammo"] = this.ammo;
     }
 
     static decAmmo() {
         this.ammo = this.ammo - 1;
+        localStorage["ammo"] = this.ammo;
     }
 
     static resetHealth() {
         this.health = 100;
+        localStorage["health"] = this.health;
     }
 
     static resetOxygen() {
         this.oxygen = 100;
+        localStorage["oxygen"] = this.oxygen;
     }
 
     static decHealth(amt) {
         this.health = this.health - amt;
+        localStorage["health"] = this.health;
     }
 
     static decOxygen(amt) {
         this.oxygen = this.oxygen - amt;
+        localStorage["oxygen"] = this.oxygen;
     }
 
     static incCards() {
         this.cards = this.cards + 1;
+        localStorage["cards"] = this.cards;
     }
 
     static decCards() {
         this.cards = this.cards - 1;
+        localStorage["cards"] = this.cards;
     }
 
     static checkGun(){
@@ -84,6 +92,7 @@ class Player {
 
     static pickUpGun(){
         this.gun = true;
+        localStorage["gun"] = true;
     }
 
 }

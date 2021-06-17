@@ -330,10 +330,3 @@ function AddCredit(){
     });
 }
 
-localStorage["name"] = "Jafed";
-localStorage["health"] = 100;
-localStorage["oxygen"] = 100;
-localStorage["ammo"] = 10;
-localStorage["cards"]  = 0;
-localStorage["gun"] = false;
-

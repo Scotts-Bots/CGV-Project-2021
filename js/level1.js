@@ -36,6 +36,14 @@ audioLoader.load('Sounds/Atmosphere inside.wav', function(buffer){
     sound.play();
 })
 
+//assigning static variables
+localStorage["name"] = "Jafed";
+localStorage["health"] = 100;
+localStorage["oxygen"] = 100;
+localStorage["ammo"] = 0;
+localStorage["cards"]  = 0;
+localStorage["gun"] = false;
+
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
 var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
