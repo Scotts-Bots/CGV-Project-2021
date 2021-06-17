@@ -556,8 +556,8 @@ function WindowedWall() {
     var wallHeight = 0;
 
     var leftWall = Wall();
-    leftWall.scale.set(2,1,1);
-    leftWall.position.set(-400,wallHeight,0);
+    leftWall.scale.set(13,1,1);
+    leftWall.position.set(-950,wallHeight,0);
     windowedWall.add(leftWall);
 
     var rightWall = Wall();
@@ -566,13 +566,13 @@ function WindowedWall() {
     windowedWall.add(rightWall);
 
     var topWall = Wall();
-    topWall.scale.set(1,0.8,1);
+    topWall.scale.set(1,0.75,1);
     topWall.rotateZ(Math.PI/2);
     topWall.position.set(0,350 + wallHeight,0);
     windowedWall.add(topWall);
 
     var bottomWall = Wall();
-    bottomWall.scale.set(4,0.8,1);
+    bottomWall.scale.set(4,0.75,1);
     bottomWall.rotateZ(Math.PI/2);
     bottomWall.position.set(0,-200 + wallHeight,0);
     windowedWall.add(bottomWall);
@@ -608,7 +608,7 @@ function RoomPart() {
     roomPart.add(w3);
 
     var w4 = Wall();
-    w4.scale.set(7,3,1);
+    w4.scale.set(7.5,3,1);
     w4.rotateY(Math.PI/2);
     w4.position.set(452,200,0);
     roomPart.add(w4);
@@ -647,11 +647,11 @@ function Room() {
     room.add(w7);
 
     //walls 10,13,3r
-    var w10 = Wall();
-    w10.scale.set(9,1,1);
-    w10.rotateY(Math.PI/2);
-    w10.position.set(-1700,200,350);
-    room.add(w10);
+    // var w10 = Wall();
+    // w10.scale.set(9,1,1);
+    // w10.rotateY(Math.PI/2);
+    // w10.position.set(-1700,200,400);
+    // room.add(w10);
 
     var w13 = Wall();
     w13.scale.set(2.5,3,1);
@@ -661,7 +661,7 @@ function Room() {
 
     var w3r = Wall();
     w3r.scale.set(4,3,1);
-    w3r.position.set(1035,200,-825);
+    w3r.position.set(1035,200,-800);
     room.add(w3r);
 
     //walls with windows
