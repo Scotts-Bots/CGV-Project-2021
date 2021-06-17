@@ -94,11 +94,14 @@ flight.castShadow = true;
 scene.add(flight);
 
 //event for shooting
+var bulletCount = 0;
 window.addEventListener( 'mousedown', Attack, false );
 
 function Attack(){
     if (Player.getAmmo()>0 && Player.checkGun() == 1){
+        bullet1.visible = true;
         Player.decAmmo();
+        bulletCount = 2;
     }
 }
 
@@ -354,6 +357,17 @@ new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf', function (
     scene.add(pgun);
 });
 
+var bullet1 = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.05, 0.05, 10),
+    new THREE.MeshBasicMaterial({color: 0x0000ff})
+);
+bullet1.scale.set(1, 2, 1);
+bullet1.rotation.set(0, Math.PI/1.87, Math.PI/1.95);
+bullet1.position.set(1.2, -0.5, -14);
+bullet1.visible = false;
+cam.add(bullet1);
+scene.add(cam);
+
 const gunEvent = new THREEx.DomEvents(cam, renderer.domElement);
 
 gunEvent.addEventListener(gunf, 'dblclick', event => {
@@ -361,6 +375,7 @@ gunEvent.addEventListener(gunf, 'dblclick', event => {
     scene.remove(gunfPopup);
     Player.pickUpGun();
     //adding gun to players hand after they pick it up
+
     var pistol = new THREE.Mesh();
     new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf', function (gltf) {
         pistol = gltf.scene;
@@ -621,6 +636,12 @@ function drawScene() {
         HUD();
         Tasks();
 
+    }
+
+    if (bulletCount<=0){
+        bullet1.visible = false;
+    }else{
+        bulletCount--;
     }
 
 

@@ -70,11 +70,15 @@ var ambientLight, pointLight4;
 sceneLights();
 
 //event for shooting
+var bulletCount = 0;
+
 window.addEventListener( 'mousedown', Attack, false );
 
 function Attack(){
     if (Player.getAmmo() > 0 ){
+        bullet1.visible = true;
         Player.decAmmo();
+        bulletCount = 2;
     }
 }
 
@@ -202,6 +206,11 @@ function drawScene(){
     processKeyboard();
     HUD();
     Tasks();
+    if (bulletCount<=0){
+        bullet1.visible = false;
+    }else{
+        bulletCount--;
+    }
     requestAnimationFrame(drawScene);
 
     //if player dies
@@ -518,6 +527,17 @@ function turnTurret(r, obj, cam, bullet, x, y, z) {
 function loadAssets(){
     
     //the player's gun attached to camera
+    bullet1 = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.05, 0.05, 10),
+        new THREE.MeshBasicMaterial({color: 0x0000ff})
+    );
+    bullet1.scale.set(1, 2, 1);
+    bullet1.rotation.set(0, Math.PI/1.87, Math.PI/1.95);
+    bullet1.position.set(1.2, -0.5, -14);
+    bullet1.visible = false;
+    camera.add(bullet1);
+    scene.add(camera);
+
     var pistol = new THREE.Mesh();
     gltfLoader.load('Blender Models/GunModel/Gun Model.gltf' , function (gltf)  {
         pistol = gltf.scene;
