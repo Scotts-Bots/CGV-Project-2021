@@ -104,6 +104,7 @@ initTorch();
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 var clock = new THREE.Clock();
 
+//enemy with bullets
 bullet = new THREE.Mesh(
     new THREE.SphereGeometry(0.05, 8, 8),
     new THREE.MeshBasicMaterial({color: 0xff0000})
@@ -123,9 +124,7 @@ turretHitbox = new THREE.Mesh(
     new THREE.BoxBufferGeometry(500, 500, 500),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
-turretHitbox.position.x = turret.position.x;
-turretHitbox.position.y = turret.position.y;
-turretHitbox.position.z = turret.position.z;
+turretHitbox.position.set(-250,-250,-3000);
 turretHitbox.visible = false;
 scene.add(turretHitbox);
 const attackEnemy = new THREEx.DomEvents(camera, renderer.domElement);
