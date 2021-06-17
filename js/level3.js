@@ -141,7 +141,7 @@ function loadAssets() {
         rocket = gltf.scene;
         rocket.scale.set(75, 75, 75);
         rocket.position.set(5000, -2000, -50000);
-        //scene.add(rocket);
+        scene.add(rocket);
     });
 
     const rocketf = new THREE.Mesh(
@@ -202,7 +202,7 @@ function loadAssets() {
 
     bullet2 = new THREE.Mesh(
         new THREE.SphereGeometry(0.05, 8, 8),
-        new THREE.MeshBasicMaterial({color: 0xffffff})
+        new THREE.MeshBasicMaterial({color: 0xff0000})
     );
     bullet2.scale.set(500, 500, 500);
     bullet2.position.set(2000, 100, -20000);
@@ -245,7 +245,7 @@ function loadAssets() {
 
     bullet = new THREE.Mesh(
         new THREE.SphereGeometry(0.05, 8, 8),
-        new THREE.MeshBasicMaterial({color: 0xffffff})
+        new THREE.MeshBasicMaterial({color: 0xff0000})
     );
     bullet.scale.set(500, 500, 500);
 
@@ -288,7 +288,7 @@ function loadAssets() {
 
     bullet3 = new THREE.Mesh(
         new THREE.SphereGeometry(0.05, 8, 8),
-        new THREE.MeshBasicMaterial({color: 0xffffff})
+        new THREE.MeshBasicMaterial({color: 0xff0000})
     );
     bullet3.scale.set(500, 500, 500);
     bullet3.position.set(2000, 100, -20000);
@@ -331,7 +331,7 @@ function loadAssets() {
 
     bullet4 = new THREE.Mesh(
         new THREE.SphereGeometry(0.05, 8, 8),
-        new THREE.MeshBasicMaterial({color: 0xffffff})
+        new THREE.MeshBasicMaterial({color: 0xff0000})
     );
     bullet4.scale.set(500, 500, 500);
     bullet4.position.set(2000, 100, -20000);
@@ -391,7 +391,7 @@ function loadAssets() {
     });
 
     otank2 = new THREE.Mesh();
-    gltfLoader.load('Blender Models/Health Packs/HealthPack.gltf', function (gltf) {
+    gltfLoader.load('Blender Models/oxygen tank/Otank.gltf', function (gltf) {
         otank2 = gltf.scene;
         otank2.scale.set(100, 100, 100);
         otank2.position.set(-7000, -250, -22000);
@@ -406,7 +406,7 @@ function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
 var t = 0;
 function loop(mesh, x, y, z){
     var newX = lerp(mesh.position.x, x, t);
-    var newY = mesh.position.y; //lerp(mesh.position.y, y, ease(t));
+    var newY = lerp(mesh.position.y, y, t);
     var newZ = lerp(mesh.position.z, z, t);
     t += 0.0002;
     mesh.position.set(newX, newY, newZ);
@@ -419,7 +419,7 @@ function turnTurret(r, obj, bullet, x, y, z) {
         ran = Math.floor(Math.random() * 20);
         loop(bullet, cam.position.x, cam.position.y, cam.position.z)
         if (ran == 2){
-            //Player.decHealth(1);
+            Player.decHealth(1);
         }
     } else {
         bullet.position.set(x, y, z);
@@ -428,9 +428,17 @@ function turnTurret(r, obj, bullet, x, y, z) {
 
 function getPacks(r, obj) {
     if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
-        //Player.resetHealth();
+        Player.resetHealth();
         scene.remove(obj);
+        
+    }
+}
 
+function getAir(r, obj) {
+    if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
+        Player.resetOxygen();
+        scene.remove(obj);
+        
     }
 }
 
@@ -445,7 +453,7 @@ function drawScene() {
     turnTurret(5000, enemy3, bullet3, enemy3.position.x, enemy3.position.y, enemy3.position.z);
     turnTurret(5000, enemy4, bullet4, enemy4.position.x, enemy4.position.y, enemy4.position.z);
     getPacks(500, otank1);
-    getPacks(500, otank2);
+    getAir(500, otank2);
 
     requestAnimationFrame(drawScene);
     
@@ -456,8 +464,8 @@ function drawScene() {
         if (Player.getOxygen() == 0) {
             Player.decHealth(0.07);
         } else {
-            // Player.decHealth(0.03);
-            // Player.decOxygen(0.07);
+            Player.decHealth(0.03);
+            Player.decOxygen(0.07);
         }
     }
 
