@@ -729,7 +729,7 @@ function playgame() {
     cam.add(wall3);
     scene.add(cam);
 
-    loader = new THREE.FontLoader();
+    var loader = new THREE.FontLoader();
 
     loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
 

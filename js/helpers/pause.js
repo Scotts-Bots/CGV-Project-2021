@@ -30,6 +30,12 @@ document.addEventListener('keydown', event => {
 //Press up key to restart game.
 document.addEventListener('keydown', event => {
     if (event.code === "ArrowUp" && isPaused) {
+        //assigning static variables
+        localStorage["health"] = 100;
+        localStorage["oxygen"] = 100;
+        localStorage["ammo"] = 0;
+        localStorage["cards"] = 0;
+        localStorage["gun"] = 0;
         window.location.href = "level1.html";
     }
 });
@@ -37,13 +43,19 @@ document.addEventListener('keydown', event => {
 //Press right key to go back to main menu
 document.addEventListener('keydown', event => {
     if (event.code === "ArrowRight" && isPaused) {
+        //assigning static variables
+        localStorage["health"] = 100;
+        localStorage["oxygen"] = 100;
+        localStorage["ammo"] = 0;
+        localStorage["cards"] = 0;
+        localStorage["gun"] = 0;
         window.location.href = "index.html";
     }
 });
 
 //Adds pause menu to the scene
 //cam is the camera
-function AddPause(cam){
+function AddPause(cam) {
     //enable pause keys functionality
     isPaused = true;
 
@@ -183,19 +195,19 @@ function AddPause(cam){
 }
 
 //Removes the pause menu when player resumes game
-function RemovePause(cam){
+function RemovePause(cam) {
     //Disable pause keys functionality
     isPaused = false;
 
-    var removeMeshes = [mesh,mesh1,mesh2,mesh3,mesh4,mesh5,back,back1,back2,back3,back4];
-    for (let i=0; i<removeMeshes.length; ++i) {
+    var removeMeshes = [mesh, mesh1, mesh2, mesh3, mesh4, mesh5, back, back1, back2, back3, back4];
+    for (let i = 0; i < removeMeshes.length; ++i) {
         cam.remove(removeMeshes[i])
     }
     scene.add(cam);
 }
 
 //Adds credits screen
-function AddCredit(cam){
+function AddCredit(cam) {
     cback = new THREE.Mesh(
         new THREE.BoxBufferGeometry(1, 0.7, 0.001),
         new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
@@ -307,9 +319,9 @@ function AddCredit(cam){
 }
 
 //Removes credits screen
-function RemoveCredit(cam){
-    var removeMeshes = [mesh6,mesh7,mesh8,mesh9,mesh10,mesh11,mesh12,cback];
-    for (let i=0; i<removeMeshes.length; ++i) {
+function RemoveCredit(cam) {
+    var removeMeshes = [mesh6, mesh7, mesh8, mesh9, mesh10, mesh11, mesh12, cback];
+    for (let i = 0; i < removeMeshes.length; ++i) {
         cam.remove(removeMeshes[i])
     }
     scene.add(cam);

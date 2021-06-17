@@ -1,7 +1,7 @@
 //crearing global variables
 var startText, creditText, titleText, creditText, credit1Text, credit2Text, credit3Text, credit4Text, credit5Text, exitCredits
 var startButton, creditsButton, creditBackGround, loader;
- 
+
 // screating scene, camera and renderer and setting the renderers size
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -25,7 +25,7 @@ const light = new THREE.DirectionalLight(0xcccccc, 1);
 cam.position.z = 3;
 light.position.set(5, 3, 5);
 
-function getInputValue(){
+function getInputValue() {
     //get name input
     var name = document.getElementById("nameInput").value;
     localStorage["name"] = name;
@@ -35,7 +35,7 @@ function getInputValue(){
 
 //adding the texture for mars and bump map
 material.map = new THREE.TextureLoader().load('textures/diffuse.jpg');
-material.bumpMap = new THREE.TextureLoader().load('textures/bump.jpg');     
+material.bumpMap = new THREE.TextureLoader().load('textures/bump.jpg');
 material.bumpScale = 0.015;
 
 // adding the textures onto the sphere to create a skybox
@@ -52,7 +52,7 @@ const listener = new THREE.AudioListener();
 cam.add(listener);
 const sound = new THREE.Audio(listener);
 const audioLoader = new THREE.AudioLoader();
-audioLoader.load('Sounds/Atmosphere With Jump Scare.wav', function(buffer){
+audioLoader.load('Sounds/Atmosphere With Jump Scare.wav', function (buffer) {
     sound.setBuffer(buffer);
     sound.setLoop(true);
     sound.setVolume(0.5);
@@ -77,20 +77,26 @@ const animate = () => {
 animate();
 
 //creating an event for when the player clicks the start button
-const startGame = new THREEx.DomEvents(cam,  renderer.domElement);
+const startGame = new THREEx.DomEvents(cam, renderer.domElement);
 
-startGame.addEventListener(startButton, 'click', event =>{
+startGame.addEventListener(startButton, 'click', event => {
+    //assigning static variables
+    localStorage["health"] = 100;
+    localStorage["oxygen"] = 100;
+    localStorage["ammo"] = 0;
+    localStorage["cards"] = 0;
+    localStorage["gun"] = 0;
     window.location.href = "level1.html";
 });
 
 //creating an event for when the player clicks the credits button
-const viewCredits = new THREEx.DomEvents(cam,  renderer.domElement);
+const viewCredits = new THREEx.DomEvents(cam, renderer.domElement);
 
-viewCredits.addEventListener(creditsButton, 'click', event =>{
+viewCredits.addEventListener(creditsButton, 'click', event => {
     RemovePause();
     document.getElementById("overlay").style.visibility = "hidden";
-        AddCredit();
-        
+    AddCredit();
+
 });
 
 //creating an event for when the player clicks the down key arrow
@@ -103,7 +109,7 @@ document.addEventListener('keydown', event => {
 });
 
 //creating function to show the different options on main menu
-function ShowOptions(){
+function ShowOptions() {
 
     //creating and adding start button to scene
     startButton = new THREE.Mesh(
@@ -160,8 +166,8 @@ function ShowOptions(){
             curveSegments: 2,
 
             bevelThickness: 0.005,
-        bevelSize: 0.005,
-        bevelEnabled: true
+            bevelSize: 0.005,
+            bevelEnabled: true
 
         });
 
@@ -193,33 +199,33 @@ function ShowOptions(){
 }
 
 //function to remove credits from the scene
-function RemoveCredit(){
+function RemoveCredit() {
     cam.remove(creditText);
-        cam.remove(credit1Text);
-        cam.remove(credit2Text);
-        cam.remove(credit3Text);
-        cam.remove(credit4Text);
-        cam.remove(exitCredits);
-        cam.remove(credit5Text);
-        cam.remove(creditBackGround);
+    cam.remove(credit1Text);
+    cam.remove(credit2Text);
+    cam.remove(credit3Text);
+    cam.remove(credit4Text);
+    cam.remove(exitCredits);
+    cam.remove(credit5Text);
+    cam.remove(creditBackGround);
 
-        scene.add(cam);
+    scene.add(cam);
 }
 
 //function to remove options from the scene
-function RemovePause(){
-        cam.remove(startText);
-        cam.remove(creditText);
-        cam.remove(titleText);
-        cam.remove(startButton);
-        cam.remove(creditsButton);
+function RemovePause() {
+    cam.remove(startText);
+    cam.remove(creditText);
+    cam.remove(titleText);
+    cam.remove(startButton);
+    cam.remove(creditsButton);
 
 
-        scene.add(cam);
+    scene.add(cam);
 }
 
 //function to add credits to the scene
-function AddCredit(){
+function AddCredit() {
 
     //adding background for credits
     creditBackGround = new THREE.Mesh(
