@@ -257,7 +257,7 @@ function checkPopUps(){
 //all the lights in the scene
 function sceneLights() {
     //adding ambient light
-    ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    ambientLight = new THREE.AmbientLight(0xffffff, 0);
     scene.add(ambientLight);
 
     //light 1
@@ -280,7 +280,13 @@ function sceneLights() {
     // //finder1.castShadow = true;
     // scene.add(finder1);
 
-    //red light
+    //red light 1
+    var pointLight3 = new THREE.PointLight( 0xff0000, 1, 4000, 3);
+    pointLight3.position.set(-2050,100,-1050);
+    //pointLight3.castShadow = true; // default false
+    scene.add(pointLight3);
+
+    //red light 2
     var pointLight3 = new THREE.PointLight( 0xff0000, 1, 4000, 3);
     pointLight3.position.set(-2050,100,-1050);
     //pointLight3.castShadow = true; // default false
@@ -303,6 +309,19 @@ function CeilingLight(px,py,pz,ry) {
         scene.add(ceilingLight);
     });
     return ceilingLight;
+}
+
+//red emergency light
+function RedLight(px,py,pz,ry) {
+    var warningLight = new THREE.Mesh();
+    gltfLoader.load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
+        warningLight = gltf.scene;
+        warningLight.scale.set(50,-50,50);
+        warningLight.position.set(px,py,pz);
+        warningLight.rotateY(ry);
+        scene.add(warningLight);
+    });
+    return warningLight;
 }
 
 //shelf blender model
@@ -411,13 +430,7 @@ function loadAssets(){
     });
 
     //red light in the corner of side room
-    var warningLight = new THREE.Mesh();
-    gltfLoader.load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
-        warningLight = gltf.scene;
-        warningLight.scale.set(50,-50,50);
-        warningLight.position.set(-2180,300,-1080);
-        scene.add(warningLight);
-    });
+    var warningLight1 = RedLight(-2180,300,-1080,0);
 
     //ceiling lights
     var ceilingLight1 = CeilingLight(-100,850,-1800,0);
