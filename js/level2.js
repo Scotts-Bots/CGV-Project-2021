@@ -216,13 +216,6 @@ function drawScene(){
     //if player dies
     if (Player.getHealth() <= 0) {
         window.location.href = "GameOver.html";
-    }else{
-        if (Player.getOxygen() == 0) {
-            Player.decHealth(0.07);
-        } else {
-            Player.decHealth(0.03);
-            Player.decOxygen(0.07);
-        }
     }
 }
 
