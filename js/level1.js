@@ -63,6 +63,7 @@ scene.add(ambientLight);
 
 //setting camera for pause menu
 pauseCam = cam;
+var gltfLoader = new THREE.GLTFLoader();
 
 //back right room
 var brrlight = new THREE.PointLight(0xffffff, intensity, 2200, 2);
@@ -507,6 +508,9 @@ scene.add(verticalMirror);
 //calling HUD function and task function
 HUD();
 Tasks();
+
+//initialize torch
+initTorch();
 
 document.body.appendChild(renderer.domElement);
 
