@@ -174,7 +174,7 @@ function loadAssets() {
         if (Math.sqrt(Math.pow((x - fx), 2) + Math.pow((y - fy), 2)) < 10000) {
             localStorage["playtime"] = parseInt(localStorage["playtime"]) + getDelta();
             //alert(localStorage["playtime"] + " secs");
-            window.location.href = "index.html";
+            window.location.href = "WinGame.html";
         } else {
             console.log(Math.sqrt(Math.pow((x - fx), 2) + Math.pow((y - fy), 2)));
         }
