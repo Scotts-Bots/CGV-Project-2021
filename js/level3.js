@@ -194,8 +194,18 @@ function loadAssets() {
     const showLaser = new THREEx.DomEvents(cam, renderer.domElement);
     
     showLaser.addEventListener(bullet1, 'click', event => {
-        bullet.visible() = true;
+        bullet1.visible() = true;
+        setTimeout(function(){
+			bullet1.visible() = false;
+		}, 1000);
     });
+
+    bullet2 = new THREE.Mesh(
+        new THREE.SphereGeometry(0.05, 8, 8),
+        new THREE.MeshBasicMaterial({color: 0xffffff})
+    );
+    bullet2.scale.set(500, 500, 500);
+    bullet2.position.set(2000, 100, -20000);
 
     enemy1 = new THREE.Mesh();
     gltfLoader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
@@ -204,6 +214,7 @@ function loadAssets() {
         enemy1.position.x = 100*Math.cos(frameCount) + 2000;
         enemy1.position.y = 100;
         enemy1.position.z = 100*Math.sin(frameCount) - 20000;
+        scene.add(bullet2);
         scene.add(enemy1);
     });
 
@@ -226,6 +237,7 @@ function loadAssets() {
             Player.decAmmo();
             if (enemy1HitCount >= 3){
                 scene.remove(enemy1);
+                scene.remove(bullet2);
                 scene.remove(enemy1Hitbox);
             }
         }
@@ -268,10 +280,18 @@ function loadAssets() {
             Player.decAmmo();
             if (enemy1HitCount >= 3){
                 scene.remove(enemy2);
+                scene.remove(bullet);
                 scene.remove(enemy2Hitbox);
             }
         }
     });
+
+    bullet3 = new THREE.Mesh(
+        new THREE.SphereGeometry(0.05, 8, 8),
+        new THREE.MeshBasicMaterial({color: 0xffffff})
+    );
+    bullet3.scale.set(500, 500, 500);
+    bullet3.position.set(2000, 100, -20000);
 
     enemy3 = new THREE.Mesh();
     gltfLoader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
@@ -280,6 +300,7 @@ function loadAssets() {
         enemy3.position.x = 100*Math.cos(frameCount) + 5000;
         enemy3.position.y = 100;
         enemy3.position.z = 100*Math.sin(frameCount) - 30000;
+        scene.add(bullet3);
         scene.add(enemy3);
     });
 
@@ -302,10 +323,18 @@ function loadAssets() {
             Player.decAmmo();
             if (enemy1HitCount >= 3){
                 scene.remove(enemy3);
+                scene.remove(bullet3);
                 scene.remove(enemy3Hitbox);
             }
         }
     });
+
+    bullet4 = new THREE.Mesh(
+        new THREE.SphereGeometry(0.05, 8, 8),
+        new THREE.MeshBasicMaterial({color: 0xffffff})
+    );
+    bullet4.scale.set(500, 500, 500);
+    bullet4.position.set(2000, 100, -20000);
 
     enemy4 = new THREE.Mesh();
     gltfLoader.load('Blender Models/Enemies/Enemies.gltf', function (gltf) {
@@ -314,6 +343,7 @@ function loadAssets() {
         enemy4.position.x = 100*Math.cos(frameCount) - 1000;
         enemy4.position.y = 100;
         enemy4.position.z = 100*Math.sin(frameCount) - 27000;
+        scene.add(bullet4);
         scene.add(enemy4);
     });
 
@@ -336,6 +366,7 @@ function loadAssets() {
             Player.decAmmo();
             if (enemy4HitCount >= 3){
                 scene.remove(enemy4);
+                scene.remove(bullet4);
                 scene.remove(enemy4Hitbox);
             }
         }
@@ -381,7 +412,7 @@ function loop(mesh, x, y, z){
     mesh.position.set(newX, newY, newZ);
 }
 
-function turnTurret(r, obj) {
+function turnTurret(r, obj, bullet, x, y, z) {
     if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
         var ang = Math.atan2((cam.position.x - obj.position.x), (cam.position.z - obj.position.z));
         obj.rotation.y = ang;
@@ -391,7 +422,7 @@ function turnTurret(r, obj) {
             //Player.decHealth(1);
         }
     } else {
-        bullet.position.set(7000, -210, -15000);
+        bullet.position.set(x, y, z);
     }
 }
 
@@ -409,10 +440,10 @@ function drawScene() {
     otank2.rotation.y += 0.05;
     checkCollision(cam, updateKeyboard, MovingCube);
     processKeyboard();
-    //turnTurret(5000, enemy1);
-    turnTurret(5000, enemy2);
-    // turnTurret(5000, enemy3);
-    // turnTurret(5000, enemy4);
+    turnTurret(5000, enemy1, bullet2, enemy1.position.x, enemy1.position.y, enemy1.position.z);
+    turnTurret(5000, enemy2, bullet, 7000, -210, -15000);
+    turnTurret(5000, enemy3, bullet3, enemy3.position.x, enemy3.position.y, enemy3.position.z);
+    turnTurret(5000, enemy4, bullet4, enemy4.position.x, enemy4.position.y, enemy4.position.z);
     getPacks(500, otank1);
     getPacks(500, otank2);
 
