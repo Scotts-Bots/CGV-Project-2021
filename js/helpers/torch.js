@@ -23,7 +23,7 @@ function initTorch(){
     // spotLight.shadow.camera.fov = 30;
 
     torchPointLight = new THREE.PointLight( 0xffffff, 0.8, 3000, 3);
-    torchPointLight.position.set(-30,-20,-400);
+    torchPointLight.position.set(-30,-20,-100);
     torchPointLight.castShadow = true; // default false
     //pauseCam.add(torchPointLight);
 

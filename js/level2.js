@@ -557,6 +557,7 @@ function loadAssets(){
     domEvent3.addEventListener(kswipePadf, 'dblclick', event =>{
         //move to next level if key card is in possession
         if (found) {
+            localStorage["playtime"] = parseInt(localStorage["playtime"]) + getDelta();
             window.location.href = "level3.html";
         //provide text hint if key card not in possession
         } else {
