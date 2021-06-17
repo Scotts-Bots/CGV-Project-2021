@@ -59,8 +59,11 @@ audioLoader.load('Sounds/Atmosphere With Jump Scare.wav', function (buffer) {
     sound.play();
 });
 
-
+//loading options 
 ShowOptions();
+
+// //loading leader board for times
+// LeaderBoard();
 
 const animate = () => {
     requestAnimationFrame(animate);
@@ -75,6 +78,8 @@ const animate = () => {
 };
 
 animate();
+
+
 
 //creating an event for when the player clicks the start button
 const startGame = new THREEx.DomEvents(cam, renderer.domElement);
