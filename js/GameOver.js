@@ -64,6 +64,11 @@ animate();
 const restartGame = new THREEx.DomEvents(cam,  renderer.domElement);
 
 restartGame.addEventListener(restartButton, 'click', event =>{
+    localStorage["health"] = 100;
+    localStorage["oxygen"] = 100;
+    localStorage["ammo"] = 0;
+    localStorage["cards"]  = 0;
+    localStorage["gun"] = 0;
     window.location.href = "level1.html";
 });
 
