@@ -173,7 +173,8 @@ function HUD() {
     document.body.appendChild(Q);
     document.body.appendChild(helper);
     console.log(Player.checkGun());
-    if (Player.checkGun()) {
+    if (Player.checkGun()==1) {
+        console.log('hi')
         document.body.appendChild(gun);
     }
     if (Player.getCards() > 0) {

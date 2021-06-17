@@ -1,6 +1,5 @@
-const scene = new THREE.Scene();
-intensity = 0.4;
-len = 10;
+//setting global variables
+var intensity = 0.4,len = 10;
 var unLocked = false;
 var shotTagets = false;
 var isPlaying = false;
@@ -13,18 +12,20 @@ var rules;
 var rulesText;
 var rulesText2;
 var successText;
-
 var wall;
 var wall1;
 var wall2;
 var wall3;
 var helpCounter = 0;
 
+//creating a scene, camera, and renderer
+const scene = new THREE.Scene();
 var cam = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100000);
 var renderer = new THREE.WebGL1Renderer({ antialias: true });
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+//adding audio to the level
 const listener = new THREE.AudioListener();
 cam.add(listener);
 const sound = new THREE.Audio(listener);
@@ -41,9 +42,7 @@ localStorage["health"] = 100;
 localStorage["oxygen"] = 100;
 localStorage["ammo"] = 0;
 localStorage["cards"]  = 0;
-localStorage["gun"] = false;
-
-
+localStorage["gun"] = 0;
 
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
@@ -52,10 +51,12 @@ MovingCube = new THREE.Mesh(cubeGeometry, wireMaterial);
 MovingCube.position.set(0, 0, 0);
 setCollisionDetection(cam, MovingCube); //collision detection hitbox added to camera
 
+//setting the render size and camera position
 renderer.setSize(innerWidth, innerHeight);
 cam.position.set(2100, 50, 200);
 cam.lookAt(2900, 0, 2000);
 
+//adding amient light to the scene
 var ambientLight = new THREE.AmbientLight(0xffffff, 0.05);//0.05
 scene.add(ambientLight);
 
@@ -63,52 +64,48 @@ scene.add(ambientLight);
 pauseCam = cam;
 
 //back right room
-const light9 = new THREE.PointLight(0xffffff, intensity, 2200, 2);
-light9.position.set(-100, 375, 2100);
-//light9.castShadow = true;
-scene.add(light9);
+const brrlight = new THREE.PointLight(0xffffff, intensity, 2200, 2);
+brrlight.position.set(-100, 375, 2100);
+scene.add(brrlight);
 
 
 //front right room
-const light7 = new THREE.PointLight(0xffffff, intensity, 2500, 2);
-light7.position.set(-100, 375, 900);
-//light7.castShadow = true;
-scene.add(light7);
+const frrlight = new THREE.PointLight(0xffffff, intensity, 2500, 2);
+frrlight.position.set(-100, 375, 900);
+scene.add(frrlight);
 
 //passage light
-const light5 = new THREE.PointLight(0xffffff, intensity, 800, 2);
-light5.position.set(1300, 375, 1500);
-//light5.castShadow = true;
-scene.add(light5);
+const plight = new THREE.PointLight(0xffffff, intensity, 800, 2);
+plight.position.set(1300, 375, 1500);
+scene.add(plight);
 
 //emergency light
-const light3 = new THREE.PointLight(0xff0000, 3, 900, 2);
-light3.position.set(2000, 200, 1200);
-//light3.castShadow = true;
-scene.add(light3);
+const elight = new THREE.PointLight(0xff0000, 3, 900, 2);
+elight.position.set(2000, 200, 1200);
+scene.add(elight);
 
 //flourescent light
-const light1 = new THREE.PointLight(0xffffff, intensity, 6000, 2);
-light1.position.set(2500, 375, 1500);
-light1.castShadow = true;
-//light1.shadow.bias = -0.0001;
-scene.add(light1);
+const flight = new THREE.PointLight(0xffffff, intensity, 6000, 2);
+flight.position.set(2500, 375, 1500);
+flight.castShadow = true;
+scene.add(flight);
 
 //event for shooting
 window.addEventListener( 'mousedown', Attack, false );
 
 function Attack(){
-    if (Player.getAmmo()>0 && Player.checkGun() == true){
+    if (Player.getAmmo()>0 && Player.checkGun() == 1){
         Player.decAmmo();
     }
 }
 
-
+//creating and adding room to the scene
 const room = Room();
 room.scale.set(4, 4, 2.5);
 room.rotateX(3 * Math.PI / 2);
 scene.add(room);
 
+//creating and adding doors to the scene
 const door = new THREE.Mesh(
     new THREE.BoxBufferGeometry(30, 520, 400),
     new THREE.MeshLambertMaterial({ color: 0x808080 })
@@ -125,10 +122,15 @@ const door1 = new THREE.Mesh(
 door1.rotateY(Math.PI / 2);
 door1.position.set(1350, -120, 0);
 scene.add(door1);
+
+//adding doors to collision detection
 collidableMeshList.push(door1);
 
 collidableMeshList.push(door);
 
+////////////////////////////////////////////////////////WATER///////////////////////////////////////////////////////////////////////////////////
+
+//creating and adding water to the scene
 const waterGeometry = new THREE.CircleGeometry(100, 1000);
 
 var water;
@@ -156,6 +158,7 @@ water.rotation.x = - Math.PI / 2;
 
 scene.add(water);
 
+//creating and adding cup to the scene
 var cup = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/cup/cup.gltf', function (gltf) {
     cup = gltf.scene;
@@ -165,15 +168,25 @@ new THREE.GLTFLoader().load('Blender Models/cup/cup.gltf', function (gltf) {
     scene.add(cup);
 });
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//adding skybox to the scene
 const box = skyBox();
 box.scale.set(0.5, 0.5, 0.5);
 box.translateY(14600);
 scene.add(box);
 
+//adding rticle to the scene
 var qf = [2000, 1, 2000, 2000, 1, 2000, 2000, 1, 2000]
 addReticle(cam, qf);
 scene.add(cam);
 
+//////////////////////////////////////////////////////////////ADDING OBJECTS TO THE SCENE////////////////////////////////////////////////////////////
+//cone shape for sobject interaction pointer
+const geometry = new THREE.ConeGeometry(20, 20, 4);
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff99 });
+
+//Ammo objects
 const ammof = new THREE.Mesh(
     new THREE.BoxBufferGeometry(100, 100, 100),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
@@ -182,13 +195,12 @@ ammof.position.set(2100, -50, 200);
 ammof.visible = false;
 scene.add(ammof);
 
-const geometry = new THREE.ConeGeometry(20, 20, 4);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff99 });
 const AmmofPopup = new THREE.Mesh(geometry, material);
 AmmofPopup.position.set(2100, -20, 200);
 AmmofPopup.rotateZ(Math.PI);
 scene.add(AmmofPopup);
 
+//switch objects
 const switchf = new THREE.Mesh(
     new THREE.BoxBufferGeometry(50, 50, 50),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
@@ -215,6 +227,7 @@ switchf2Popup.position.set(1000, 20, 200);
 switchf2Popup.rotateZ(Math.PI);
 scene.add(switchf2Popup);
 
+//gun objects
 const gunf = new THREE.Mesh(
     new THREE.BoxBufferGeometry(150, 150, 150),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
@@ -228,9 +241,7 @@ gunfPopup.position.set(-900, -90, 2600);
 gunfPopup.rotateZ(Math.PI);
 scene.add(gunfPopup);
 
-
-
-
+//bedroom light
 var bedLight = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.gltf', function (gltf) {
     bedLight = gltf.scene;
@@ -238,6 +249,8 @@ new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.glt
     bedLight.position.set(2150, 150, 1800);
     scene.add(bedLight);
 });
+
+//emergency light
 var ELight = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/LIghts/Warning Light/W Light.gltf', function (gltf) {
     ELight = gltf.scene;
@@ -247,6 +260,7 @@ new THREE.GLTFLoader().load('Blender Models/LIghts/Warning Light/W Light.gltf', 
     scene.add(ELight);
 });
 
+//hallway light
 var hLight = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.gltf', function (gltf) {
     hLight = gltf.scene;
@@ -255,6 +269,7 @@ new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.glt
     scene.add(hLight);
 });
 
+//front roon light
 var frLight = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.gltf', function (gltf) {
     frLight = gltf.scene;
@@ -263,6 +278,7 @@ new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.glt
     scene.add(frLight);
 });
 
+//back room light
 var brLight = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.gltf', function (gltf) {
     brLight = gltf.scene;
@@ -271,6 +287,7 @@ new THREE.GLTFLoader().load('Blender Models/LIghts/Flourescent Light/F Light.glt
     scene.add(brLight);
 });
 
+//ammo container object
 var Ammo = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Ammo Box/AmmoBox.gltf', function (gltf) {
     Ammo = gltf.scene;
@@ -279,14 +296,16 @@ new THREE.GLTFLoader().load('Blender Models/Ammo Box/AmmoBox.gltf', function (gl
     scene.add(Ammo);
 });
 
-const domEvent2 = new THREEx.DomEvents(cam, renderer.domElement);
+//event for ammo interaction
+const ammoEvent = new THREEx.DomEvents(cam, renderer.domElement);
 
-domEvent2.addEventListener(ammof, 'dblclick', event => {
+ammoEvent.addEventListener(ammof, 'dblclick', event => {
     scene.remove(Ammo);//must remove object
     scene.remove(AmmofPopup);
     Player.incAmmo();
 });
 
+//event for stwiches interactions and adding switches to the scene
 var lswitch = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Switch/Switch.gltf', function (gltf) {
     lswitch = gltf.scene;
@@ -295,9 +314,9 @@ new THREE.GLTFLoader().load('Blender Models/Switch/Switch.gltf', function (gltf)
     scene.add(lswitch);
 });
 
-const domEvent1 = new THREEx.DomEvents(cam, renderer.domElement);
+const switch1Event = new THREEx.DomEvents(cam, renderer.domElement);
 
-domEvent1.addEventListener(switchf, 'dblclick', event => {
+switch1Event.addEventListener(switchf, 'dblclick', event => {
     isPlaying = true;
     playgame();
 });
@@ -310,9 +329,9 @@ new THREE.GLTFLoader().load('Blender Models/Switch/Switch.gltf', function (gltf)
     scene.add(lswitch2);
 });
 
-const domEvent3 = new THREEx.DomEvents(cam, renderer.domElement);
+const switch2Event = new THREEx.DomEvents(cam, renderer.domElement);
 
-domEvent3.addEventListener(switchf2, 'dblclick', event => {
+switch2Event.addEventListener(switchf2, 'dblclick', event => {
     if (shotTagets == true && unLocked == true && Player.checkGun() != false && Player.getAmmo() > 0) {
         window.location.href = "level2.html";
     } else {
@@ -321,6 +340,7 @@ domEvent3.addEventListener(switchf2, 'dblclick', event => {
     }
 });
 
+//adding gun to scene and event for gun interaction
 var pgun = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf', function (gltf) {
     pgun = gltf.scene;
@@ -330,12 +350,13 @@ new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf', function (
     scene.add(pgun);
 });
 
-const domEvent4 = new THREEx.DomEvents(cam, renderer.domElement);
+const gunEvent = new THREEx.DomEvents(cam, renderer.domElement);
 
-domEvent4.addEventListener(gunf, 'dblclick', event => {
+gunEvent.addEventListener(gunf, 'dblclick', event => {
     scene.remove(pgun);
     scene.remove(gunfPopup);
     Player.pickUpGun();
+    //adding gun to players hand after they pick it up
     var pistol = new THREE.Mesh();
     new THREE.GLTFLoader().load('Blender Models/GunModel/Gun Model.gltf', function (gltf) {
         pistol = gltf.scene;
@@ -349,6 +370,7 @@ domEvent4.addEventListener(gunf, 'dblclick', event => {
     });
 });
 
+//adding bedroom table to the scene
 var bTable = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Level 2/table/Table.gltf', function (gltf) {
     bTable = gltf.scene;
@@ -358,6 +380,7 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/table/Table.gltf', function 
     scene.add(bTable);
 });
 
+//adding bedrroom chair to the scene
 var bChair = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Level 2/chair/Chair.gltf', function (gltf) {
     bChair = gltf.scene;
@@ -367,6 +390,7 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/chair/Chair.gltf', function 
     scene.add(bChair);
 });
 
+//adding table to the lab
 var Table = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Level 2/table/Table.gltf', function (gltf) {
     Table = gltf.scene;
@@ -375,6 +399,7 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/table/Table.gltf', function 
     scene.add(Table);
 });
 
+//adding chair to the lab
 var Chair = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Level 2/chair/Chair.gltf', function (gltf) {
     Chair = gltf.scene;
@@ -383,6 +408,7 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/chair/Chair.gltf', function 
     scene.add(Chair);
 });
 
+//adding microscope objects to the lab
 var mScope = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Level 1/Microscope/Microscope.gltf', function (gltf) {
     mScope = gltf.scene;
@@ -407,6 +433,8 @@ new THREE.GLTFLoader().load('Blender Models/Level 1/Microscope/Microscope.gltf',
     mScope2.position.set(-900, -170, 2300);
     scene.add(mScope2);
 });
+
+//adding bed in the bedroom
 var bed = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Bed/Bed.gltf', function (gltf) {
     bed = gltf.scene;
@@ -416,6 +444,7 @@ new THREE.GLTFLoader().load('Blender Models/Bed/Bed.gltf', function (gltf) {
     scene.add(bed);
 });
 
+//adding shelf in bedroom
 var shelf1 = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf', function (gltf) {
     shelf1 = gltf.scene;
@@ -425,6 +454,7 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf', function 
     scene.add(shelf1);
 });
 
+//adding shelf in the lab
 var shelf2 = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf', function (gltf) {
     shelf2 = gltf.scene;
@@ -434,6 +464,7 @@ new THREE.GLTFLoader().load('Blender Models/Level 2/Shelf/Shelf.gltf', function 
     scene.add(shelf2);
 });
 
+//adding target to the frnt room
 target1 = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/target/target.gltf', function (gltf) {
     target1 = gltf.scene;
@@ -442,6 +473,7 @@ new THREE.GLTFLoader().load('Blender Models/target/target.gltf', function (gltf)
     scene.add(target1);
 });
 
+//adding target objects and event for taget interaction
 const targetf = new THREE.Mesh(
     new THREE.BoxBufferGeometry(370, 370, 370),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
@@ -450,27 +482,16 @@ targetf.position.set(-1020, 150, 600);
 targetf.visible = false;
 scene.add(targetf);
 
-const domEvent5 = new THREEx.DomEvents(cam, renderer.domElement);
+const targetEvent = new THREEx.DomEvents(cam, renderer.domElement);
 
-domEvent5.addEventListener(targetf, 'click', event => {
+targetEvent.addEventListener(targetf, 'click', event => {
     if (Player.getAmmo() != 0 && Player.checkGun() == true) {
         scene.remove(target1);
         shotTagets = true;
     }
-
-
 });
 
-HUD();
-Tasks();
-
-geometry1 = new THREE.PlaneGeometry(500, 500);
-let bMat2 = new THREE.MeshStandardMaterial({ color: 0x000000, wireframe: false });
-verticalMirror1 = new Mesh(geometry1, bMat2);
-verticalMirror1.position.set(2100, 25, 2940);
-verticalMirror1.rotation.y = Math.PI;
-scene.add(verticalMirror1);
-
+//creating and adding mirror to the scene
 geomet = new THREE.PlaneGeometry(490, 490);
 verticalMirror = new Reflector(geomet, {
     clipBias: 0.003,
@@ -478,37 +499,24 @@ verticalMirror = new Reflector(geomet, {
     textureHeight: window.innerHeight * window.devicePixelRatio,
     color: 0x889999,
 });
-verticalMirror.position.set(2100, 25, 2900);
+verticalMirror.position.set(2100, 25, 2940);
 verticalMirror.rotation.y = Math.PI;
 scene.add(verticalMirror);
 
+//calling HUD function and task function
+HUD();
+Tasks();
 
 document.body.appendChild(renderer.domElement);
 
-// function onMouseMove( event ) {
-// 	const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-// 				const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-
-// 				_euler.setFromQuaternion( cam.quaternion );
-
-// 				_euler.y -= movementX * 0.02;
-// 				_euler.x -= movementY * 0.02;
-// 				_euler.x = Math.max(Math.PI / 2 - 3.141592653589793, Math.min(Math.PI / 2 - 0, _euler.x ) );
-// 				cam.quaternion.setFromEuler( _euler );
-
-// }
-
+//controls for player movement
 let controls = new THREE.PointerLockControls(cam, renderer.domElement);
 var lastKeyPressed;
 let clock = new THREE.Clock();
 
-// let btn1 = document.querySelector("#button1");
-// btn1.addEventListener('click', () => {
-//     controls.lock();
-// });
-
 function drawScene() {
 
+    //waking up scene
     if (frame < 0.4) {
         light1.intensity = frame;
         light3.intensity = frame * 7.5;
@@ -518,10 +526,13 @@ function drawScene() {
         frame += 0.0015;
     }
 
-    if (isPlaying == true) {
+    
+    if (isPlaying == true) {//if the player is playing the game
+        //hide HUD and TASKS
         RemoveHUD();
         RemoveTasks();
 
+        //generate random lines for game
         ran = Math.floor(Math.random() * 50);
         if (ran == 2) {
 
@@ -532,6 +543,7 @@ function drawScene() {
                 lines.push(line);
             }
         }
+        //moving lines across the scene
         for (i = 0; i < lines.length; i++) {
             lines[i].position.x -= 0.01;
             if (lines[i].position.x < -1.55) {
@@ -540,14 +552,16 @@ function drawScene() {
             }
         }
 
+        //check to to see if the game is finished
         if (success >= 5) {
             collidableMeshList.pop();
             EndGame();
             unLocked = true;
             scene.remove(switchfPopup);
         }
-    } else if (paused == true) {
+    } else if (paused == true) { //if paused dont do anything
     } else {
+        //creating flashing lights using random numbers
         if (len == 0) {
             len = Math.floor(Math.random() * 10);
             ran = Math.floor(Math.random() * 20);
@@ -572,24 +586,31 @@ function drawScene() {
             len = len - 1;
         }
 
+        //check if door has been unlocked
         if (unLocked == true) {
             scene.remove(door);
         }
 
+        //making water move
         water.material.uniforms[ 'time' ].value += 1 / 60.0;
 
+        //checking if the player is close enough 
         checkPopUps();
+
+        //rotating pop ups
         AmmofPopup.rotation.y += 0.02;
         switchfPopup.rotation.y += 0.02;
         switchf2Popup.rotation.y += 0.02;
         gunfPopup.rotation.y += 0.02;
 
+        //help counter
         if (helpCounter == 0) {
             ShowHelp(false,cam);
         } else {
             helpCounter -= 1;
         }
 
+        //updating tasks and hud
         HUD();
         Tasks();
 
@@ -602,6 +623,7 @@ function drawScene() {
     requestAnimationFrame(drawScene);
 }
 
+//function for checking popups
 function checkPopUps() {
     camposition = new THREE.Vector3();
     camposition.setFromMatrixPosition(cam.matrixWorld);
@@ -646,6 +668,7 @@ function checkPopUps() {
     }
 }
 
+//function for finishing the game
 function EndGame() {
     if (lines.length > 0) {
         for (i = 0; i < lines.length; i++) {
@@ -666,6 +689,7 @@ function EndGame() {
     isPlaying = false;
 }
 
+//function to start the game
 function playgame() {
     ambientLight.intensity = 1;
     wall = new THREE.Mesh(
@@ -770,6 +794,7 @@ function playgame() {
 
 drawScene();
 
+//lines for minigame
 function drawLine() {
     const wall4 = new THREE.Mesh(
         new THREE.BoxBufferGeometry(0.02, 0.1, 5),
@@ -781,6 +806,7 @@ function drawLine() {
     return wall4;
 }
 
+// space bar for game interaction
 document.addEventListener('keydown', event => {
     if (event.code === "Space") {
         if (lines.length > 0) {
@@ -794,13 +820,8 @@ document.addEventListener('keydown', event => {
     }
 });
 
-// const finder = new THREE.Mesh(
-//     new THREE.BoxBufferGeometry(200,200,200),
-//     new THREE.MeshLambertMaterial({color: 0xffffff})
-// );
-// finder.position.set(2500,25,1500);
-// scene.add(finder);
 
+//function for removing tasks
 function RemoveTasks() {
     check = document.getElementById("task");
     if (check != null) {
@@ -821,6 +842,7 @@ function RemoveTasks() {
     }
 }
 
+//function for adding tasks to the scene
 function Tasks() {
     check = document.getElementById("task");
     if (check != null) {
@@ -894,7 +916,7 @@ function Tasks() {
 
 
     document.body.appendChild(task);
-    if (Player.checkGun() == false || Player.getAmmo() == 0) {
+    if (Player.checkGun() == 0 || Player.getAmmo() == 0) {
         document.body.appendChild(task1);
     }
     if (unLocked == false) {

@@ -14,7 +14,7 @@ class Player {
     static oxygen = parseInt(localStorage["oxygen"]);
     static ammo = parseInt(localStorage["ammo"]);
     static cards = parseInt(localStorage["cards"]);
-    static gun = localStorage["gun"];
+    static gun = parseInt(localStorage["gun"]);
     // static name = "Guest";
     // static health = 100;
     // static oxygen = 100;
@@ -91,8 +91,8 @@ class Player {
     }
 
     static pickUpGun(){
-        this.gun = true;
-        localStorage["gun"] = true;
+        this.gun = 1;
+        localStorage["gun"] = this.gun;
     }
 
 }

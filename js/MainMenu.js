@@ -1,12 +1,15 @@
-var mesh, mesh2, mesh6, mesh7, mesh8, mesh9, mesh10, mesh11, mesh12, back2, back4, cback;
-
+//crearing global variables
+var startText, creditText, titleText, creditText, credit1Text, credit2Text, credit3Text, credit4Text, credit5Text, exitCredits
+var startButton, creditsButton, creditBackGround, loader;
+ 
+// screating scene, camera and renderer and setting the renderers size
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-
+// creating the background
 const geometry = new THREE.SphereGeometry(1, 32, 32);
 const material = new THREE.MeshPhongMaterial();
 const mars = new THREE.Mesh(geometry, material);
@@ -15,10 +18,10 @@ const starsGeometry = new THREE.SphereGeometry(50, 32, 32);
 const starsMaterial = new THREE.MeshBasicMaterial();
 const starsMesh = new THREE.Mesh(starsGeometry, starsMaterial);
 
+// creating a directional light
 const light = new THREE.DirectionalLight(0xcccccc, 1);
 
-
-
+//setting the cameras' and lights' position
 cam.position.z = 3;
 light.position.set(5, 3, 5);
 
@@ -30,17 +33,21 @@ function getInputValue(){
     alert("Name saved");
 }
 
+//adding the texture for mars and bump map
 material.map = new THREE.TextureLoader().load('textures/diffuse.jpg');
 material.bumpMap = new THREE.TextureLoader().load('textures/bump.jpg');     
 material.bumpScale = 0.015;
 
+// adding the textures onto the sphere to create a skybox
 starsMaterial.map = new THREE.TextureLoader().load('textures/stars.jpg');
 starsMaterial.side = THREE.BackSide;
 
+// adding mars, stars and light to to scene
 scene.add(mars);
 scene.add(light);
 scene.add(starsMesh);
 
+//adding audio to the level
 const listener = new THREE.AudioListener();
 cam.add(listener);
 const sound = new THREE.Audio(listener);
@@ -50,14 +57,16 @@ audioLoader.load('Sounds/Atmosphere With Jump Scare.wav', function(buffer){
     sound.setLoop(true);
     sound.setVolume(0.5);
     sound.play();
-})
+});
 
-AddPause();
+
+ShowOptions();
 
 const animate = () => {
     requestAnimationFrame(animate);
     renderer.render(scene, cam);
 
+    // rotating the stars to create a dynamic skybox and rotating mars  and light for realism
     starsMesh.rotation.y += 0.0001;
     starsMesh.rotation.x += 0.0003;
     mars.rotation.y -= 0.001;
@@ -67,54 +76,62 @@ const animate = () => {
 
 animate();
 
-const domEvent1 = new THREEx.DomEvents(cam,  renderer.domElement);
+//creating an event for when the player clicks the start button
+const startGame = new THREEx.DomEvents(cam,  renderer.domElement);
 
-domEvent1.addEventListener(back2, 'click', event =>{
+startGame.addEventListener(startButton, 'click', event =>{
     window.location.href = "level1.html";
 });
 
-const domEvent2 = new THREEx.DomEvents(cam,  renderer.domElement);
+//creating an event for when the player clicks the credits button
+const viewCredits = new THREEx.DomEvents(cam,  renderer.domElement);
 
-domEvent2.addEventListener(back4, 'click', event =>{
+viewCredits.addEventListener(creditsButton, 'click', event =>{
     RemovePause();
     document.getElementById("overlay").style.visibility = "hidden";
-    AddCredit();
+        AddCredit();
+        
 });
 
+//creating an event for when the player clicks the down key arrow
 document.addEventListener('keydown', event => {
     if (event.code === "ArrowDown") {
         RemoveCredit();
-        AddPause();
+        ShowOptions();
         document.getElementById("overlay").style.visibility = "visible";
     }
 });
 
-function AddPause(){
+//creating function to show the different options on main menu
+function ShowOptions(){
 
-    back2 = new THREE.Mesh(
+    //creating and adding start button to scene
+    startButton = new THREE.Mesh(
         new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
         new THREE.MeshLambertMaterial({ color: 0x696969 })
     );
-    back2.position.z = -1;
-    back2.position.y = 0.19;
-    cam.add(back2);
+    startButton.position.z = -1;
+    startButton.position.y = 0.19;
+    cam.add(startButton);
     scene.add(cam);
 
-    back4 = new THREE.Mesh(
+    //creating and adding credits button to scene
+    creditsButton = new THREE.Mesh(
         new THREE.BoxBufferGeometry(0.4, 0.1, 0.001),
         new THREE.MeshLambertMaterial({ color: 0x696969 })
     );
-    back4.position.z = -1;
-    back4.position.y = -0.16;
-    cam.add(back4);
+    creditsButton.position.z = -1;
+    creditsButton.position.y = -0.16;
+    cam.add(creditsButton);
     scene.add(cam);
 
 
-    var loader = new THREE.FontLoader();
+    //creating and setting words for each button
+    loader = new THREE.FontLoader();
 
     loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
 
-        var restartText = new THREE.TextGeometry("Start", {
+        let startGeo = new THREE.TextGeometry("Start", {
 
             font: font,
 
@@ -124,7 +141,7 @@ function AddPause(){
 
         });
 
-        var creditText = new THREE.TextGeometry("Credits", {
+        let creditGeo = new THREE.TextGeometry("Credits", {
 
             font: font,
 
@@ -134,7 +151,7 @@ function AddPause(){
 
         });
 
-        var TitleText = new THREE.TextGeometry("Escape Mars", {
+        let titleGeo = new THREE.TextGeometry("Escape Mars", {
 
             font: font,
 
@@ -151,63 +168,71 @@ function AddPause(){
         textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
         const textMaterial1 = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 
-        mesh = new THREE.Mesh(restartText, textMaterial);
-        mesh.position.z = -1;
-        mesh.position.y = 0.17;
-        mesh.position.x = -0.08;
+        startText = new THREE.Mesh(startGeo, textMaterial);
+        startText.position.z = -1;
+        startText.position.y = 0.17;
+        startText.position.x = -0.08;
 
-        mesh2 = new THREE.Mesh(creditText, textMaterial);
-        mesh2.position.z = -1;
-        mesh2.position.y = -0.18;
-        mesh2.position.x = -0.1;
+        creditText = new THREE.Mesh(creditGeo, textMaterial);
+        creditText.position.z = -1;
+        creditText.position.y = -0.18;
+        creditText.position.x = -0.1;
 
-        mesh3 = new THREE.Mesh(TitleText, textMaterial1);
-        mesh3.position.z = -1;
-        mesh3.position.y = 0.5;
-        mesh3.position.x = -0.4;
+        titleText = new THREE.Mesh(titleGeo, textMaterial1);
+        titleText.position.z = -1;
+        titleText.position.y = 0.5;
+        titleText.position.x = -0.4;
 
-        cam.add(mesh);
-        cam.add(mesh2);
-        cam.add(mesh3);
+        //adding the wors to the scene
+        cam.add(startText);
+        cam.add(creditText);
+        cam.add(titleText);
         scene.add(cam);
 
     });
 }
 
+//function to remove credits from the scene
 function RemoveCredit(){
-    cam.remove(mesh6);
-        cam.remove(mesh7);
-        cam.remove(mesh8);
-        cam.remove(mesh9);
-        cam.remove(mesh10);
-        cam.remove(mesh11);
-        cam.remove(mesh12);
-        cam.remove(cback);
+    cam.remove(creditText);
+        cam.remove(credit1Text);
+        cam.remove(credit2Text);
+        cam.remove(credit3Text);
+        cam.remove(credit4Text);
+        cam.remove(exitCredits);
+        cam.remove(credit5Text);
+        cam.remove(creditBackGround);
 
         scene.add(cam);
 }
 
+//function to remove options from the scene
 function RemovePause(){
-        cam.remove(mesh);
-        cam.remove(mesh2);
-        cam.remove(back2);
-        cam.remove(back4);
+        cam.remove(startText);
+        cam.remove(creditText);
+        cam.remove(titleText);
+        cam.remove(startButton);
+        cam.remove(creditsButton);
 
 
         scene.add(cam);
 }
 
+//function to add credits to the scene
 function AddCredit(){
-    cback = new THREE.Mesh(
+
+    //adding background for credits
+    creditBackGround = new THREE.Mesh(
         new THREE.BoxBufferGeometry(1, 0.7, 0.001),
         new THREE.MeshLambertMaterial({ color: 0xC0C0C0 })
     );
-    cback.position.z = -1;
-    cback.position.x = -0.05;
-    cam.add(cback);
+    creditBackGround.position.z = -1;
+    creditBackGround.position.x = -0.05;
+    cam.add(creditBackGround);
     scene.add(cam);
 
-    let loader = new THREE.FontLoader();
+    //creating and settting words for credits
+    loader = new THREE.FontLoader();
 
     loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
 
@@ -283,48 +308,49 @@ function AddCredit(){
 
         textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
 
-        mesh6 = new THREE.Mesh(credit1, textMaterial);
-        mesh6.position.z = -1;
-        mesh6.position.y = 0.17;
-        mesh6.position.x = -0.5;
+        creditText = new THREE.Mesh(credit1, textMaterial);
+        creditText.position.z = -1;
+        creditText.position.y = 0.17;
+        creditText.position.x = -0.5;
 
-        mesh7 = new THREE.Mesh(credit2, textMaterial);
-        mesh7.position.z = -1;
-        mesh7.position.y = -0.01;
-        mesh7.position.x = -0.5;
+        credit1Text = new THREE.Mesh(credit2, textMaterial);
+        credit1Text.position.z = -1;
+        credit1Text.position.y = -0.01;
+        credit1Text.position.x = -0.5;
 
-        mesh8 = new THREE.Mesh(credit, textMaterial);
-        mesh8.position.z = -1;
-        mesh8.position.y = 0.25;
-        mesh8.position.x = -0.15;
+        credit2Text = new THREE.Mesh(credit, textMaterial);
+        credit2Text.position.z = -1;
+        credit2Text.position.y = 0.25;
+        credit2Text.position.x = -0.15;
 
-        mesh9 = new THREE.Mesh(credit3, textMaterial);
-        mesh9.position.z = -1;
-        mesh9.position.y = 0.08;
-        mesh9.position.x = -0.5;
+        credit3Text = new THREE.Mesh(credit3, textMaterial);
+        credit3Text.position.z = -1;
+        credit3Text.position.y = 0.08;
+        credit3Text.position.x = -0.5;
 
-        mesh10 = new THREE.Mesh(credit4, textMaterial);
-        mesh10.position.z = -1;
-        mesh10.position.y = -0.105;
-        mesh10.position.x = -0.5;
+        credit4Text = new THREE.Mesh(credit4, textMaterial);
+        credit4Text.position.z = -1;
+        credit4Text.position.y = -0.105;
+        credit4Text.position.x = -0.5;
 
-        mesh12 = new THREE.Mesh(credit5, textMaterial);
-        mesh12.position.z = -1;
-        mesh12.position.y = -0.19;
-        mesh12.position.x = -0.5;
+        credit5Text = new THREE.Mesh(credit5, textMaterial);
+        credit5Text.position.z = -1;
+        credit5Text.position.y = -0.19;
+        credit5Text.position.x = -0.5;
 
-        mesh11 = new THREE.Mesh(dArrow, textMaterial);
-        mesh11.position.z = -1;
-        mesh11.position.y = 0.3;
-        mesh11.position.x = 0.2;
+        exitCredits = new THREE.Mesh(dArrow, textMaterial);
+        exitCredits.position.z = -1;
+        exitCredits.position.y = 0.3;
+        exitCredits.position.x = 0.2;
 
-        cam.add(mesh6);
-        cam.add(mesh7);
-        cam.add(mesh8);
-        cam.add(mesh9);
-        cam.add(mesh10);
-        cam.add(mesh11);
-        cam.add(mesh12);
+        //adding credits words to the scene
+        cam.add(creditText);
+        cam.add(credit1Text);
+        cam.add(credit2Text);
+        cam.add(credit3Text);
+        cam.add(credit4Text);
+        cam.add(exitCredits);
+        cam.add(credit5Text);
         scene.add(cam);
 
     });
