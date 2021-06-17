@@ -44,6 +44,7 @@ localStorage["oxygen"] = 100;
 localStorage["ammo"] = 0;
 localStorage["cards"]  = 0;
 localStorage["gun"] = 0;
+localStorage["playtime"] = 0;
 
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
@@ -338,6 +339,7 @@ var switch2Event = new THREEx.DomEvents(cam, renderer.domElement);
 
 switch2Event.addEventListener(switchf2, 'dblclick', event => {
     if (shotTagets == true && unLocked == true && Player.checkGun() != false && Player.getAmmo() > 0) {
+        localStorage["playtime"] = parseInt(localStorage["playtime"]) + getDelta();
         window.location.href = "level2.html";
     } else {
         ShowHelp(true,cam);

@@ -15,12 +15,6 @@ class Player {
     static ammo = parseInt(localStorage["ammo"]);
     static cards = parseInt(localStorage["cards"]);
     static gun = parseInt(localStorage["gun"]);
-    // static name = "Guest";
-    // static health = 100;
-    // static oxygen = 100;
-    // static ammo = 0;
-    // static cards = 0;
-    // static gun = false;
 
     static setName(Name) {
         this.name = Name;
