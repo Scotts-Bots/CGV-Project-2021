@@ -60,6 +60,8 @@ function Room() {
     var b5 = Wall(1100, 25, 300);
     var b6 = Wall(225, 25, 300);
     var b7 = Wall(240, 25, 300);
+    b7.receiveShadow = true;
+    b7.castShadow = true;
     var b78 = Wall(100, 25, 100);
     var b8 = Wall(30, 25, 300);
     //var b9 = Wall(30, 25, 300);
