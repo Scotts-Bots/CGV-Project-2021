@@ -43,6 +43,8 @@ localStorage["ammo"] = 0;
 localStorage["cards"]  = 0;
 localStorage["gun"] = false;
 
+
+
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
 var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
@@ -450,7 +452,7 @@ scene.add(targetf);
 
 const domEvent5 = new THREEx.DomEvents(cam, renderer.domElement);
 
-domEvent5.addEventListener(targetf, 'dblclick', event => {
+domEvent5.addEventListener(targetf, 'click', event => {
     if (Player.getAmmo() != 0 && Player.checkGun() == true) {
         scene.remove(target1);
         shotTagets = true;

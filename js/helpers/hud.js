@@ -172,7 +172,8 @@ function HUD() {
     document.body.appendChild(torch);
     document.body.appendChild(Q);
     document.body.appendChild(helper);
-    if (Player.checkGun() != false && Player.getAmmo() > 0) {
+    console.log(Player.checkGun());
+    if (Player.checkGun()) {
         document.body.appendChild(gun);
     }
     if (Player.getCards() > 0) {
