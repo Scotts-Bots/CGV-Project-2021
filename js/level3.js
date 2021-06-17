@@ -171,6 +171,13 @@ function loadAssets() {
         }
     });
 
+    bullet1 = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.05, 0.05, 10),
+        new THREE.MeshBasicMaterial({color: 0x0000ff})
+    );
+    bullet1.scale.set(1, 2, 1);
+    bullet1.rotation.set(0, Math.PI/2, Math.PI/2);
+    bullet1.position.set(0, 0, 10);
     var pistol = new THREE.Mesh();
     gltfLoader.load('Blender Models/GunModel/Gun Model.gltf', function (gltf) {
         pistol = gltf.scene;
@@ -179,8 +186,15 @@ function loadAssets() {
         pistol.position.z = -4;
         pistol.position.x = 2;
         pistol.position.y = -1;
+        pistol.add(bullet1);
         cam.add(pistol)
         scene.add(cam);
+    });
+
+    const showLaser = new THREEx.DomEvents(cam, renderer.domElement);
+    
+    showLaser.addEventListener(bullet1, 'click', event => {
+        bullet.visible() = true;
     });
 
     enemy1 = new THREE.Mesh();
@@ -401,6 +415,7 @@ function drawScene() {
     // turnTurret(5000, enemy4);
     getPacks(500, otank1);
     getPacks(500, otank2);
+
     requestAnimationFrame(drawScene);
     
 
