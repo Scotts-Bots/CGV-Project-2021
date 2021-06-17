@@ -17,6 +17,7 @@ var wall1;
 var wall2;
 var wall3;
 var helpCounter = 0;
+var check;
 
 //creating a scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -40,7 +41,7 @@ audioLoader.load('Sounds/Atmosphere inside.wav', function(buffer){
 //assigning static variables
 localStorage["health"] = 100;
 localStorage["oxygen"] = 100;
-localStorage["ammo"] = 10;
+localStorage["ammo"] = 0;
 localStorage["cards"]  = 0;
 localStorage["gun"] = 0;
 
@@ -64,28 +65,28 @@ scene.add(ambientLight);
 pauseCam = cam;
 
 //back right room
-const brrlight = new THREE.PointLight(0xffffff, intensity, 2200, 2);
+var brrlight = new THREE.PointLight(0xffffff, intensity, 2200, 2);
 brrlight.position.set(-100, 375, 2100);
 scene.add(brrlight);
 
 
 //front right room
-const frrlight = new THREE.PointLight(0xffffff, intensity, 2500, 2);
+var frrlight = new THREE.PointLight(0xffffff, intensity, 2500, 2);
 frrlight.position.set(-100, 375, 900);
 scene.add(frrlight);
 
 //passage light
-const plight = new THREE.PointLight(0xffffff, intensity, 800, 2);
+var plight = new THREE.PointLight(0xffffff, intensity, 800, 2);
 plight.position.set(1300, 375, 1500);
 scene.add(plight);
 
 //emergency light
-const elight = new THREE.PointLight(0xff0000, 3, 900, 2);
+var elight = new THREE.PointLight(0xff0000, 3, 900, 2);
 elight.position.set(2000, 200, 1200);
 scene.add(elight);
 
 //flourescent light
-const flight = new THREE.PointLight(0xffffff, intensity, 6000, 2);
+var flight = new THREE.PointLight(0xffffff, intensity, 6000, 2);
 flight.position.set(2500, 375, 1500);
 flight.castShadow = true;
 scene.add(flight);
@@ -100,13 +101,13 @@ function Attack(){
 }
 
 //creating and adding room to the scene
-const room = Room();
+var room = Room();
 room.scale.set(4, 4, 2.5);
 room.rotateX(3 * Math.PI / 2);
 scene.add(room);
 
 //creating and adding doors to the scene
-const door = new THREE.Mesh(
+var door = new THREE.Mesh(
     new THREE.BoxBufferGeometry(30, 520, 400),
     new THREE.MeshLambertMaterial({ color: 0x808080 })
 );
@@ -115,7 +116,7 @@ if (unLocked == false) {
     scene.add(door);
 }
 
-const door1 = new THREE.Mesh(
+var door1 = new THREE.Mesh(
     new THREE.BoxBufferGeometry(30, 520, 400),
     new THREE.MeshLambertMaterial({ color: 0x808080 })
 );
@@ -171,7 +172,7 @@ new THREE.GLTFLoader().load('Blender Models/cup/cup.gltf', function (gltf) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //adding skybox to the scene
-const box = skyBox();
+var box = skyBox();
 box.scale.set(0.5, 0.5, 0.5);
 box.translateY(14600);
 scene.add(box);
@@ -187,7 +188,7 @@ const geometry = new THREE.ConeGeometry(20, 20, 4);
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff99 });
 
 //Ammo objects
-const ammof = new THREE.Mesh(
+var ammof = new THREE.Mesh(
     new THREE.BoxBufferGeometry(100, 100, 100),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
@@ -195,13 +196,13 @@ ammof.position.set(2100, -50, 200);
 ammof.visible = false;
 scene.add(ammof);
 
-const AmmofPopup = new THREE.Mesh(geometry, material);
+var AmmofPopup = new THREE.Mesh(geometry, material);
 AmmofPopup.position.set(2100, -20, 200);
 AmmofPopup.rotateZ(Math.PI);
 scene.add(AmmofPopup);
 
 //switch objects
-const switchf = new THREE.Mesh(
+var switchf = new THREE.Mesh(
     new THREE.BoxBufferGeometry(50, 50, 50),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
@@ -209,12 +210,12 @@ switchf.position.set(1000, -10, 1550);
 switchf.visible = false;
 scene.add(switchf);
 
-const switchfPopup = new THREE.Mesh(geometry, material);
+var switchfPopup = new THREE.Mesh(geometry, material);
 switchfPopup.position.set(1000, 20, 1550);
 switchfPopup.rotateZ(Math.PI);
 scene.add(switchfPopup);
 
-const switchf2 = new THREE.Mesh(
+var switchf2 = new THREE.Mesh(
     new THREE.BoxBufferGeometry(50, 50, 50),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
@@ -222,13 +223,13 @@ switchf2.position.set(1000, -10, 200);
 switchf2.visible = false;
 scene.add(switchf2);
 
-const switchf2Popup = new THREE.Mesh(geometry, material);
+var switchf2Popup = new THREE.Mesh(geometry, material);
 switchf2Popup.position.set(1000, 20, 200);
 switchf2Popup.rotateZ(Math.PI);
 scene.add(switchf2Popup);
 
 //gun objects
-const gunf = new THREE.Mesh(
+var gunf = new THREE.Mesh(
     new THREE.BoxBufferGeometry(150, 150, 150),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
@@ -236,7 +237,7 @@ gunf.position.set(-900, -120, 2600);
 gunf.visible = false;
 scene.add(gunf);
 
-const gunfPopup = new THREE.Mesh(geometry, material);
+var gunfPopup = new THREE.Mesh(geometry, material);
 gunfPopup.position.set(-900, -90, 2600);
 gunfPopup.rotateZ(Math.PI);
 scene.add(gunfPopup);
@@ -314,7 +315,7 @@ new THREE.GLTFLoader().load('Blender Models/Switch/Switch.gltf', function (gltf)
     scene.add(lswitch);
 });
 
-const switch1Event = new THREEx.DomEvents(cam, renderer.domElement);
+var switch1Event = new THREEx.DomEvents(cam, renderer.domElement);
 
 switch1Event.addEventListener(switchf, 'dblclick', event => {
     isPlaying = true;
@@ -329,7 +330,7 @@ new THREE.GLTFLoader().load('Blender Models/Switch/Switch.gltf', function (gltf)
     scene.add(lswitch2);
 });
 
-const switch2Event = new THREEx.DomEvents(cam, renderer.domElement);
+var switch2Event = new THREEx.DomEvents(cam, renderer.domElement);
 
 switch2Event.addEventListener(switchf2, 'dblclick', event => {
     if (shotTagets == true && unLocked == true && Player.checkGun() != false && Player.getAmmo() > 0) {
@@ -474,7 +475,7 @@ new THREE.GLTFLoader().load('Blender Models/target/target.gltf', function (gltf)
 });
 
 //adding target objects and event for taget interaction
-const targetf = new THREE.Mesh(
+var targetf = new THREE.Mesh(
     new THREE.BoxBufferGeometry(370, 370, 370),
     new THREE.MeshLambertMaterial({ color: 0xffffff })
 );
@@ -482,7 +483,7 @@ targetf.position.set(-1020, 150, 600);
 targetf.visible = false;
 scene.add(targetf);
 
-const targetEvent = new THREEx.DomEvents(cam, renderer.domElement);
+var targetEvent = new THREEx.DomEvents(cam, renderer.domElement);
 
 targetEvent.addEventListener(targetf, 'click', event => {
     if (Player.getAmmo() != 0 && Player.checkGun() == true) {
@@ -492,7 +493,7 @@ targetEvent.addEventListener(targetf, 'click', event => {
 });
 
 //creating and adding mirror to the scene
-geomet = new THREE.PlaneGeometry(490, 490);
+const geomet = new THREE.PlaneGeometry(490, 490);
 verticalMirror = new Reflector(geomet, {
     clipBias: 0.003,
     textureWidth: window.innerWidth * window.devicePixelRatio,
@@ -518,11 +519,11 @@ function drawScene() {
 
     //waking up scene
     if (frame < 0.4) {
-        light1.intensity = frame;
-        light3.intensity = frame * 7.5;
-        light5.intensity = frame;
-        light7.intensity = frame;
-        light9.intensity = frame;
+        flight.intensity = frame;
+        elight.intensity = frame * 7.5;
+        plight.intensity = frame;
+        frrlight.intensity = frame;
+        brrlight.intensity = frame;
         frame += 0.0015;
     }
 
@@ -533,7 +534,7 @@ function drawScene() {
         RemoveTasks();
 
         //generate random lines for game
-        ran = Math.floor(Math.random() * 50);
+        let ran = Math.floor(Math.random() * 50);
         if (ran == 2) {
 
             if (lines.length < 4) {
@@ -567,18 +568,18 @@ function drawScene() {
             ran = Math.floor(Math.random() * 20);
             if (ran == 2) {
                 intensity = 0.2;
-                light1.intensity = intensity;
-                light5.intensity = intensity;
-                light7.intensity = intensity;
-                light9.intensity = intensity;
+                flight.intensity = intensity;
+                plight.intensity = intensity;
+                frrlight.intensity = intensity;
+                brrlight.intensity = intensity;
             } else {
                 if (frame >= 0.4) {
                     intensity = 0.4;
-                    light1.intensity = intensity;
-                    light3.intensity = 3;
-                    light5.intensity = intensity;
-                    light7.intensity = intensity;
-                    light9.intensity = intensity;
+                    flight.intensity = intensity;
+                    elight.intensity = 3;
+                    plight.intensity = intensity;
+                    frrlight.intensity = intensity;
+                    brrlight.intensity = intensity;
                 }
 
             }
@@ -728,11 +729,11 @@ function playgame() {
     cam.add(wall3);
     scene.add(cam);
 
-    var loader = new THREE.FontLoader();
+    loader = new THREE.FontLoader();
 
     loader.load('node_modules/three/examples/fonts/helvetiker_regular.typeface.json', function (font) {
 
-        var rulesGeo = new THREE.TextGeometry("Rules:", {
+        let rulesGeo = new THREE.TextGeometry("Rules:", {
 
             font: font,
 
@@ -742,7 +743,7 @@ function playgame() {
 
         });
 
-        var rulesTxtGeo = new THREE.TextGeometry("1. Press space bar when lines are inside the red area to score a point", {
+        let rulesTxtGeo = new THREE.TextGeometry("1. Press space bar when lines are inside the red area to score a point", {
 
             font: font,
 
@@ -753,7 +754,7 @@ function playgame() {
 
         });
 
-        var rulesTxtGeo2 = new THREE.TextGeometry("2. Score 5 points to complete the game", {
+        let rulesTxtGeo2 = new THREE.TextGeometry("2. Score 5 points to complete the game", {
 
             font: font,
 
@@ -796,7 +797,7 @@ drawScene();
 
 //lines for minigame
 function drawLine() {
-    const wall4 = new THREE.Mesh(
+    let wall4 = new THREE.Mesh(
         new THREE.BoxBufferGeometry(0.02, 0.1, 5),
         new THREE.MeshLambertMaterial({ color: 0xffffff })
     );
@@ -862,7 +863,7 @@ function Tasks() {
         check.parentNode.removeChild(check);
     }
 
-    var task = document.createElement('div');
+    let task = document.createElement('div');
     task.id = "task";
     task.style.position = 'absolute';
     task.style.color = "white";
@@ -875,7 +876,7 @@ function Tasks() {
     task.style.top = window.innerHeight * 0.2 + 'px';
     task.style.left = window.innerWidth * 0.02 + 'px';
 
-    var task1 = document.createElement('div');
+    let task1 = document.createElement('div');
     task1.id = "task1";
     task1.style.position = 'absolute';
     task1.style.color = "white";
@@ -888,7 +889,7 @@ function Tasks() {
     task1.style.top = window.innerHeight * 0.23 + 'px';
     task1.style.left = window.innerWidth * 0.02 + 'px';
 
-    var task2 = document.createElement('div');
+    let task2 = document.createElement('div');
     task2.id = "task2";
     task2.style.position = 'absolute';
     task2.style.color = "white";
@@ -901,7 +902,7 @@ function Tasks() {
     task2.style.top = window.innerHeight * 0.26 + 'px';
     task2.style.left = window.innerWidth * 0.02 + 'px';
 
-    var task3 = document.createElement('div');
+    let task3 = document.createElement('div');
     task3.id = "task3";
     task3.style.position = 'absolute';
     task3.style.color = "white";
