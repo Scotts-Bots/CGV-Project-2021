@@ -528,16 +528,18 @@ scene.add(verticalMirror);
 astro = new THREE.Mesh();
 new THREE.GLTFLoader().load('Blender Models/Astronaut/Astronauta1.gltf', function (gltf) {
     astro = gltf.scene;
-    camposition = new THREE.Vector3();
-    camposition.setFromMatrixPosition(cam.matrixWorld);
-    x = camposition.x;
-    z = camposition.z;
+    // camposition = new THREE.Vector3();
+    // camposition.setFromMatrixPosition(cam.matrixWorld);
+    // x = camposition.x;
+    // z = camposition.z;
 
-    astro.position.z = z-50;
-    astro.position.x = x;
-    astro.position.y = -350;
-    astro.scale.set(200, 230, 200);
-    scene.add(astro);
+    astro.position.z = 0;
+    astro.rotation.y = Math.PI;
+    astro.rotation.x = Math.PI/8;
+    astro.position.y = -420;
+    astro.scale.set(200, 230, 250);
+    cam.add(astro);
+    scene.add(cam);
 });
 
 
@@ -651,13 +653,13 @@ function drawScene() {
             helpCounter -= 1;
         }
 
-        camposition = new THREE.Vector3();
-    camposition.setFromMatrixPosition(cam.matrixWorld);
-    x = camposition.x;
-    z = camposition.z;
+    //     camposition = new THREE.Vector3();
+    // camposition.setFromMatrixPosition(cam.matrixWorld);
+    // x = camposition.x;
+    // z = camposition.z;
 
-    astro.position.z = z-50;
-    astro.position.x = x;
+    // astro.position.z = z-50;
+    // astro.position.x = x;
 
         //updating tasks and hud
         HUD();
