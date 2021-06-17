@@ -64,7 +64,7 @@ box.scale.set(0.5,0.5,0.5);
 scene.add(box);
 
 //LIGHTING
-var ambientLight;
+var ambientLight, pointLight4;
 sceneLights(); 
 
 //event for shooting
@@ -85,6 +85,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
+var frame = 0; //to keep track of frame number
 
 //loading blender models
 var gltfLoader = new THREE.GLTFLoader();
@@ -134,6 +135,9 @@ function setCamera(isPlay) {
 }
 
 function drawScene(){
+    //update frame number
+    frame += 1;
+
     renderer.render(scene,camera);
     //This function is called to check if there is a collision at each frame and how to react appropriately.
     checkCollision(camera,updateKeyboard,MovingCube);
@@ -148,6 +152,9 @@ function drawScene(){
     keycardPopup.rotation.y +=0.02;
     kswipePadPopup.rotation.y +=0.02;
     checkPopUps();
+
+    //animations
+    pointLight4.intensity = Math.sin(frame/15)*0.5 + 0.2
 
     //Functions for keyboard controls, and displaying the HUD and Tasks in each frame.
     processKeyboard();
@@ -263,13 +270,13 @@ function sceneLights() {
     //light 1
     var pointLight1 = new THREE.PointLight( 0xffffff, 1, 2000, 3);
     pointLight1.position.set(-100,700,-200);
-    //pointLight1.castShadow = true; // default false
+    pointLight1.castShadow = true; // default false
     scene.add(pointLight1);
 
     //light 2
     var pointLight2 = new THREE.PointLight( 0xffffff, 1, 3000, 2);
     pointLight2.position.set(-100,700,-1800);
-    //pointLight2.castShadow = true; // default false
+    pointLight2.castShadow = true; // default false
     scene.add(pointLight2);
 
     // const finder1 = new THREE.Mesh(
@@ -281,16 +288,16 @@ function sceneLights() {
     // scene.add(finder1);
 
     //red light 1
-    var pointLight3 = new THREE.PointLight( 0xff0000, 1, 4000, 3);
+    var pointLight3 = new THREE.PointLight( 0xff0000, 1, 6000, 3);
     pointLight3.position.set(-2050,100,-1050);
-    //pointLight3.castShadow = true; // default false
+    pointLight3.castShadow = true; // default false
     scene.add(pointLight3);
 
     //red light 2
-    var pointLight3 = new THREE.PointLight( 0xff0000, 1, 4000, 3);
-    pointLight3.position.set(-2050,100,-1050);
-    //pointLight3.castShadow = true; // default false
-    scene.add(pointLight3);
+    pointLight4 = new THREE.PointLight( 0xff0000, 0.5, 3000, 2);
+    pointLight4.position.set(800,500,600);
+    pointLight4.castShadow = true; // default false
+    scene.add(pointLight4);
 }
 
 /* These are functions used to load multiple of the same types of blender models.
@@ -312,13 +319,13 @@ function CeilingLight(px,py,pz,ry) {
 }
 
 //red emergency light
-function RedLight(px,py,pz,ry) {
+function RedLight(px,py,pz,rx) {
     var warningLight = new THREE.Mesh();
     gltfLoader.load('Blender Models/LIghts/Warning Light/W Light.gltf' , function (gltf)  {
         warningLight = gltf.scene;
         warningLight.scale.set(50,-50,50);
         warningLight.position.set(px,py,pz);
-        warningLight.rotateY(ry);
+        warningLight.rotateX(rx);
         scene.add(warningLight);
     });
     return warningLight;
@@ -333,6 +340,7 @@ function Shelf(sx,sy,sz,px,py,pz) {
         shelf.position.set(px,py,pz);
         scene.add(shelf);
     });
+    shelf.receiveShadow = true;
     return shelf;
 }
 
@@ -431,6 +439,7 @@ function loadAssets(){
 
     //red light in the corner of side room
     var warningLight1 = RedLight(-2180,300,-1080,0);
+    var warningLight2 = RedLight(800,700,525,-Math.PI/2);
 
     //ceiling lights
     var ceilingLight1 = CeilingLight(-100,850,-1800,0);

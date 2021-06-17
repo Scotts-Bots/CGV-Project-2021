@@ -77,13 +77,15 @@ const domEvent2 = new THREEx.DomEvents(cam,  renderer.domElement);
 
 domEvent2.addEventListener(back4, 'click', event =>{
     RemovePause();
-        AddCredit();
+    document.getElementById("overlay").style.visibility = "hidden";
+    AddCredit();
 });
 
 document.addEventListener('keydown', event => {
     if (event.code === "ArrowDown") {
         RemoveCredit();
         AddPause();
+        document.getElementById("overlay").style.visibility = "visible";
     }
 });
 
