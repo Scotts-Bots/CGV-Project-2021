@@ -62,7 +62,7 @@ function Room() {
     var b7 = Wall(240, 25, 300);
     var b78 = Wall(100, 25, 100);
     var b8 = Wall(30, 25, 300);
-    var b9 = Wall(30, 25, 300);
+    //var b9 = Wall(30, 25, 300);
     var b910 = Wall(100, 25, 100);
     var b10 = Wall(240, 25, 300);
     var b11 = Wall(240, 25, 300);
@@ -89,6 +89,7 @@ function Room() {
     fl.translateX(-375);
     fl.translateY(-280);
     b4.translateY(-375);
+    b4.translateX(-20);
     b5.translateY(-750);
     b5.translateX(290);
     b6.rotateZ(Math.PI / 2);
@@ -102,18 +103,21 @@ function Room() {
     b7.translateX(-130);
     b78.rotateZ(Math.PI / 2);
     b78.translateY(-237);
-    b78.translateX(-300);
+    b78.translateX(-297.5);
     b78.translateZ(100);
+    b78.scale.set(0.95,1,1);
     b8.rotateZ(Math.PI / 2);
     b8.translateY(-237);
-    b8.translateX(-360);
-    b9.rotateZ(Math.PI / 2);
-    b9.translateY(-237);
-    b9.translateX(-400);
+    b8.translateX(-380);
+    b8.scale.set(2.4,1,1);
+    // b9.rotateZ(Math.PI / 2);
+    // b9.translateY(-237);
+    // b9.translateX(-400);
     b910.rotateZ(Math.PI / 2);
     b910.translateY(-237);
-    b910.translateX(-460);
+    b910.translateX(-462.5);
     b910.translateZ(100);
+    b910.scale.set(0.95,1,1);
     b10.rotateZ(Math.PI / 2);
     b10.translateY(-237);
     b10.translateX(-630);
@@ -122,29 +126,33 @@ function Room() {
     b11.translateX(-130);
     b1112.rotateZ(Math.PI / 2);
     b1112.translateY(-430);
-    b1112.translateX(-300);
+    b1112.translateX(-297.5);
     b1112.translateZ(100);
+    b1112.scale.set(0.95,1,1);
     b_12.rotateZ(Math.PI / 2);
     b_12.translateY(-430);
     b_12.translateX(-550);
     b613.rotateZ(Math.PI / 2);
     b613.translateY(-825);
-    b613.translateX(-400);
+    b613.translateX(-375);
     b613.translateZ(115);
+    b613.scale.set(0.815,1,1);
     b14.rotateZ(Math.PI / 2);
     b14.translateY(-825);
-    b14.translateX(-400);
+    b14.translateX(-375);
     b14.translateZ(-115);
+    b14.scale.set(0.815,1,1);
     window.rotateZ(Math.PI / 2);
     window.translateY(-825);
-    window.translateX(-400);
+    window.translateX(-375);
+    window.scale.set(0.815,1,1);
     roof.translateZ(155);
     roof.rotateZ(Math.PI / 2);
     roof.translateX(-375);
     roof.translateY(-280);
 
     //add all objects to the room group
-    var addMeshList = [b3,b1,b2,b12,fl,b4,b5,b6,b7,b78,b8,b9,b910,b10,b11,b1112,b_12,b13,b613,b14,window,roof];
+    var addMeshList = [b3,b1,b2,b12,fl,b4,b5,b6,b7,b78,b8,b910,b10,b11,b1112,b_12,b13,b613,b14,window,roof];
     for (let i=0; i<addMeshList.length; ++i) {
         room.add(addMeshList[i]);
     }
