@@ -12,6 +12,8 @@ const cameraHeight = cameraWidth / aspectRatio;
 var camera;
 //function to switch between different cameras for editing purposes
 setCamera(play);
+//setting camera for pause menu
+pauseCam = camera;
 ///////////////////////////////////////////////////////////////////////////////////
 
 //adding music to the level
@@ -65,7 +67,7 @@ scene.add(box);
 
 //LIGHTING
 var ambientLight, pointLight4;
-sceneLights(); 
+sceneLights();
 
 //event for shooting
 window.addEventListener( 'mousedown', Attack, false );
@@ -75,9 +77,6 @@ function Attack(){
         Player.decAmmo();
     }
 }
-
-//setting camera for pause menu
-pauseCam = camera;
 
 //setting up renderer
 const renderer = new THREE.WebGL1Renderer({ antialias: true});
@@ -232,7 +231,7 @@ function checkPopUps(){
     }
 }
 
- function Tasks(){
+function Tasks(){
     check = document.getElementById("task");
     if (check != null) {
         check.parentNode.removeChild(check);
@@ -290,15 +289,15 @@ function checkPopUps(){
     task2.style.top = window.innerHeight*0.26 + 'px';
     task2.style.left = window.innerWidth*0.02 + 'px';
 
-    
+
     document.body.appendChild(task);
     if (found == false){
         document.body.appendChild(task1);
         
     }
     document.body.appendChild(task2);
-    
- }
+
+}
 
 ////////////////////////////////////SCENE MODELING//////////////////////////////////
 
