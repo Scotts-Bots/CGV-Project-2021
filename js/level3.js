@@ -25,7 +25,7 @@ audioLoader.load('Sounds/Outside ambience.wav', function(buffer){
     sound.setLoop(true);
     sound.setVolume(0.5);
     sound.play();
-})
+});
 
 //player hitbox
 var cubeGeometry = new THREE.BoxBufferGeometry(200, 200, 200, 3, 3, 3);
@@ -101,11 +101,15 @@ Tasks();
 particleSystem();
 
 //event for shooting
+var bulletCount = 0;
+
 window.addEventListener( 'mousedown', Attack, false );
 
 function Attack(){
-    if (Player.getAmmo()>0 && Player.checkGun() == true){
+    if (Player.getAmmo()>0){
+        bullet1.visible = true;
         Player.decAmmo();
+        bulletCount = 2;
     }
 }
 
@@ -176,8 +180,12 @@ function loadAssets() {
         new THREE.MeshBasicMaterial({color: 0x0000ff})
     );
     bullet1.scale.set(1, 2, 1);
-    bullet1.rotation.set(0, Math.PI/2, Math.PI/2);
-    bullet1.position.set(0, 0, 10);
+    bullet1.rotation.set(0, Math.PI/1.87, Math.PI/1.95);
+    bullet1.position.set(1.2, -0.5, -14);
+    bullet1.visible = false;
+    cam.add(bullet1);
+    scene.add(cam);
+
     var pistol = new THREE.Mesh();
     gltfLoader.load('Blender Models/GunModel/Gun Model.gltf', function (gltf) {
         pistol = gltf.scene;
@@ -186,18 +194,8 @@ function loadAssets() {
         pistol.position.z = -4;
         pistol.position.x = 2;
         pistol.position.y = -1;
-        pistol.add(bullet1);
-        cam.add(pistol)
+        cam.add(pistol);
         scene.add(cam);
-    });
-
-    const showLaser = new THREEx.DomEvents(cam, renderer.domElement);
-    
-    showLaser.addEventListener(bullet1, 'click', event => {
-        bullet1.visible() = true;
-        setTimeout(function(){
-			bullet1.visible() = false;
-		}, 1000);
     });
 
     bullet2 = new THREE.Mesh(
@@ -448,6 +446,19 @@ function drawScene() {
     otank2.rotation.y += 0.05;
     checkCollision(cam, updateKeyboard, MovingCube);
     processKeyboard();
+    setInterval( function(){
+        window.addEventListener("mousedown", function(){
+            var listener2 = new THREE.AudioListener();
+            cam.add(listener2);
+            var sound2 = new THREE.Audio(listener2);
+            var audioLoader2 = new THREE.AudioLoader();
+            audioLoader2.load('Sounds/laser-gun-19sf.mp3', function(buffer){
+                sound2.setBuffer(buffer);
+                sound2.setVolume(0.5);
+                sound2.play();
+            });
+        });
+    }, 1500);
     turnTurret(5000, enemy1, bullet2, enemy1.position.x, enemy1.position.y, enemy1.position.z);
     turnTurret(5000, enemy2, bullet, 7000, -210, -15000);
     turnTurret(5000, enemy3, bullet3, enemy3.position.x, enemy3.position.y, enemy3.position.z);
@@ -490,6 +501,11 @@ function drawScene() {
     HUD();
     Tasks();
     updateParticleSystem();
+    if (bulletCount<=0){
+        bullet1.visible = false;
+    }else{
+        bulletCount--;
+    }
 }
 
 function Tasks() {

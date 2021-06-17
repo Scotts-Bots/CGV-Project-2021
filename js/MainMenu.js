@@ -1,5 +1,5 @@
 //crearing global variables
-var startText, creditText, titleText, creditText, credit1Text, credit2Text, credit3Text, credit4Text, credit5Text, exitCredits
+var startText, creditText, titleText, creditText, credit1Text, credit2Text, credit3Text, credit4Text, credit5Text, credit6Text, credit7Text, credit8Text, exitCredits
 var startButton, creditsButton, creditBackGround, loader;
 
 // screating scene, camera and renderer and setting the renderers size
@@ -272,7 +272,7 @@ function AddCredit() {
 
         });
 
-        let credit3 = new THREE.TextGeometry("Collision dectection: Three.js tutorials by Lee Stemkoski Date: July 2013 (three.js v59dev)", {
+        let credit3 = new THREE.TextGeometry("Collision dectection and sandstorm: Three.js tutorials by Lee Stemkoski ", {
 
             font: font,
 
@@ -302,6 +302,36 @@ function AddCredit() {
 
         });
 
+        let credit6 = new THREE.TextGeometry("Music and Audio by: Dulane McCabe", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit7 = new THREE.TextGeometry("astronaut model by jgilhutton : https://blendswap.com/blend/12622", {
+
+            font: font,
+
+            size: 0.017,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
+        let credit8 = new THREE.TextGeometry("water code and picture by mrdoob: https://github.com/mrdoob/three.js/tree/master/examples ", {
+
+            font: font,
+
+            size: 0.0155,
+            height: 0.001,
+            curveSegments: 2,
+
+        });
+
         let dArrow = new THREE.TextGeometry("Down arrow to close", {
 
             font: font,
@@ -321,7 +351,7 @@ function AddCredit() {
 
         credit1Text = new THREE.Mesh(credit2, textMaterial);
         credit1Text.position.z = -1;
-        credit1Text.position.y = -0.01;
+        credit1Text.position.y = 0.03;
         credit1Text.position.x = -0.5;
 
         credit2Text = new THREE.Mesh(credit, textMaterial);
@@ -331,18 +361,33 @@ function AddCredit() {
 
         credit3Text = new THREE.Mesh(credit3, textMaterial);
         credit3Text.position.z = -1;
-        credit3Text.position.y = 0.08;
+        credit3Text.position.y = 0.1;
         credit3Text.position.x = -0.5;
 
         credit4Text = new THREE.Mesh(credit4, textMaterial);
         credit4Text.position.z = -1;
-        credit4Text.position.y = -0.105;
+        credit4Text.position.y = -0.035;
         credit4Text.position.x = -0.5;
 
         credit5Text = new THREE.Mesh(credit5, textMaterial);
         credit5Text.position.z = -1;
-        credit5Text.position.y = -0.19;
+        credit5Text.position.y = -0.09;
         credit5Text.position.x = -0.5;
+
+        credit6Text = new THREE.Mesh(credit6, textMaterial);
+        credit6Text.position.z = -1;
+        credit6Text.position.y = -0.15;
+        credit6Text.position.x = -0.5;
+
+        credit7Text = new THREE.Mesh(credit7, textMaterial);
+        credit7Text.position.z = -1;
+        credit7Text.position.y = -0.21;
+        credit7Text.position.x = -0.5;
+
+        credit8Text = new THREE.Mesh(credit8, textMaterial);
+        credit8Text.position.z = -1;
+        credit8Text.position.y = -0.27;
+        credit8Text.position.x = -0.5;
 
         exitCredits = new THREE.Mesh(dArrow, textMaterial);
         exitCredits.position.z = -1;
@@ -357,6 +402,9 @@ function AddCredit() {
         cam.add(credit4Text);
         cam.add(exitCredits);
         cam.add(credit5Text);
+        cam.add(credit6Text);
+        cam.add(credit7Text);
+        cam.add(credit8Text);
         scene.add(cam);
 
     });
