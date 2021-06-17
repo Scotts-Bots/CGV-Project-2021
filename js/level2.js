@@ -71,7 +71,7 @@ sceneLights();
 window.addEventListener( 'mousedown', Attack, false );
 
 function Attack(){
-    if (Player.getAmmo()>0 && Player.checkGun() == true){
+    if (Player.getAmmo() > 0 ){
         Player.decAmmo();
     }
 }

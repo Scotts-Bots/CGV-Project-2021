@@ -47,7 +47,7 @@ class Player {
     }
 
     static incAmmo() {
-        this.ammo = this.ammo + 16;
+        this.ammo = this.ammo + 60;
         localStorage["ammo"] = this.ammo;
     }
 
