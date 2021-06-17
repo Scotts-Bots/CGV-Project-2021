@@ -409,6 +409,18 @@ function Chair(s,ry,px,py,pz) {
     return chair;
 }
 
+//enemy turret model with bullets
+function Turret(){
+    var enemy = new THREE.Mesh();
+    gltfLoader.load('Blender Models/Laser Turret/LaserTurret.gltf', function (gltf) {
+        enemy = gltf.scene;
+        enemy.scale.set(200, 200, 200);
+        enemy.position.set(-250,-250,-3000);
+        scene.add(enemy);
+    });
+    return enemy;
+}
+
 //green hovering pyramid indicator
 function hoveringIndicator(px,py,pz,rz){
     var geometry = new THREE.ConeGeometry( 20, 20, 4 );
@@ -419,6 +431,13 @@ function hoveringIndicator(px,py,pz,rz){
     popup.rotateZ(rz);
 
     return popup;
+}
+
+function turnTurret(r, obj) {
+    if (Math.pow(cam.position.x - obj.position.x, 2) + Math.pow(cam.position.z - obj.position.z, 2) <= Math.pow(r, 2)) {
+        var ang = Math.atan2((cam.position.x - obj.position.x), (cam.position.z - obj.position.z));
+        obj.rotation.y = ang;
+    }
 }
 
 //ADDING ALL THE BLENDER MODELS INTO THE SCENE
@@ -537,6 +556,7 @@ function loadAssets(){
     var table1 = Table(150,Math.PI/2,-800,-350,-50);
     var table2 = Table(150,Math.PI/2,-1850,-350,-1000);
     var chair1 = Chair(100,-Math.PI/2,-1000,-250,-350);
+    var turret = Turret();
 
 }
 
