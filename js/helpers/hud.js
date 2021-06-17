@@ -172,7 +172,7 @@ function HUD() {
     document.body.appendChild(torch);
     document.body.appendChild(Q);
     document.body.appendChild(helper);
-    console.log(Player.checkGun());
+    //console.log(Player.checkGun());
     if (Player.checkGun()==1) {
         console.log('hi')
         document.body.appendChild(gun);
