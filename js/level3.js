@@ -141,7 +141,7 @@ function loadAssets() {
         rocket = gltf.scene;
         rocket.scale.set(75, 75, 75);
         rocket.position.set(5000, -2000, -50000);
-        //scene.add(rocket);
+        scene.add(rocket);
     });
 
     const rocketf = new THREE.Mesh(

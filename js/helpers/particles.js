@@ -4,6 +4,7 @@
 	Date: July 2013 (three.js v59dev)
 */
 var particleGroup, particleAttributes;
+var camposition;
 
 function particleSystem() {
     var particleTexture = new THREE.TextureLoader().load( 'Images/smokeparticle.png' );
@@ -11,23 +12,23 @@ function particleSystem() {
     particleGroup = new THREE.Object3D();
     particleAttributes = { startSize: [], startPosition: [], randomness: [] };
 
-    var totalParticles = 200;
-    var radiusRange = 40;
+    var totalParticles = 600;
+    var radiusRange = 100;
     for( var i = 0; i < totalParticles; i++ ) 
     {
-        var spriteMaterial = new THREE.SpriteMaterial( { map: particleTexture, color: 0xffffff } );
+        var spriteMaterial = new THREE.SpriteMaterial( { map: particleTexture, color: 0x754312 } );
         
         var sprite = new THREE.Sprite( spriteMaterial );
-        sprite.scale.set( 8, 8, 0.25 ); // imageWidth, imageHeight
+        sprite.scale.set( 4, 4, 0.125 ); // imageWidth, imageHeight
         sprite.position.set( Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 );
         // for a cube:
-        sprite.position.multiplyScalar( radiusRange );
+        //sprite.position.multiplyScalar( radiusRange );
         // for a solid sphere:
-        //sprite.position.setLength( radiusRange * Math.random() );
+        sprite.position.setLength( radiusRange * Math.random() );
         // for a spherical shell:
         //sprite.position.setLength( radiusRange * (Math.random() * 0.1 + 0.9) );
         
-        // sprite.color.setRGB( Math.random(),  Math.random(),  Math.random() ); 
+        //sprite.color.setRGB( Math.random(),  Math.random(),  Math.random() ); 
         //sprite.material.color.setHSL( Math.random(), 0.9, 0.7 ); 
         
         //sprite.opacity = 0.20; // translucent particles
@@ -38,9 +39,15 @@ function particleSystem() {
         particleAttributes.startPosition.push( sprite.position.clone() );
         particleAttributes.randomness.push( Math.random() );
     }
-    particleGroup.position.set(5000, 2000, -20000);
-    particleGroup.scale.set(50,50,50);
+    camposition = new THREE.Vector3();
+    camposition.setFromMatrixPosition( cam.matrixWorld );
+    x = camposition.x;
+    z = camposition.z;
+
+    particleGroup.position.set(x,200,z);
+    particleGroup.scale.set(100,100,100);
     scene.add( particleGroup );
+    
 }
 
 function updateParticleSystem() {
@@ -66,8 +73,15 @@ function updateParticleSystem() {
 	}
 
 	// rotate the entire group
-	// particleGroup.rotation.x = time * 0.5;
-	// particleGroup.rotation.y = time * 0.75;
-	// particleGroup.rotation.z = time * 1.0;
+	particleGroup.rotation.x = time * -0.05;
+	particleGroup.rotation.y = time * -0.05;
+	//particleGroup.rotation.z = time * -0.02;
+
+    camposition = new THREE.Vector3();
+    camposition.setFromMatrixPosition( cam.matrixWorld );
+    x = camposition.x;
+    z = camposition.z;
+
+    particleGroup.position.set(x,200,z);
 }
 

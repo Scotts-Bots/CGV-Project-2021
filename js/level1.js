@@ -40,7 +40,7 @@ audioLoader.load('Sounds/Atmosphere inside.wav', function(buffer){
 //assigning static variables
 localStorage["health"] = 100;
 localStorage["oxygen"] = 100;
-localStorage["ammo"] = 0;
+localStorage["ammo"] = 10;
 localStorage["cards"]  = 0;
 localStorage["gun"] = 0;
 
