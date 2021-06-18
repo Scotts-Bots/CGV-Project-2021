@@ -76,7 +76,7 @@ restartGame.addEventListener(restartButton, 'click', event =>{
 const mainMenuGame = new THREEx.DomEvents(cam,  renderer.domElement);
 
 mainMenuGame.addEventListener(mainMenuButton, 'click', event =>{
-    window.location.href = "index.html";
+    window.location.href = "mainIndex.html";
 });
 
 // Pause menu function

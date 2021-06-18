@@ -177,6 +177,16 @@ function loadAssets() {
         if (Math.sqrt(Math.pow((x - fx), 2) + Math.pow((y - fy), 2)) < 10000) {
             localStorage["playtime"] = parseInt(localStorage["playtime"]) + getDelta();
             //alert(localStorage["playtime"] + " secs");
+
+            //update leaderboard
+            
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            today = yyyy + "-" + mm + '-' + dd ;
+            localStorage["scores"] += localStorage["name"]+","+today+","+localStorage["playtime"] + ",";
+            console.log(localStorage["scores"]);
             window.location.href = "WinGame.html";
         } else {
             console.log(Math.sqrt(Math.pow((x - fx), 2) + Math.pow((y - fy), 2)));

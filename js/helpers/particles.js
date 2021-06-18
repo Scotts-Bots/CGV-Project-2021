@@ -61,7 +61,7 @@ function particleSystem() {
     particleGroup = new THREE.Object3D();
     particleAttributes = { startSize: [], startPosition: [], randomness: [] };
 
-    var totalParticles = 600;
+    var totalParticles = 500;
     var radiusRange = 100;
     for( var i = 0; i < totalParticles; i++ ) 
     {
