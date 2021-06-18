@@ -19,6 +19,7 @@ var wall3;
 var helpCounter = 0;
 var check;
 var astro;
+var view = 1;
 
 //creating a scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -532,14 +533,41 @@ new THREE.GLTFLoader().load('Blender Models/Astronaut/Astronauta1.gltf', functio
     // camposition.setFromMatrixPosition(cam.matrixWorld);
     // x = camposition.x;
     // z = camposition.z;
-
-    astro.position.z = 0;
+    view = 1;
+    astro.position.z = 30;
     astro.rotation.y = Math.PI;
-    astro.rotation.x = Math.PI/8;
+    // astro.rotation.x = Math.PI/8;
     astro.position.y = -420;
-    astro.scale.set(200, 230, 250);
+    astro.scale.set(200, 230, 200);
     cam.add(astro);
     scene.add(cam);
+});
+
+//creating an event for changing view
+document.addEventListener('keydown', event => {
+    if (event.code === "KeyV") {
+        cam.remove(astro);
+        if (view == 3){
+            view = 1;
+    astro.position.z = 30;
+    astro.rotation.y = Math.PI;
+    // astro.rotation.x = Math.PI/8;
+    astro.position.y = -420;
+    astro.scale.set(200, 230, 200);
+    cam.add(astro);
+    scene.add(cam);
+        }else{
+            view = 3;
+    astro.position.z = -150;
+    astro.rotation.y = Math.PI;
+    astro.rotation.z = -Math.PI/30;
+    astro.position.x = -30;
+    astro.position.y = -380;
+    astro.scale.set(150, 200, 150);
+    cam.add(astro);
+    scene.add(cam);
+        }
+    }
 });
 
 
