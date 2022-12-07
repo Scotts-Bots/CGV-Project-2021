@@ -1,4 +1,4 @@
-#Computer Graphics and Visualization Project 2021
+# Computer Graphics and Visualization Project 2021
 
 Escape Mars Game
 
