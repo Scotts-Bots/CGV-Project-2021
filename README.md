@@ -1,6 +1,6 @@
-# CGV-project
+#Computer Graphics and Visualization Project 2021
 
-Mars Game
+Escape Mars Game
 
 Team members:
 - Mohammed Gathoo
@@ -12,7 +12,6 @@ You are an astronaut and scientist that currently resides on a mars base camp th
 - the scientist's quarters / lab facilities
 - manufacturing facility
 - outside the base camp; the rocket ship on its landing platform
-
 
 You awake to the sounds of alarms going off in the base camp and red flashing lights signalling a
 security threat in the base. There is a severe sand storm occuring outside the facility. Upon closer
